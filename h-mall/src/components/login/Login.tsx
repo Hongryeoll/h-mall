@@ -33,7 +33,7 @@ export default function Login() {
     if (error) {
       setServerError(error.message);
     } else {
-      router.replace('/dashboard'); // 로그인 성공 시 대시보드로 이동
+      router.replace('/'); // 로그인 성공 시 홈 이동
     }
   };
 
@@ -78,16 +78,13 @@ export default function Login() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="bg-blue-500 text-white px-4 py-2 rounded"
+          className="bg-hr-gray-50 text-white px-4 py-2 rounded"
         >
           {isSubmitting ? '로그인 중...' : '로그인'}
         </button>
 
         {serverError && <p className="text-red-500">{serverError}</p>}
       </form>
-      <div className="h-15 mt-10">
-        <div>회원가입하실?</div>
-      </div>
     </>
   );
 }

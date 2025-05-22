@@ -2,7 +2,7 @@ import Link from 'next/link';
 import AuthUI from '@/components/auth/AuthUI';
 import Login from '@/components/login/Login';
 
-export default function LoginPage() {
+export default async function LoginPage() {
   return (
     <>
       <AuthUI />

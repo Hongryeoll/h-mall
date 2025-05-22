@@ -2,16 +2,16 @@ import { cookies } from 'next/headers';
 import { createServerClient } from '@supabase/ssr';
 import { NextRequest, NextResponse } from 'next/server';
 import type { Database } from '@/types/supabase';
+import { ROUTES } from '@/types/constants';
 
 /**
  * 서버 전용 클라이언트
  * — Server Components, Server Actions, Route Handlers 에서 사용
  */
 export async function createServerSupabaseClient(
-  isServerComponent = false
+  isServerComponent = false,
 ) {
-  // ✅ 여기서 await 로 실제 ReadonlyRequestCookies 인스턴스를 꺼냅니다.
-  const cookieStore = await cookies(); // Promise<ReadonlyRequestCookies> → ReadonlyRequestCookies
+  const cookieStore = await cookies();
 
   return createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -79,7 +79,6 @@ export async function supabaseMiddleware(
       },
     }
   );
-
   const {
     data: { user },
   } = await supabase.auth.getUser();

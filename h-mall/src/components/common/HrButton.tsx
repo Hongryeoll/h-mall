@@ -31,8 +31,6 @@ export const HrButton = ({
         {SvgComp && SvgComp}
         {text}
       </button>
-      <div className="bg-hr-pink-default">asdasd</div>
-      <div className="bg-black">asdasd</div>
     </>
   );
 };
@@ -48,10 +46,10 @@ const sizeClasses = {
 };
 
 const typeClasses = {
-  default: 'bg-hr-pink-default border-none text-white',
-  line: 'bg-hr-white border border-hr-pink-default text-hr-pink-default',
-  light: 'bg-hr-white text-hr-pink-default',
-  flat: 'bg-hr-pink-bg text-hr-pink-default',
+  default: 'bg-hr-gray-40 border-none text-white',
+  line: 'bg-hr-white border border-hr-gray-40 text-hr-gray-40',
+  light: 'bg-hr-white text-hr-gray-40',
+  flat: 'bg-hr-gray-10 text-hr-gray-40',
   danger: 'bg-hr-white border border-hr-danger-default text-hr-danger-default',
 };
 

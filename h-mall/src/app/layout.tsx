@@ -2,8 +2,9 @@ import type { Metadata } from 'next';
 import { Noto_Sans_KR } from 'next/font/google';
 import localFont from 'next/font/local';
 import './globals.css';
-import AuthHeader from '@/components/auth/AuthHeader';
 import { getUser } from '@/actions/auth/user.action';
+import GlobalsProvider from '@/components/provider/GlobalsProvider';
+import AuthHeader from '@/components/auth/AuthHeader';
 
 const notoSansKR = Noto_Sans_KR({
   subsets: ['cyrillic', 'latin', 'latin-ext', 'vietnamese'],
@@ -25,6 +26,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const user = await getUser({ serverComponent: true });
+  console.log('>>user', user);
 
   return (
     <html
@@ -33,8 +35,10 @@ export default async function RootLayout({
       className={`${pretendard.variable} ${notoSansKR.variable}`}
     >
       <body className="font-pretendard">
-        <AuthHeader user={user} />
-        {children}
+        <GlobalsProvider initialUser={user}>
+          <AuthHeader user={user} />
+          {children}
+        </GlobalsProvider>
       </body>
     </html>
   );

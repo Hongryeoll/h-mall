@@ -11,6 +11,6 @@ export const getProfileById = async ({
   userId = "",
 }) => {
   const supabase = await createServerSupabaseClient(serverComponent);
-  const profile = await supabase.from("profiles").select("*").eq("id", userId);
+  const profile = await supabase.from("userinfo").select("*").eq("id", userId);
   return profile?.data?.[0];
 };

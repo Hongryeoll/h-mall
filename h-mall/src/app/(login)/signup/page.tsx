@@ -10,7 +10,7 @@ type FormData = {
   password: string;
 };
 
-export default function SignUpPage() {
+export default async function SignUpPage() {
   const router = useRouter();
   const supabase = createSupabaseBrowserClient();
 
@@ -24,18 +24,41 @@ export default function SignUpPage() {
   const onSubmit = async (data: FormData) => {
     setServerError('');
 
-    const { error } = await supabase.auth.signUp({
+    // 이메일 사전 중복 체크
+    const { data: existingUser } = await supabase
+      .from('userinfo')
+      .select('id')
+      .eq('email', data.email)
+      .maybeSingle();
+
+    if (existingUser) {
+      alert('이미 가입된 이메일입니다. 로그인해주세요.');
+      router.push('/login');
+      return;
+    }
+
+    const { error, data: signUpData } = await supabase.auth.signUp({
       email: data.email,
       password: data.password,
     });
 
     if (error) {
-      setServerError(error.message);
-    } else {
-      alert('이메일 확인 후 로그인 해주세요.');
-      // router.push('/auth');
-      router.push('/login');
+      if (error.message === 'User already registered') {
+        alert('이미 인증된 이메일입니다. 로그인해주세요.');
+        router.push('/login');
+      } else {
+        alert(`회원가입 실패: ${error.message}`);
+      }
+      return;
     }
+
+    if (!signUpData.user) {
+      alert('이미 등록된 이메일입니다. 이메일 인증을 완료해주세요.');
+      return;
+    }
+
+    alert('이메일 확인 후 로그인 해주세요.');
+    router.push('/login');
   };
 
   return (
@@ -78,7 +101,7 @@ export default function SignUpPage() {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="bg-blue-500 text-white px-4 py-2 rounded"
+        className="bg-hr-gray-50 text-white px-4 py-2 rounded"
       >
         {isSubmitting ? '처리 중...' : '가입하기'}
       </button>

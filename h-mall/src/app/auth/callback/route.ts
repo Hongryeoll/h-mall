@@ -13,7 +13,8 @@ export async function GET(request: Request) {
   // const authPage = `${origin}/auth`;
   const authPage = `${origin}/login`;
 
-  const supabase = await createServerSupabaseClient();
+  // const supabase = await createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient(false, request);
 
   if (code) {
     // ── 로그인 콜백 ──
