@@ -1,13 +1,13 @@
-'use client';
+// 'use client';
 
-import { HrButton } from '@/components/common/HrButton';
-import { ROUTES } from '@/types/constants';
-import { useMutation } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
-import { useContext } from 'react';
+// import { HrButton } from '@/components/common/HrButton';
+// import { ROUTES } from '@/types/constants';
+// import { useMutation } from '@tanstack/react-query';
+// import { useRouter } from 'next/navigation';
+// import { useContext } from 'react';
 
 export default function MallHome() {
-  const route = useRouter();
+  // const route = useRouter();
 
   return (
     <>

@@ -1,7 +1,58 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next'
+
+interface SVGExcludeRule {
+  test?: RegExp
+  exclude?: Array<RegExp | string>
+}
+
+interface SVGRLoader {
+  loader: string
+  options: { icon?: boolean; svgo?: boolean }
+}
+
+interface SVGRRule {
+  test: RegExp
+  issuer: RegExp
+  use: SVGRLoader[]
+}
 
 const nextConfig: NextConfig = {
-  /* config options here */
-};
+  reactStrictMode: true,
 
-export default nextConfig;
+  webpack(config) {
+    const rules = config.module?.rules
+    if (Array.isArray(rules)) {
+      rules.forEach((rule) => {
+        const r = rule as SVGExcludeRule
+        if (
+          r.test instanceof RegExp &&
+          r.test.toString().includes('svg') &&
+          Array.isArray(r.exclude)
+        ) {
+          r.exclude.push(/\.svg$/i)
+        }
+      })
+    }
+
+    const svgrRule = {
+      test: /\.svg$/i,
+      issuer: /\.[jt]sx?$/,
+      use: [
+        {
+          loader: require.resolve('@svgr/webpack'),
+          options: { icon: true, svgo: true },
+        },
+      ],
+    } as SVGRRule
+
+    config.module?.rules?.push(svgrRule)
+
+    return config
+  },
+
+  images: {
+    domains: ['your.cdn.com'],
+  },
+}
+
+export default nextConfig

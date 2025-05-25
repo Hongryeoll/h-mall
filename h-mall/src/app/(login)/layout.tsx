@@ -1,4 +1,3 @@
-// src/app/(login)/layout.tsx
 import { redirect } from 'next/navigation';
 import { getUser } from '@/actions/auth/user.action';
 import { ROUTES } from '@/types/constants';

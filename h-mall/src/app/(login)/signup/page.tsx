@@ -10,7 +10,7 @@ type FormData = {
   password: string;
 };
 
-export default async function SignUpPage() {
+export default function SignUpPage() {
   const router = useRouter();
   const supabase = createSupabaseBrowserClient();
 

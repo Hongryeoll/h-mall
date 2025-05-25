@@ -13,6 +13,8 @@ const config: Config = {
       colors: {
         'hr-purple-default': '#732DCE',
         'hr-purple-bg': '#F4EFFB',
+        'hr-purple-border': '#D8C7F7',
+        'hr-purple-hover': '#5B1DB8',
         'hr-mint-default': '#01BDD7',
         'hr-yellow-default': '#FFA203',
         'hr-pink-default': '#FB1397',
