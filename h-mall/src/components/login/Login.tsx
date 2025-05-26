@@ -38,7 +38,7 @@ export default function Login() {
       <FormProvider {...methods}>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col gap-4 p-4 w-full max-w-md mx-auto"
+        className="flex flex-col gap-2 p-4 w-full max-w-md mx-auto"
       >
         <h1 className="text-2xl font-bold">로그인</h1>
         <HrInput<FormData>

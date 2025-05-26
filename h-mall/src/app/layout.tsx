@@ -5,7 +5,6 @@ import './globals.css';
 import { getUser } from '@/actions/auth/user.action';
 import GlobalsProvider from '@/components/provider/GlobalsProvider';
 import { HrHeader } from '@/components/common/HrHeader';
-// import AuthHeader from '@/components/auth/AuthHeader';
 
 const notoSansKR = Noto_Sans_KR({
   subsets: ['cyrillic', 'latin', 'latin-ext', 'vietnamese'],

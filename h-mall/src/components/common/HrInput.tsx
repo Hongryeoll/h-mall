@@ -135,7 +135,7 @@ export const HrInput = <TFormValues extends FieldValues>({
             <>
               {!closeBtnHidden && (
                 <CloseSvg
-                  className="cursor-pointer"
+                  className="cursor-pointer text-hr-gray-50"
                   width={iconSize[size]}
                   height={iconSize[size]}
                   onClick={() => {

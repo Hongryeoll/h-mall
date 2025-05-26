@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 import { getUser } from '@/actions/auth/user.action';
+import { HrHeader } from '@/components/common/HrHeader';
 
 export default async function MallLayout({
   children,
@@ -10,5 +11,10 @@ export default async function MallLayout({
   if (!user) {
     redirect('/login');
   }
-  return <>{children}</>;
+  return (
+    <>
+      <HrHeader user={user} />
+      {children}
+    </>
+  );
 }

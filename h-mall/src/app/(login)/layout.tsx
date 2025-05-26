@@ -16,8 +16,13 @@ export default async function LoginGroupLayout({
 
   // 로그인·회원가입 전용 레이아웃 (헤더 제거 등)
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center bg-gray-50">
-      {children}
-    </div>
+    <>
+      {/* <div className="min-h-screen flex flex-col justify-center items-center bg-gray-50">
+        {children}
+      </div> */}
+      <div className="items-center">
+        {children}
+      </div>
+    </>
   );
 }

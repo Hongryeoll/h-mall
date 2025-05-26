@@ -6,16 +6,7 @@ import Image from 'next/image';
 export default function LoginPage() {
   return (
     <>
-      <div className="w-full max-w-md mx-auto space-y-6 p-4">
-        <div className="flex justify-center">
-          <Image
-            src="/images/h_logo.png"
-            alt="logo"
-            width={120}
-            height={70}
-            priority
-          />
-        </div>
+      <div className="w-full max-w-lg mx-auto space-y-6 p-4">
         <Login />
         <hr className="border-hr-gray-20" />
         <AuthUI />
