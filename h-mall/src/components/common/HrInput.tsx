@@ -60,7 +60,9 @@ export const HrInput = <TFormValues extends FieldValues>({
   // resetValue,
 }: TProps<TFormValues>) => {
   // const { register, setValue, getValues, resetField } = useFormContext<TFormValues>();
-  const { register, getValues, resetField } = useFormContext<TFormValues>();
+  const { register, getValues, resetField, watch } =
+    useFormContext<TFormValues>();
+  const inputValue = watch(name);
   const [isFocused, setIsFocused] = useState(false);
   const [isShowPwd, setIsShowPwd] = useState(false);
   const inputType = type === 'password' && isShowPwd ? 'text' : type;
@@ -105,7 +107,7 @@ export const HrInput = <TFormValues extends FieldValues>({
           {formatMillisecondsToTime(timer)}
         </span>
       )}
-      {getValues(name) && (
+      {inputValue && (
         <div className="flex items-center gap-2">
           {/* 타입이 password일때는 show password toggle 버튼 노출 */}
           {type === 'password' && (
@@ -132,25 +134,16 @@ export const HrInput = <TFormValues extends FieldValues>({
           {!disabled && (
             <>
               {!closeBtnHidden && (
-                // <CloseSvg
-                //   className="cursor-pointer"
-                //   width={iconSize[size]}
-                //   height={iconSize[size]}
-                //   onClick={() => {
-                //     if (disabled) return;
-                //     setValue(name, (resetValue ?? '') as PathValue<TFormValues, Path<TFormValues>>);
-                //   }}
-                // />
                 <CloseSvg
-              className="cursor-pointer"
-              width={iconSize[size]}
-              height={iconSize[size]}
-              onClick={() => {
-                if (!disabled) {
-                  resetField(name);   // 해당 필드를 빈값(또는 defaultValue)로 리셋
-                }
-              }}
-            />
+                  className="cursor-pointer"
+                  width={iconSize[size]}
+                  height={iconSize[size]}
+                  onClick={() => {
+                    if (!disabled) {
+                      resetField(name);
+                    }
+                  }}
+                />
               )}
             </>
           )}
