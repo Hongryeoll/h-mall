@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import CloseSvg from '@/styles/icon/close-circle-fill.svg';
-import ViewSvg from '@/styles/icon/view.svg';
-import ViewHideSvg from '@/styles/icon/view-hide.svg';
-import SearchSvg from '@/styles/icon/search.svg';
+import CloseSvg from '@/assets/icons/close.svg';
+import ViewSvg from '@/assets/icons/view.svg';
+import ViewHideSvg from '@/assets/icons/view-hide.svg';
+import SearchSvg from '@/assets/icons/search.svg';
 import {
   useFormContext,
   RegisterOptions,
