@@ -4,14 +4,15 @@ import localFont from 'next/font/local';
 import './globals.css';
 import { getUser } from '@/actions/auth/user.action';
 import GlobalsProvider from '@/components/provider/GlobalsProvider';
-import AuthHeader from '@/components/auth/AuthHeader';
+import { HrHeader } from '@/components/common/HrHeader';
+// import AuthHeader from '@/components/auth/AuthHeader';
 
 const notoSansKR = Noto_Sans_KR({
   subsets: ['cyrillic', 'latin', 'latin-ext', 'vietnamese'],
   variable: '--font-notoSansKR',
 });
 const pretendard = localFont({
-  src: '../styles/fonts/PretendardGOVVariable.woff2',
+  src: '../assets/fonts/PretendardGOVVariable.woff2',
   variable: '--font-pretendard',
 });
 
@@ -36,7 +37,8 @@ export default async function RootLayout({
     >
       <body className="font-pretendard">
         <GlobalsProvider initialUser={user}>
-          <AuthHeader user={user} />
+          {/* <AuthHeader user={user} /> */}
+          <HrHeader user={user} />
           {children}
         </GlobalsProvider>
       </body>
