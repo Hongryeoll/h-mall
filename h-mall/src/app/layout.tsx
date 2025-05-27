@@ -5,6 +5,7 @@ import './globals.css';
 import { getUser } from '@/actions/auth/user.action';
 import GlobalsProvider from '@/components/provider/GlobalsProvider';
 import { HrHeader } from '@/components/common/HrHeader';
+import HrNav from '@/components/common/HrNav';
 
 const notoSansKR = Noto_Sans_KR({
   subsets: ['cyrillic', 'latin', 'latin-ext', 'vietnamese'],
@@ -38,6 +39,7 @@ export default async function RootLayout({
         <GlobalsProvider initialUser={user}>
           {/* <AuthHeader user={user} /> */}
           <HrHeader user={user} />
+          <HrNav />
           {children}
         </GlobalsProvider>
       </body>
