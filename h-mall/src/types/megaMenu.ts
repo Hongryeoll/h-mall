@@ -1,11 +1,13 @@
 export interface MegaLink {
   label: string;
+  slug: string;
   href: string;
 }
 
 export interface MegaSection {
   /** 예: '의류', '가방', '신발', '액세서리' */
   title: string;
+  slug: string;
   links: MegaLink[];
 }
 

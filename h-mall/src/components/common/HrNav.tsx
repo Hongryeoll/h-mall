@@ -34,7 +34,7 @@ export default function HrNav() {
               mx-auto max-w-screen-xl p-6
               ${
                 openKey === 'INTERIOR' || openKey === 'KITCHEN'
-                  ? 'columns-2 gap-8' /* 두 칼럼으로 분할 */
+                  ? 'columns-2 gap-8'
                   : 'grid grid-cols-4 gap-8'
               }   /* 일반 그리드 레이아웃 유지 */
             `}
