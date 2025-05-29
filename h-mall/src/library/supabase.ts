@@ -2,7 +2,6 @@ import { cookies } from 'next/headers';
 import { createServerClient } from '@supabase/ssr';
 import { NextRequest, NextResponse } from 'next/server';
 import type { Database } from '@/types/supabase';
-import { ROUTES } from '@/types/constants';
 
 /**
  * 서버 전용 클라이언트
@@ -82,6 +81,7 @@ export async function supabaseMiddleware(
   const {
     data: { user },
   } = await supabase.auth.getUser();
+  console.log(">> all cookies", req.cookies.getAll())
 
   if (!user && !req.nextUrl.pathname.startsWith('/login')) {
     const url = req.nextUrl.clone();

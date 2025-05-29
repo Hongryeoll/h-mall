@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { User } from '@supabase/supabase-js';
 import Image from 'next/image';
@@ -7,13 +8,15 @@ import { ROUTES } from '@/types/constants';
 import SearchSVG from '@/assets/icons/search.svg';
 import ShoppingBagSVG from '@/assets/icons/shopping-bag.svg';
 import UserSVG from '@/assets/icons/user.svg';
-import LoginSVG from '@/assets/icons/login.svg'
-import LogoutSVG from '@/assets/icons/logout.svg'
+import LoginSVG from '@/assets/icons/login.svg';
+import LogoutSVG from '@/assets/icons/logout.svg';
+import CogwheelSVG from '@/assets/icons/cogwhell.svg';
+import { createSupabaseBrowserClient } from '@/library/client/supabase';
 
 type TProps = {
   user?: User | null;
-  className?: string; // 추가 클래스명
-  style?: React.CSSProperties; // 추가 스타일
+  className?: string;
+  style?: React.CSSProperties;
   isHiddenLeftIcon?: boolean;
 };
 
@@ -26,6 +29,29 @@ export const HrHeader = ({
   const router = useRouter();
   const pathname = usePathname();
 
+  const [role, setRole] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchRole = async () => {
+      if (!user?.id) {
+        setRole(null);
+        return;
+      }
+      const supabase = createSupabaseBrowserClient();
+      const { data, error } = await supabase
+        .from('userinfo')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+
+      if (!error && data?.role) {
+        setRole(data.role);
+      }
+    };
+
+    fetchRole();
+  }, [user]);
+
   return (
     <div
       className={`
@@ -33,7 +59,6 @@ export const HrHeader = ({
       `}
       style={style}
     >
-      {/* 왼쪽 로고 */}
       <div className="flex items-center">
         {!isHiddenLeftIcon && (
           <span className="p-3" onClick={() => router.push(ROUTES.HOME)}>
@@ -48,10 +73,7 @@ export const HrHeader = ({
         )}
       </div>
 
-      {/* 오른쪽 아이콘 묶음 */}
       <div className="flex items-center gap-2 ml-auto">
-        {/* 1) 각 클릭 영역을 inline-flex 컨테이너로 바꾸고 */}
-        {/* 2) 텍스트용 <div> 대신 inline 요소 <span> 사용 */}
         <span
           className="inline-flex items-center gap-1 p-2 cursor-pointer"
           onClick={() => router.push(ROUTES.HOME)}
@@ -84,13 +106,45 @@ export const HrHeader = ({
 
         <span
           className="inline-flex items-center gap-1 p-2 cursor-pointer"
-          onClick={() => router.push(ROUTES.LOGIN)}
+          onClick={async () => {
+            if (user) {
+              const supabase = createSupabaseBrowserClient();
+              await supabase.auth.signOut();
+              router.push(ROUTES.HOME);
+              router.refresh();
+            } else {
+              router.push(ROUTES.LOGIN);
+            }
+          }}
         >
-          <LoginSVG width={16} height={16} className="text-hr-gray-80" />
-          <span className="text-hr-c3 text-hr-gray-50 leading-none hidden lg:inline">
-            LOGIN
-          </span>
+          {user ? (
+            <>
+              <LogoutSVG width={16} height={16} className="text-hr-gray-80" />
+              <span className="text-hr-c3 text-hr-gray-50 leading-none hidden lg:inline">
+                LOGOUT
+              </span>
+            </>
+          ) : (
+            <>
+              <LoginSVG width={16} height={16} className="text-hr-gray-80" />
+              <span className="text-hr-c3 text-hr-gray-50 leading-none hidden lg:inline">
+                LOGIN
+              </span>
+            </>
+          )}
         </span>
+
+        {role === 'admin' && (
+          <span
+            className="inline-flex items-center gap-1 p-2 cursor-pointer text-red-600 font-semibold"
+            onClick={() => router.push('/admin/dashboard')}
+          >
+            <CogwheelSVG width={16} height={16} className="text-hr-gray-80" />
+            <span className="text-hr-c3 leading-none hidden lg:inline">
+              ADMIN
+            </span>
+          </span>
+        )}
       </div>
     </div>
   );
