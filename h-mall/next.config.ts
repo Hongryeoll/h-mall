@@ -16,7 +16,7 @@ interface SVGRRule {
   use: SVGRLoader[]
 }
 
-const nextConfig: NextConfig = {
+const nextConfig: NextConfig & { serverExternalPackages?: string[] } = {
   reactStrictMode: true,
 
   webpack(config) {
@@ -51,7 +51,13 @@ const nextConfig: NextConfig = {
   },
 
   images: {
-    domains: ['your.cdn.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'your.cdn.com',
+        pathname: '**',
+      },
+    ],
   },
 }
 

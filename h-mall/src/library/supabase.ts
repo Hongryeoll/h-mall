@@ -2,6 +2,13 @@ import { cookies } from 'next/headers';
 import { createServerClient } from '@supabase/ssr';
 import { NextRequest, NextResponse } from 'next/server';
 import type { Database } from '@/types/supabase';
+import type { CookieSerializeOptions } from 'cookie';
+
+type UserInfo = {
+  id: string;
+  role: 'user' | 'admin';
+  email: string;
+};
 
 /**
  * 서버 전용 클라이언트
@@ -35,7 +42,7 @@ export async function createServerSupabaseClient(
           cookiesToSet: Array<{
             name: string;
             value: string;
-            options?: any;
+            options?: CookieSerializeOptions;
           }>
         ) => {
           if (isServerComponent) return;
@@ -54,22 +61,58 @@ export function createServerSupabaseClientRSC() {
 }
 
 /** Next.js Middleware 전용 세션 갱신 헬퍼 */
+// export async function supabaseMiddleware(
+//   req: NextRequest
+// ): Promise<NextResponse> {
+//   let res = NextResponse.next();
+
+//   // Middleware 에서는 req.cookies 가 동기 API
+//   const supabase = createServerClient<Database>(
+//     process.env.NEXT_PUBLIC_SUPABASE_URL!,
+//     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+//     {
+//       cookies: {
+//         getAll: async () =>
+//           req.cookies
+//             .getAll()
+//             .map((c) => ({ name: c.name, value: c.value })),
+
+//         setAll: async (cookiesToSet) => {
+//           for (const { name, value, options } of cookiesToSet) {
+//             res.cookies.set(name, value, options);
+//           }
+//         },
+//       },
+//     }
+//   );
+//   const {
+//     data: { user },
+//   } = await supabase.auth.getUser();
+//   console.log(">> all cookies", req.cookies.getAll())
+
+//   if (!user && !req.nextUrl.pathname.startsWith('/login')) {
+//     const url = req.nextUrl.clone();
+//     url.pathname = '/login';
+//     return NextResponse.redirect(url);
+//   }
+
+//   return res;
+// }
 export async function supabaseMiddleware(
   req: NextRequest
 ): Promise<NextResponse> {
-  let res = NextResponse.next();
+  const res = NextResponse.next();
+  const url = req.nextUrl;
+  const pathname = url.pathname;
 
-  // Middleware 에서는 req.cookies 가 동기 API
+  // ✅ Supabase 클라이언트 생성 (req.cookies 사용)
   const supabase = createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
         getAll: async () =>
-          req.cookies
-            .getAll()
-            .map((c) => ({ name: c.name, value: c.value })),
-
+          req.cookies.getAll().map((c) => ({ name: c.name, value: c.value })),
         setAll: async (cookiesToSet) => {
           for (const { name, value, options } of cookiesToSet) {
             res.cookies.set(name, value, options);
@@ -78,15 +121,42 @@ export async function supabaseMiddleware(
       },
     }
   );
+
+  // ✅ 현재 유저 정보 확인
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  console.log(">> all cookies", req.cookies.getAll())
 
-  if (!user && !req.nextUrl.pathname.startsWith('/login')) {
-    const url = req.nextUrl.clone();
-    url.pathname = '/login';
-    return NextResponse.redirect(url);
+  // ✅ 보호가 필요한 경로인지 확인
+  const isProtectedPath = [
+    "/mypage",
+    "/settings",
+    "/api",
+    "/admin",
+  ].some((protectedPath) => pathname.startsWith(protectedPath));
+
+  // ✅ 로그인 안된 유저는 로그인 페이지로
+  if (!user && isProtectedPath) {
+    const loginUrl = url.clone();
+    loginUrl.pathname = "/login";
+    return NextResponse.redirect(loginUrl);
+  }
+
+  // ✅ 관리자 전용 경로 접근 시 권한 검사
+  if (user && pathname.startsWith("/admin")) {
+    const { data: profile, error } = await supabase
+      .from("userinfo")
+      .select("role")
+      .eq("id", user.id)
+      .single<UserInfo>();
+
+    const role = profile?.role;
+
+    if (error || role !== "admin") {
+      const unauthorizedUrl = url.clone();
+      unauthorizedUrl.pathname = "/not-authorized";
+      return NextResponse.redirect(unauthorizedUrl);
+    }
   }
 
   return res;
