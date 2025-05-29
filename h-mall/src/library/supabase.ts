@@ -152,7 +152,8 @@ export async function supabaseMiddleware(
 
     const role = profile?.role;
 
-    if (error || role !== "admin") {
+    // if (error || role !== "admin") {
+    if (error || !profile || profile.role !== "admin") {
       const unauthorizedUrl = url.clone();
       unauthorizedUrl.pathname = "/not-authorized";
       return NextResponse.redirect(unauthorizedUrl);
