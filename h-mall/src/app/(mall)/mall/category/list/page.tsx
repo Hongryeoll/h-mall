@@ -1,16 +1,9 @@
-// src/app/category/list/page.tsx
 // import ProductGrid from '@/components/category/ProductGrid'
 
-type Props = {
-  searchParams: {
-    category?: string;
-    section?: string;
-  };
-};
 
-export default function CategoryListPage({ searchParams }: Props) {
-  const category = searchParams.category;
-  const section = searchParams.section;
+export default function CategoryListPage() {
+  // const category = searchParams.category;
+  // const section = searchParams.section;
 
   // if (!category || !section) {
   //   return <p>잘못된 접근입니다.</p>;

@@ -3,8 +3,8 @@ export const ROUTES: Record<string, string> = {
   MALL: '/mall',
   LOGIN: '/login',
   SIGNUP: '/signup',
-  MYPAGE: '/mypage',
-  CART: '/order/cart'
+  MYPAGE: '/mall/mypage',
+  CART: '/mall/order/cart'
 };
 // Auth-Helpers가 쿠키를 읽도록 돕는 옵션
 export const SUPABASE_COOKIE_OPTIONS = {

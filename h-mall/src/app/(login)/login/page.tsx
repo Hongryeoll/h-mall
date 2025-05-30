@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import AuthUI from '@/components/auth/AuthUI';
 import Login from '@/components/login/Login';
-import Image from 'next/image';
 
 export default function LoginPage() {
   return (

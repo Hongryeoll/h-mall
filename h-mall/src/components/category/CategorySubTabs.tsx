@@ -21,7 +21,7 @@ export default function CategorySubTabs() {
         {tabsForSection.map((tab) => (
           <li key={tab.slug}>
             <Link
-              href={`/category/list?category=${megaKey}&section=${section}&sub=${tab.slug}`}
+              href={`/mall/category/list?category=${megaKey}&section=${section}&sub=${tab.slug}`}
               className={`
                 py-2
                 ${

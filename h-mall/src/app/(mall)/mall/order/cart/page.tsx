@@ -7,7 +7,6 @@
 // import { useContext } from 'react';
 
 export default function OrderCart() {
-  // const route = useRouter();
 
   return (
     <>

@@ -9,10 +9,16 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    "/mypage", 
-    "/mypage/:path*",
+    "/login",
+    "/signup",
+    "/login/:path*",
+    "/signup/:path*",
+    "/mall/mypage",
+    "/mall/mypage/:path*",
+    "/mall/order/cart",
+    "/mall/order/cart/:path*",
     "/admin",
     "/admin/:path*",
-    "/api/:path*"
+    "/api/:path*",
   ],
 };

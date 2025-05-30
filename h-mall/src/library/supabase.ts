@@ -24,18 +24,14 @@ export async function createServerSupabaseClient(
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        /**
-         * Supabase 에서 호출할 때마다 쿠키를 읽어서
-         * { name, value } 배열 형태로 반환합니다.
-         */
         getAll: async (): Promise<{ name: string; value: string }[]> => {
-          const all = cookieStore.getAll();          // ReadonlyRequestCookies#getAll
+          const all = cookieStore.getAll();
           return all.map((c) => ({ name: c.name, value: c.value }));
         },
 
         /**
          * Supabase 가 갱신하라고 내려보낸 쿠키들을
-         * 동기/비동기 상관없이 순회하며 set 해 줍니다.
+         * 동기/비동기 상관없이 순회하며 set 해 줌.
          * RSC(Server Component) 모드일 땐 무시하도록 처리.
          */
         setAll: async (
@@ -47,7 +43,7 @@ export async function createServerSupabaseClient(
         ) => {
           if (isServerComponent) return;
           for (const { name, value, options } of cookiesToSet) {
-            cookieStore.set(name, value, options);  // ReadonlyRequestCookies#set
+            cookieStore.set(name, value, options);
           }
         },
       },
@@ -61,43 +57,6 @@ export function createServerSupabaseClientRSC() {
 }
 
 /** Next.js Middleware 전용 세션 갱신 헬퍼 */
-// export async function supabaseMiddleware(
-//   req: NextRequest
-// ): Promise<NextResponse> {
-//   let res = NextResponse.next();
-
-//   // Middleware 에서는 req.cookies 가 동기 API
-//   const supabase = createServerClient<Database>(
-//     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-//     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-//     {
-//       cookies: {
-//         getAll: async () =>
-//           req.cookies
-//             .getAll()
-//             .map((c) => ({ name: c.name, value: c.value })),
-
-//         setAll: async (cookiesToSet) => {
-//           for (const { name, value, options } of cookiesToSet) {
-//             res.cookies.set(name, value, options);
-//           }
-//         },
-//       },
-//     }
-//   );
-//   const {
-//     data: { user },
-//   } = await supabase.auth.getUser();
-//   console.log(">> all cookies", req.cookies.getAll())
-
-//   if (!user && !req.nextUrl.pathname.startsWith('/login')) {
-//     const url = req.nextUrl.clone();
-//     url.pathname = '/login';
-//     return NextResponse.redirect(url);
-//   }
-
-//   return res;
-// }
 export async function supabaseMiddleware(
   req: NextRequest
 ): Promise<NextResponse> {
@@ -105,7 +64,6 @@ export async function supabaseMiddleware(
   const url = req.nextUrl;
   const pathname = url.pathname;
 
-  // ✅ Supabase 클라이언트 생성 (req.cookies 사용)
   const supabase = createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -122,27 +80,36 @@ export async function supabaseMiddleware(
     }
   );
 
-  // ✅ 현재 유저 정보 확인
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // ✅ 보호가 필요한 경로인지 확인
   const isProtectedPath = [
-    "/mypage",
+    "/mall/mypage",
+    "/mall/order/cart",
     "/settings",
     "/api",
     "/admin",
   ].some((protectedPath) => pathname.startsWith(protectedPath));
 
-  // ✅ 로그인 안된 유저는 로그인 페이지로
+  // ✅ 로그인 안 된 사용자 보호 경로 접근 시 /login 으로
   if (!user && isProtectedPath) {
     const loginUrl = url.clone();
     loginUrl.pathname = "/login";
     return NextResponse.redirect(loginUrl);
   }
 
-  // ✅ 관리자 전용 경로 접근 시 권한 검사
+  // ✅ 로그인한 사용자가 /login 또는 /signup 에 접근 시 /mall 으로 리다이렉트
+  const isAuthPage =
+    pathname === "/login" || pathname === "/signup" ||
+    pathname.startsWith("/login/") || pathname.startsWith("/signup/");
+  if (user && isAuthPage) {
+    const mallUrl = url.clone();
+    mallUrl.pathname = "/";
+    return NextResponse.redirect(mallUrl);
+  }
+
+  // ✅ 관리자 경로 접근 시 권한 확인
   if (user && pathname.startsWith("/admin")) {
     const { data: profile, error } = await supabase
       .from("userinfo")
@@ -150,9 +117,6 @@ export async function supabaseMiddleware(
       .eq("id", user.id)
       .single<UserInfo>();
 
-    const role = profile?.role;
-
-    // if (error || role !== "admin") {
     if (error || !profile || profile.role !== "admin") {
       const unauthorizedUrl = url.clone();
       unauthorizedUrl.pathname = "/not-authorized";
