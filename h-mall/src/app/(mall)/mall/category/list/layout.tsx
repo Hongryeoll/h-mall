@@ -1,3 +1,4 @@
+// app/mall/category/layout.tsx
 import type { ReactNode } from 'react';
 import CategorySidebar from '@/components/category/CategorySidebar';
 import CategorySubTabs from '@/components/category/CategorySubTabs';
@@ -13,16 +14,13 @@ type Props = {
 
 export default function CategoryListLayout({ children, searchParams }: Props) {
   return (
-    <div className="flex min-h-screen">
-      {/* ── 좌측 사이드바 ───────────────────── */}
-      <aside className="w-64 border-r p-6">
+    <div className="flex h-full min-h-0">
+      <aside className="w-64 border-r p-6 h-full">
         <CategorySidebar />
       </aside>
-      {/* ── 메인 콘텐츠 ─────────────────────── */}
-      <main className="flex-1 p-6">
-        {/* 상단 서브탭 (전체, NEW, EXCLUSIVE 등) */}
+      <main className="flex-1 p-6 flex flex-col h-full min-h-0">
         <CategorySubTabs />
-        <div className="mt-6">{children}</div>
+        <div className="mt-6 flex-1 min-h-0 overflow-auto">{children}</div>
       </main>
     </div>
   );

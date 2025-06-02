@@ -32,15 +32,16 @@ export default async function RootLayout({
     <html
       lang="ko"
       style={{ fontSize: '16px' }}
-      className={`${pretendard.variable} ${notoSansKR.variable}`}
+      className={`${pretendard.variable} ${notoSansKR.variable} h-full`}
     >
-      <body className="font-pretendard">
-        <GlobalsProvider initialUser={user}>
-          {/* <AuthHeader user={user} /> */}
+      <body className="h-full flex flex-col font-pretendard">
+        <div className="h-full flex flex-col min-h-0">
+          {/* <GlobalsProvider initialUser={user}> */}
           <HrHeader user={user} />
           <HrNav />
           {children}
-        </GlobalsProvider>
+          {/* </GlobalsProvider> */}
+        </div>
       </body>
     </html>
   );
