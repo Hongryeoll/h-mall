@@ -137,7 +137,7 @@ export const HrHeader = ({
         {role === 'admin' && (
           <span
             className="inline-flex items-center gap-1 p-2 cursor-pointer text-red-600 font-semibold"
-            onClick={() => router.push('/admin/dashboard')}
+            onClick={() => router.push('/admin')}
           >
             <CogwheelSVG width={16} height={16} className="text-hr-gray-80" />
             <span className="text-hr-c3 leading-none hidden lg:inline">

@@ -2,10 +2,15 @@
 'use client';
 
 import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { MEGA_MENU } from '@/data/megaMenu';
 
 export default function HrNav() {
+  const pathname = usePathname();
+  if (typeof pathname === 'string' && pathname.startsWith('/admin')) {
+    return null;
+  }
   const [openKey, setOpenKey] = useState<string | null>(null);
   const keys = Object.keys(MEGA_MENU) as (keyof typeof MEGA_MENU)[];
 
