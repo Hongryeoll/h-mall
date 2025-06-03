@@ -8,10 +8,9 @@ import { XCircleIcon } from '@heroicons/react/16/solid';
 
 export default function ProductInfo() {
   return (
-    // 최상단: 부모 높이를 100%로 채우고, flex-col + overflow-hidden
-    <div className="flex flex-col overflow-hidden h-full p-[1.5%]">
+    <div className="flex flex-col h-full px-4 py-4">
       {/* 1) 상단 제목 */}
-      <div className="pb-3">
+      <div className="pb-3 shrink-0">
         <h1 className="text-3xl font-bold text-gray-800">상품 관리</h1>
         <p className="mt-1 text-sm text-gray-600">
           상품 등록, 검색, 필터링, 수정 기능을 제공합니다.
@@ -19,9 +18,9 @@ export default function ProductInfo() {
       </div>
 
       {/* 2) 검색/필터/버튼 영역 (높이 고정) */}
-      <div className="space-y-2">
+      <div className="space-y-2 shrink-0">
         {/* 2-1) 검색 바 */}
-        <div className="bg-white rounded-lg shadow-sm px-4 py-2 flex gap-2 items-center">
+        <div className="bg-white rounded-lg pt-2 flex gap-2 items-center">
           <div className="flex-1 flex items-center bg-gray-50 rounded-md px-3 py-2">
             <MagnifyingGlassIcon className="w-5 text-gray-500 stroke-2" />
             <input
@@ -44,7 +43,7 @@ export default function ProductInfo() {
         </div>
 
         {/* 2-2) 필터 셀렉트 박스 */}
-        <div className="bg-white rounded-lg shadow-sm px-4 py-2">
+        <div className="bg-white rounded-lg pt-2">
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-3">
             {/* 예시: 6개의 셀렉트 박스 */}
             <div>
@@ -110,7 +109,7 @@ export default function ProductInfo() {
         </div>
 
         {/* 2-3) 신규 등록 + 새로고침 버튼 */}
-        <div className="bg-white rounded-lg shadow-sm px-4 py-2 flex justify-between items-center">
+        <div className="bg-white rounded-lg pt-1 pb-3 flex justify-between items-center">
           <button className="flex items-center gap-2 bg-hr-purple-default hover:bg-hr-purple-dark text-white text-sm font-medium rounded-md px-3 py-1 transition">
             신규 등록
           </button>
@@ -121,74 +120,52 @@ export default function ProductInfo() {
         </div>
       </div>
 
-      {/* 3) “테이블 영역” (flex-1, overflow-auto) → 스크롤은 이 영역 안에서만 발생 */}
-      <div className="flex-1 overflow-auto mt-2">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-x-auto">
-          <table className="min-w-full table-fixed divide-y divide-gray-200">
-            <thead className="bg-gray-100 sticky top-0 z-10">
-              <tr className="table w-full table-fixed">
-                <th className="w-16 px-4 py-2 text-left text-sm font-medium text-gray-700">
-                  수정
-                </th>
-                <th className="w-24 px-4 py-2 text-left text-sm font-medium text-gray-700">
-                  상품 코드
-                </th>
-                <th className="w-24 px-4 py-2 text-left text-sm font-medium text-gray-700">
-                  대분류
-                </th>
-                <th className="w-24 px-4 py-2 text-left text-sm font-medium text-gray-700">
-                  중분류
-                </th>
-                <th className="w-24 px-4 py-2 text-left text-sm font-medium text-gray-700">
-                  소분류
-                </th>
-                <th className="w-48 px-4 py-2 text-left text-sm font-medium text-gray-700">
-                  상품명
-                </th>
-                <th className="w-24 px-4 py-2 text-left text-sm font-medium text-gray-700">
-                  등록일
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {/* 실제 데이터를 map 돌려서 tr을 렌더하세요 */}
-              <tr className="table w-full table-fixed hover:bg-gray-50">
-                <td className="w-16 px-4 py-2">
-                  <button className="bg-hr-purple-default hover:bg-hr-purple-dark text-white text-xs font-medium rounded-md px-2 py-1 transition">
-                    수정
-                  </button>
-                </td>
-                <td className="w-24 px-4 py-2 text-sm text-gray-600">
-                  PRD-001
-                </td>
-                <td className="w-24 px-4 py-2 text-sm text-gray-600">
-                  카테고리 A
-                </td>
-                <td className="w-24 px-4 py-2 text-sm text-gray-600">
-                  하위 A1
-                </td>
-                <td className="w-24 px-4 py-2 text-sm text-gray-600">
-                  서브 A1-1
-                </td>
-                <td className="w-48 px-4 py-2 text-sm font-semibold text-gray-800">
-                  멋진 상품 1
-                </td>
-                <td className="w-24 px-4 py-2 text-sm text-gray-600">
-                  2025-06-01
-                </td>
-              </tr>
-              {/* …행이 많아지면 이 안에서 스크롤 됩니다. */}
-            </tbody>
-          </table>
+      {/* 3) 테이블 */}
+      <div className="flex-1 rounded-lg overflow-hidden">
+        <div className="w-full h-full overflow-x-auto">
+          <div className="min-w-[768px] h-full flex flex-col">
+            <table className="table-fixed w-full">
+              <thead className="bg-gray-100">
+                <tr className="h-10">
+                    <th className="w-16 px-4 ml-2 text-left text-sm font-medium text-gray-700 whitespace-nowrap">수정</th>
+                    <th className="w-24 px-2 text-left text-sm font-medium text-gray-700 whitespace-nowrap">대분류</th>
+                    <th className="w-24 px-2 text-left text-sm font-medium text-gray-700 whitespace-nowrap">중분류</th>
+                    <th className="w-24 px-2 text-left text-sm font-medium text-gray-700 whitespace-nowrap">소분류</th>
+                    <th className="w-48 text-left text-sm font-medium text-gray-700 whitespace-nowrap">상품명</th>
+                    <th className="w-24 text-left text-sm font-medium text-gray-700 whitespace-nowrap">등록일</th>
+                  </tr>
+              </thead>
+            </table>
+            <div className="flex-1 overflow-y-auto">
+              <table className="table-fixed w-full divide-y divide-gray-200">
+                <tbody className="divide-y divide-gray-200">
+                  {[...Array(50)].map((_, idx) => (
+                      <tr key={idx} className="hover:bg-gray-50 h-12">
+                        <td className="w-16 px-2 text-sm text-gray-600 whitespace-nowrap">
+                          <button className="bg-hr-purple-default hover:bg-hr-purple-dark text-white text-xs font-medium rounded-md px-2 py-1 min-w-[40px] transition">
+                            수정
+                          </button>
+                        </td>
+                        <td className="w-24 px-2 text-sm text-gray-600 whitespace-nowrap">카테고리 A</td>
+                        <td className="w-24 px-2 text-sm text-gray-600 whitespace-nowrap">하위 A1</td>
+                        <td className="w-24 px-2 text-sm text-gray-600 whitespace-nowrap">서브 A1-1</td>
+                        <td className="w-48 px-2 text-sm font-semibold text-gray-800 whitespace-nowrap">상품 {idx}</td>
+                        <td className="w-24 px-2 text-sm text-gray-600 whitespace-nowrap">2025-06-01</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
-
+      
       {/* 4) 페이지네이션: flex-1 바깥, 항상 최하단에 위치 */}
-      <div className="mt-3">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 py-3 px-4 text-center text-gray-600">
-          페이지네이션 영역 (추후 컴포넌트 삽입)
-        </div>
-      </div>
+      <div className="pt-3 shrink-0">
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200 py-3 px-4 text-center text-gray-600">
+      페이지네이션 영역
+    </div>
+  </div>
     </div>
   );
 }

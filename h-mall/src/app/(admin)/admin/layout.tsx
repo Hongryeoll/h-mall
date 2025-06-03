@@ -1,5 +1,4 @@
 import AdminSidebar from '@/components/layout/AdminSidebar';
-import '@/app/globals.css';
 
 export default function AdminLayout({
   children,
@@ -7,10 +6,10 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex h-full overflow-hidden">
+    <div className="flex h-full">
       <AdminSidebar />
       {/* main */}
-      <main className="flex-1 flex flex-col h-full overflow-hidden">
+      <main className="flex-1 flex flex-col h-full">
         {children}
       </main>
     </div>

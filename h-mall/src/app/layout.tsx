@@ -3,7 +3,7 @@ import { Noto_Sans_KR } from 'next/font/google';
 import localFont from 'next/font/local';
 import './globals.css';
 import { getUser } from '@/actions/auth/user.action';
-import GlobalsProvider from '@/components/provider/GlobalsProvider';
+// import GlobalsProvider from '@/components/provider/GlobalsProvider';
 import { HrHeader } from '@/components/common/HrHeader';
 import HrNav from '@/components/common/HrNav';
 
