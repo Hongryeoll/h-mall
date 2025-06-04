@@ -3,5 +3,5 @@ export interface ProductFormProps {
   image_url: string;
   price: number;
   description: string;
-  subtab_id: number;
+  subtab_id: string;
 };
