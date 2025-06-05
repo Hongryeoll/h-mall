@@ -36,7 +36,6 @@ export const SUB_TABS: Record<string, Record<string, { label: string; slug: stri
       { label: '반소매 셔츠',      slug: 'short-sleeve-shirt'  },
       { label: '반소매 티셔츠',    slug: 'short-sleeve-tshirt' },
       { label: '슬리브리스',       slug: 'sleeveless'          },
-      { label: '추천순',           slug: 'recommended'         },
       { label: '피케,카라 티셔츠', slug: 'pique-collar-tshirt'},
       { label: '스웨트셔츠',       slug: 'sweatshirt'          },
       { label: '집업',             slug: 'zip-up'              },
@@ -50,7 +49,6 @@ export const SUB_TABS: Record<string, Record<string, { label: string; slug: stri
       { label: '레깅스',          slug: 'leggings'          },
       { label: '쇼트',            slug: 'shorts'            },
       { label: '슬림 팬츠',       slug: 'slim-pants'        },
-      { label: '추천순',          slug: 'recommended'       },
       { label: '스트레이트 팬츠', slug: 'straight-pants'    },
       { label: '와이드 팬츠',     slug: 'wide-pants'        },
       { label: '데님 팬츠',       slug: 'denim-pants'       },
@@ -65,21 +63,18 @@ export const SUB_TABS: Record<string, Record<string, { label: string; slug: stri
       { label: '하의', slug: 'bottoms'      },
       { label: '세트', slug: 'sets'         },
       { label: '로브', slug: 'robes'        },
-      { label: '추천순', slug: 'recommended' },
     ],
     setups: [
       { label: '전체',             slug: 'all'                      },
       { label: '수트 셋업',         slug: 'suit-setup'               },
       { label: '기타 상하의 셋업',  slug: 'other-setup'              },
       { label: '스웻/트레이닝 셋업', slug: 'sweat-training-setup'     },
-      { label: '추천순',             slug: 'recommended'              },
     ],
     innerwear: [
       { label: '전체',        slug: 'all'          },
       { label: '팬티',        slug: 'panties'      },
       { label: '언더셔츠',     slug: 'undershirt'   },
       { label: '내의,내복',    slug: 'long-johns'   },
-      { label: '추천순',       slug: 'recommended'  },
     ],
     knitwear: [
       { label: '전체',        slug: 'all'          },
@@ -88,15 +83,41 @@ export const SUB_TABS: Record<string, Record<string, { label: string; slug: stri
       { label: '기타 니트',   slug: 'other-knit'   },
       { label: '크루넥',      slug: 'crewneck'     },
       { label: '폴로 셔츠',   slug: 'polo-shirt'   },
-      { label: '추천순',       slug: 'recommended'  },
     ],
-
-
-
-
-
     bag: [
-      /* … */
+      { label: '전체',         slug: 'all' },
+      { label: '캐리어',       slug: 'carrier' },
+      { label: '여행가방',     slug: 'travel-bag' },
+      { label: '보스턴백',     slug: 'boston-bag' },
+      { label: '크로스백',     slug: 'cross-bag' },
+      { label: '웨이스트백',   slug: 'waist-bag' },
+      { label: '토트백',       slug: 'tote' },
+      { label: '백팩',         slug: 'backpack' },
+      { label: '기타 가방',    slug: 'other-bags' },
+    ],
+    shoes: [
+      { label: '전체',        slug: 'all' },
+      { label: '기능화',      slug: 'functional-shoes' },
+      { label: '스니커즈',     slug: 'sneakers' },
+      { label: '로퍼',        slug: 'loafers' },
+      { label: '구두',        slug: 'dress-shoes' },
+      { label: '부츠',        slug: 'boots' },
+      { label: '샌들',        slug: 'sandals' },
+      { label: '슬리퍼',      slug: 'slippers' },
+      { label: '기타 신발',   slug: 'other-shoes' },
+    ],
+    accessories: [
+      { label: '전체',             slug: 'all' },
+      { label: '파우치',           slug: 'pouch' },
+      { label: '지갑',             slug: 'wallets' },
+      { label: '모자',             slug: 'hats' },
+      { label: '시계',             slug: 'watches' },
+      { label: '아이웨어',         slug: 'eyewear' },
+      { label: '넥타이',           slug: 'ties' },
+      { label: '벨트',             slug: 'belts' },
+      { label: '양말',             slug: 'socks' },
+      { label: '장갑',             slug: 'gloves' },
+      { label: '기타 액세서리',     slug: 'other-accessories' },
     ],
   },
   WOMEN: {
