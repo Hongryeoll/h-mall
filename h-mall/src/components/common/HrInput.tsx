@@ -57,11 +57,8 @@ export const HrInput = <TFormValues extends FieldValues>({
   onKeyDown,
   timer,
   leftIcon,
-  // resetValue,
 }: TProps<TFormValues>) => {
-  // const { register, setValue, getValues, resetField } = useFormContext<TFormValues>();
-  const { register, getValues, resetField, watch } =
-    useFormContext<TFormValues>();
+  const { register, resetField, watch } = useFormContext<TFormValues>();
   const inputValue = watch(name);
   const [isFocused, setIsFocused] = useState(false);
   const [isShowPwd, setIsShowPwd] = useState(false);
@@ -70,7 +67,7 @@ export const HrInput = <TFormValues extends FieldValues>({
   return (
     <div
       className={`flex items-center border bg-white ${
-        isFocused ? 'border-hr-purple-hover' : 'border-hr-purple-border'
+        isFocused ? 'border-hr-purple-default' : 'border-hr-gray-30'
       } ${sizeClasses[size]} ${
         disabled && 'bg-hr-gray-5'
       } ${containerClassName}`}

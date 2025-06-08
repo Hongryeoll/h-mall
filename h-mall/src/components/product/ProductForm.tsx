@@ -1,42 +1,43 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, FormProvider } from 'react-hook-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createSupabaseBrowserClient } from '@/library/client/supabase';
 import { ProductFormProps } from '@/types/products';
 import ImageUploader from '@/components/uploader/ImageUploader';
+import { useCategoryCascade } from '@/hooks/useCategoryCascade';
+import HrSelectbox from '@/components/common/HrSelectbox';
+import { HrInput } from '@/components/common/HrInput';
 
-type Props = {
+export default function ProductForm({
+  productId,
+  onClose,
+}: {
   productId: string | null;
   onClose: () => void;
-};
-
-export default function ProductForm({ productId, onClose }: Props) {
+}) {
   const supabase = createSupabaseBrowserClient();
   const queryClient = useQueryClient();
-
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-
+  const methods = useForm<ProductFormProps>();
   const {
     register,
     handleSubmit,
     reset,
     setValue,
     formState: { errors },
-  } = useForm<ProductFormProps>();
+  } = methods;
+  const { selected, set, options } = useCategoryCascade();
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  // 기존 데이터 불러오기
   useEffect(() => {
     const fetchProduct = async () => {
       if (!productId) return;
-
       const { data, error } = await supabase
         .from('products')
         .select('*')
         .eq('id', productId)
         .single();
-
       if (error) {
         alert('상품 정보를 불러오지 못했습니다.');
       } else {
@@ -47,22 +48,17 @@ export default function ProductForm({ productId, onClose }: Props) {
           description: data.description ?? undefined,
           subtab_id: data.subtab_id ?? undefined,
         });
-        setImagePreview(data.image_url); // ✅ 기존 이미지 미리보기 설정
+        setImagePreview(data.image_url);
       }
     };
-
     fetchProduct();
   }, [productId, reset, supabase]);
 
-  // ✅ 파일 선택 시 미리보기 설정
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const url = URL.createObjectURL(file);
-    setImagePreview(url);
-    setValue('image_url', url); // 임시로 저장
-  };
+  useEffect(() => {
+    if (selected.subtabId) {
+      setValue('subtab_id', selected.subtabId);
+    }
+  }, [selected.subtabId, setValue]);
 
   const mutation = useMutation({
     mutationFn: async (data: ProductFormProps) => {
@@ -88,87 +84,123 @@ export default function ProductForm({ productId, onClose }: Props) {
     },
   });
 
-  const onSubmit = (data: ProductFormProps) => {
-    mutation.mutate(data);
-  };
+  const onSubmit = (data: ProductFormProps) => mutation.mutate(data);
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col gap-3 bg-white p-4 rounded shadow max-w-lg"
-    >
-      <h2 className="text-lg font-semibold">
-        {productId ? '상품 수정' : '상품 등록'}
-      </h2>
+    <FormProvider {...methods}>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex flex-col gap-3 bg-white p-4 rounded shadow w-full max-w-4xl lg:max-w-5xl"
+      >
+        <h2 className="text-lg font-semibold">
+          {productId ? '상품 수정' : '상품 등록'}
+        </h2>
 
-      <input
-        {...register('name', { required: '상품명을 입력해주세요' })}
-        placeholder="상품명"
-        className="border p-2 rounded"
-      />
-      {errors.name && (
-        <p className="text-red-500 text-sm">{errors.name.message}</p>
-      )}
+        <HrSelectbox
+          value={selected.categoryId}
+          onChange={(v) => set.category(v)}
+          placeholder="카테고리 선택"
+          options={options.categories.map((c) => ({
+            value: c.id,
+            label: c.name,
+          }))}
+        />
+        <HrSelectbox
+          value={selected.sectionId}
+          onChange={(v) => set.section(v)}
+          placeholder="섹션 선택"
+          options={options.sections.map((s) => ({
+            value: s.id,
+            label: s.title,
+          }))}
+        />
+        <HrSelectbox
+          value={selected.subsectionId}
+          onChange={(v) => set.subsection(v)}
+          placeholder="서브섹션 선택"
+          options={options.subsections.map((s) => ({
+            value: s.id,
+            label: s.title,
+          }))}
+        />
+        <HrSelectbox
+          value={selected.subtabId}
+          onChange={(v) => set.subtab(v)}
+          placeholder="서브탭 선택"
+          options={options.subtabs.map((s) => ({
+            value: s.id,
+            label: s.label,
+          }))}
+        />
 
-      {/* ✅ 이미지 업로드 & 미리보기 */}
-      <ImageUploader
-        value={imagePreview}
-        onChange={(img) => {
-          setImagePreview(img);
-          setValue('image_url', img || '');
-        }}
-      />
-      <input
-        type="hidden"
-        {...register('image_url', { required: '이미지를 선택해주세요' })}
-      />
+        <HrInput name="name" placeholder="상품명" required size="md" />
+        {errors.name && (
+          <p className="text-hr-danger-default text-sm">
+            {errors.name.message}
+          </p>
+        )}
 
-      <input
-        type="number"
-        {...register('price', { required: '가격을 입력해주세요' })}
-        placeholder="가격"
-        className="border p-2 rounded"
-      />
-      {errors.price && (
-        <p className="text-red-500 text-sm">{errors.price.message}</p>
-      )}
+        <ImageUploader
+          value={imagePreview}
+          onChange={(img) => {
+            setImagePreview(img);
+            setValue('image_url', img || '');
+          }}
+        />
+        <input
+          type="hidden"
+          {...register('image_url', { required: '이미지를 선택해주세요' })}
+        />
+        {errors.image_url && (
+          <p className="text-hr-danger-default text-sm">
+            {errors.image_url.message}
+          </p>
+        )}
 
-      <textarea
-        {...register('description')}
-        placeholder="설명"
-        className="border p-2 rounded"
-      />
+        <HrInput name="price" placeholder="가격" required size="md" />
+        {errors.price && (
+          <p className="text-hr-danger-default text-sm">
+            {errors.price.message}
+          </p>
+        )}
 
-      <input
-        type="number"
-        {...register('subtab_id', { required: '소탭 ID를 선택해주세요' })}
-        placeholder="subtab_id"
-        className="border p-2 rounded"
-      />
-      {errors.subtab_id && (
-        <p className="text-red-500 text-sm">{errors.subtab_id.message}</p>
-      )}
+        <textarea
+          {...register('description')}
+          placeholder="설명"
+          className="w-full border border-hr-gray-30 bg-hr-white text-hr-gray-60 text-sm rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-hr-purple-default transition"
+        />
 
-      <div className="flex gap-2">
-        <button
-          type="submit"
-          disabled={mutation.isPending}
-          className="bg-purple-600 text-white py-2 px-4 rounded hover:bg-purple-700"
-        >
-          {mutation.isPending
-            ? '처리 중...'
-            : productId
-              ? '상품 수정'
-              : '상품 등록'}
-        </button>
-        <button
-          type="button"
-          onClick={onClose}
-          className="bg-gray-300 text-gray-800 py-2 px-4 rounded hover:bg-gray-400"
-        >
-          닫기
-        </button>
-      </div>
-    </form>
+        <input
+          type="hidden"
+          {...register('subtab_id', { required: '소탭 ID를 선택해주세요' })}
+        />
+        {errors.subtab_id && (
+          <p className="text-hr-danger-default text-sm">
+            {errors.subtab_id.message}
+          </p>
+        )}
+
+        <div className="flex gap-2">
+          <button
+            type="submit"
+            disabled={mutation.isPending}
+            className="bg-hr-purple-default hover:bg-hr-purple-dark text-white text-sm font-hr-semi-bold py-2 px-4 rounded-md transition"
+          >
+            {mutation.isPending
+              ? '처리 중...'
+              : productId
+                ? '상품 수정'
+                : '상품 등록'}
+          </button>
+          <button
+            type="button"
+            onClick={onClose}
+            className="bg-hr-gray-20 hover:bg-hr-gray-30 text-hr-gray-60 text-sm font-hr-semi-bold py-2 px-4 rounded-md transition"
+          >
+            닫기
+          </button>
+        </div>
+      </form>
+    </FormProvider>
   );
 }

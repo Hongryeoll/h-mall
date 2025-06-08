@@ -1,4 +1,3 @@
-// src/components/common/HrNav.tsx
 'use client';
 
 import { useState } from 'react';

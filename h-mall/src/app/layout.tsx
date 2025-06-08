@@ -3,9 +3,9 @@ import { Noto_Sans_KR } from 'next/font/google';
 import localFont from 'next/font/local';
 import './globals.css';
 import { getUser } from '@/actions/auth/user.action';
-import GlobalsProvider from '@/components/provider/GlobalsProvider';
 import { HrHeader } from '@/components/common/HrHeader';
 import HrNav from '@/components/common/HrNav';
+import Providers from '@/components/provider/provider';
 
 const notoSansKR = Noto_Sans_KR({
   subsets: ['cyrillic', 'latin', 'latin-ext', 'vietnamese'],
@@ -36,11 +36,11 @@ export default async function RootLayout({
     >
       <body className="h-full flex flex-col font-pretendard">
         <div className="h-full flex flex-col min-h-0">
-          {/* <GlobalsProvider initialUser={user}> */}
-          <HrHeader user={user} />
-          <HrNav />
-          {children}
-          {/* </GlobalsProvider> */}
+          <Providers>
+            <HrHeader user={user} />
+            <HrNav />
+            {children}
+          </Providers>
         </div>
       </body>
     </html>
