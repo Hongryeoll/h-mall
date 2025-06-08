@@ -9,11 +9,35 @@ import { useState } from 'react';
 import ProductForm from './ProductForm';
 import { useCategoryCascade } from '@/hooks/useCategoryCascade';
 import HrSelectbox from '@/components/common/HrSelectbox';
+import { useProducts } from '@/hooks/useProducts';
 
 export default function ProductInfo() {
   const [isModalOpen, setModalOpen] = useState(false);
   const [editingProductId, setEditingProductId] = useState<string | null>(null);
   const { selected, set, options } = useCategoryCascade();
+  const { data: products, isLoading } = useProducts();
+  if (isLoading) return <div>로딩 중...</div>;
+  if (!products) return <div>데이터가 없습니다</div>;
+  console.log('>>products', products);
+  const filtered = products.filter((p) => {
+    const categoryMatch =
+      !selected.categoryId ||
+      p.subtabs?.subsections?.sections?.category_id === selected.categoryId;
+
+    const sectionMatch =
+      !selected.sectionId ||
+      p.subtabs?.subsections?.section_id === selected.sectionId;
+
+    const subsectionMatch =
+      !selected.subsectionId ||
+      p.subtabs?.subsection_id === selected.subsectionId;
+
+    const subtabMatch = !selected.subtabId || p.subtab_id === selected.subtabId;
+
+    return categoryMatch && sectionMatch && subsectionMatch && subtabMatch;
+  });
+
+  console.log('>>filtered', filtered);
 
   const openNewProductForm = () => {
     setEditingProductId(null);
@@ -160,7 +184,7 @@ export default function ProductInfo() {
             {/* 바디 */}
             <div className="flex-1 overflow-y-auto">
               <table className="table-fixed w-full divide-y divide-hr-gray-20">
-                <tbody className="divide-y divide-hr-gray-20">
+                {/* <tbody className="divide-y divide-hr-gray-20">
                   {[...Array(50)].map((_, idx) => (
                     <tr key={idx} className="hover:bg-hr-gray-5 h-12">
                       <td className="w-16 px-2 text-xs sm:text-sm md:text-base text-hr-gray-50 whitespace-nowrap">
@@ -182,6 +206,43 @@ export default function ProductInfo() {
                       </td>
                       <td className="w-24 px-2 text-xs sm:text-sm md:text-base text-hr-gray-50 whitespace-nowrap">
                         2025-06-01
+                      </td>
+                    </tr>
+                  ))}
+                </tbody> */}
+                <tbody className="divide-y divide-hr-gray-20">
+                  {filtered.map((product) => (
+                    <tr
+                      key={product.id}
+                      className="hover:bg-hr-gray-5 h-12"
+                      onClick={() => openEditProductForm(product.id)}
+                    >
+                      <td className="w-16 px-2 text-xs sm:text-sm md:text-base text-hr-gray-50 whitespace-nowrap">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation(); // 클릭 전파 방지
+                            openEditProductForm(product.id);
+                          }}
+                          className="bg-hr-purple-default hover:bg-hr-purple-dark text-white text-xs sm:text-sm font-medium rounded-md px-2 py-1 min-w-[40px] transition"
+                        >
+                          수정
+                        </button>
+                      </td>
+                      <td className="w-24 px-2 text-xs sm:text-sm md:text-base text-hr-gray-50 whitespace-nowrap">
+                        {product.subtabs?.subsections?.sections?.categories
+                          ?.name || '-'}
+                      </td>
+                      <td className="w-24 px-2 text-xs sm:text-sm md:text-base text-hr-gray-50 whitespace-nowrap">
+                        {product.subtabs?.subsections?.sections?.title || '-'}
+                      </td>
+                      <td className="w-24 px-2 text-xs sm:text-sm md:text-base text-hr-gray-50 whitespace-nowrap">
+                        {product.subtabs?.subsections?.title || '-'}
+                      </td>
+                      <td className="w-48 px-2 text-xs sm:text-sm md:text-base font-semibold text-hr-gray-80 whitespace-nowrap">
+                        {product.name}
+                      </td>
+                      <td className="w-24 px-2 text-xs sm:text-sm md:text-base text-hr-gray-50 whitespace-nowrap">
+                        {product.created_date?.slice(0, 10) || '-'}
                       </td>
                     </tr>
                   ))}

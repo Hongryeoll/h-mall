@@ -84,7 +84,10 @@ export default function ProductForm({
     },
   });
 
-  const onSubmit = (data: ProductFormProps) => mutation.mutate(data);
+  const onSubmit = (data: ProductFormProps) => {
+    console.log('📦 폼에 담긴 데이터:', data);
+    mutation.mutate(data);
+  };
 
   return (
     <FormProvider {...methods}>

@@ -6,10 +6,26 @@ import { createServerSupabaseClient } from '@/library/supabase';
 /** products 테이블 전체 가져오기 */
 export const getAllProducts = async () => {
   const supabase = await createServerSupabaseClient();
-  const { data, error } = await supabase.from('products').select('*');
+  // const { data, error } = await supabase.from('products').select('*');
+  const { data, error } = await supabase.from('products').select(`
+      *,
+      subtabs (
+        *,
+        subsections (
+          *,
+          sections (
+            *,
+            categories (
+              *
+            )
+          )
+        )
+      )
+    `);
   if (error) throw error;
   return data;
 };
+
 /** categories 테이블 전체 */
 export const getAllCategories = async () => {
   const supabase = await createServerSupabaseClient();
