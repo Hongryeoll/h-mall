@@ -5,13 +5,13 @@ import { useForm, FormProvider } from 'react-hook-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createSupabaseBrowserClient } from '@/library/client/supabase';
 import { ProductFormProps } from '@/types/products';
-import ImageUploader from '@/components/uploader/ImageUploader';
 import { useCategoryCascade } from '@/hooks/useCategoryCascade';
-import HrSelectbox from '@/components/common/HrSelectbox';
-import { HrInput } from '@/components/common/HrInput';
 import ProductBasicForm from '@/components/product/ProductBasicForm';
-import ProductPriceForm from './ProductPriceForm';
-import ProductDetailForm from './ProductDetailForm';
+import ProductPriceForm from '@/components/product/ProductPriceForm';
+import ProductDetailForm from '@/components/product/ProductDetailForm';
+import ProductCategoryForm from '@/components/product/ProductCategoryForm';
+
+type TabKey = 'category' | 'basic' | 'price' | 'detail' | 'ship';
 
 export default function ProductForm({
   productId,
@@ -25,7 +25,6 @@ export default function ProductForm({
   const methods = useForm<ProductFormProps>();
   const {
     register,
-    watch,
     handleSubmit,
     reset,
     setValue,
@@ -35,8 +34,9 @@ export default function ProductForm({
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [activeTab, setActiveTab] = useState<
-    'basic' | 'price' | 'detail' | 'ship'
-  >('basic');
+    'category' | 'basic' | 'price' | 'detail' | 'ship'
+  >('category');
+  const tabList: TabKey[] = ['category', 'basic', 'price', 'detail', 'ship'];
 
   useEffect(() => {
     if (!productId) return;
@@ -96,7 +96,7 @@ export default function ProductForm({
     };
 
     fetchProduct();
-  }, [productId, reset, supabase]);
+  }, [productId, reset, supabase, set]);
 
   useEffect(() => {
     if (selected.subtabId) {
@@ -176,8 +176,9 @@ export default function ProductForm({
         <h2 className="text-lg font-semibold">
           {productId ? '상품 수정' : '상품 등록'}
         </h2>
+
         <div className="flex space-x-4 border-b mb-4">
-          {['basic', 'price', 'detail', 'ship'].map((tab) => (
+          {tabList.map((tab) => (
             <button
               type="button"
               key={tab}
@@ -186,10 +187,11 @@ export default function ProductForm({
                   ? 'border-b-2 border-hr-purple-default text-hr-purple-default'
                   : 'text-gray-400'
               }`}
-              onClick={() => setActiveTab(tab as any)}
+              onClick={() => setActiveTab(tab)}
             >
               {
                 {
+                  category: '상품 분류',
                   basic: '기본 정보',
                   price: '가격 정보',
                   detail: '상세 설명',
@@ -199,59 +201,55 @@ export default function ProductForm({
             </button>
           ))}
         </div>
-        {activeTab === 'basic' && (
-          <>
-            <ProductBasicForm
-              register={register}
-              selected={selected}
-              set={set}
-              options={options}
-              errors={errors}
-            />
-          </>
+
+        {activeTab === 'category' && (
+          <ProductCategoryForm
+            register={register}
+            selected={selected}
+            set={set}
+            options={options}
+            errors={errors}
+          />
         )}
+        {activeTab === 'basic' && <ProductBasicForm errors={errors} />}
         {activeTab === 'price' && (
-          <>
-            <ProductPriceForm
-              errors={errors}
-              register={register}
-              watch={methods.watch}
-              setValue={setValue}
-            />
-          </>
+          <ProductPriceForm
+            errors={errors}
+            register={register}
+            watch={methods.watch}
+            setValue={setValue}
+          />
         )}
         {activeTab === 'detail' && (
-          <>
-            <ProductDetailForm
-              errors={errors}
-              previewUrl={imagePreview}
-              onFileSelect={(file) => setSelectedImage(file)}
-              register={register}
-            />
-          </>
+          <ProductDetailForm
+            errors={errors}
+            previewUrl={imagePreview}
+            onFileSelect={(file) => setSelectedImage(file)}
+            register={register}
+          />
         )}
-
-        <div className="flex gap-2">
-          <button
-            type="submit"
-            disabled={mutation.isPending}
-            className="bg-hr-purple-default hover:bg-hr-purple-dark text-white text-sm font-hr-semi-bold py-2 px-4 rounded-md transition"
-          >
-            {mutation.isPending
-              ? '처리 중...'
-              : productId
-                ? '상품 수정'
-                : '상품 등록'}
-          </button>
-          <button
-            type="button"
-            onClick={onClose}
-            className="bg-hr-gray-20 hover:bg-hr-gray-30 text-hr-gray-60 text-sm font-hr-semi-bold py-2 px-4 rounded-md transition"
-          >
-            닫기
-          </button>
-        </div>
       </form>
+      {/* 하단 버튼 정렬 */}
+      <div className="flex justify-between items-center mt-6">
+        <button
+          type="submit"
+          disabled={mutation.isPending}
+          className="bg-hr-purple-default hover:bg-hr-purple-dark text-white text-sm font-hr-semi-bold py-2 px-4 rounded-md transition"
+        >
+          {mutation.isPending
+            ? '처리 중...'
+            : productId
+              ? '상품 수정'
+              : '상품 등록'}
+        </button>
+        <button
+          type="button"
+          onClick={onClose}
+          className="bg-hr-gray-20 hover:bg-hr-gray-30 text-hr-gray-60 text-sm font-hr-semi-bold py-2 px-4 rounded-md transition"
+        >
+          닫기
+        </button>
+      </div>
     </FormProvider>
   );
 }
