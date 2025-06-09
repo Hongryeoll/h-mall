@@ -18,7 +18,6 @@ export default function ProductInfo() {
   const { data: products, isLoading } = useProducts();
   if (isLoading) return <div>로딩 중...</div>;
   if (!products) return <div>데이터가 없습니다</div>;
-  console.log('>>products', products);
   const filtered = products.filter((p) => {
     const categoryMatch =
       !selected.categoryId ||
@@ -36,8 +35,6 @@ export default function ProductInfo() {
 
     return categoryMatch && sectionMatch && subsectionMatch && subtabMatch;
   });
-
-  console.log('>>filtered', filtered);
 
   const openNewProductForm = () => {
     setEditingProductId(null);
@@ -184,32 +181,6 @@ export default function ProductInfo() {
             {/* 바디 */}
             <div className="flex-1 overflow-y-auto">
               <table className="table-fixed w-full divide-y divide-hr-gray-20">
-                {/* <tbody className="divide-y divide-hr-gray-20">
-                  {[...Array(50)].map((_, idx) => (
-                    <tr key={idx} className="hover:bg-hr-gray-5 h-12">
-                      <td className="w-16 px-2 text-xs sm:text-sm md:text-base text-hr-gray-50 whitespace-nowrap">
-                        <button className="bg-hr-purple-default hover:bg-hr-purple-dark text-white text-xs sm:text-sm font-medium rounded-md px-2 py-1 min-w-[40px] transition">
-                          수정
-                        </button>
-                      </td>
-                      <td className="w-24 px-2 text-xs sm:text-sm md:text-base text-hr-gray-50 whitespace-nowrap">
-                        카테고리 A
-                      </td>
-                      <td className="w-24 px-2 text-xs sm:text-sm md:text-base text-hr-gray-50 whitespace-nowrap">
-                        하위 A1
-                      </td>
-                      <td className="w-24 px-2 text-xs sm:text-sm md:text-base text-hr-gray-50 whitespace-nowrap">
-                        서브 A1-1
-                      </td>
-                      <td className="w-48 px-2 text-xs sm:text-sm md:text-base font-semibold text-hr-gray-80 whitespace-nowrap">
-                        상품 {idx}
-                      </td>
-                      <td className="w-24 px-2 text-xs sm:text-sm md:text-base text-hr-gray-50 whitespace-nowrap">
-                        2025-06-01
-                      </td>
-                    </tr>
-                  ))}
-                </tbody> */}
                 <tbody className="divide-y divide-hr-gray-20">
                   {filtered.map((product) => (
                     <tr
@@ -220,7 +191,7 @@ export default function ProductInfo() {
                       <td className="w-16 px-2 text-xs sm:text-sm md:text-base text-hr-gray-50 whitespace-nowrap">
                         <button
                           onClick={(e) => {
-                            e.stopPropagation(); // 클릭 전파 방지
+                            e.stopPropagation();
                             openEditProductForm(product.id);
                           }}
                           className="bg-hr-purple-default hover:bg-hr-purple-dark text-white text-xs sm:text-sm font-medium rounded-md px-2 py-1 min-w-[40px] transition"

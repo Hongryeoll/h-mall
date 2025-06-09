@@ -1,32 +1,39 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { XCircleIcon } from '@heroicons/react/24/solid';
 
 type Props = {
-  value: string | null;
-  onChange: (value: string | null) => void;
+  onFileSelect: (file: File | null) => void;
+  previewUrl: string | null;
 };
 
-export default function ImageUploader({ value, onChange }: Props) {
+export default function ImageUploader({ onFileSelect, previewUrl }: Props) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [localPreview, setLocalPreview] = useState<string | null>(previewUrl);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
-    const imageUrl = URL.createObjectURL(file);
-    onChange(imageUrl);
+    const objectUrl = URL.createObjectURL(file);
+    setLocalPreview(objectUrl);
+    onFileSelect(file);
   };
 
   const handleRemove = (e: React.MouseEvent) => {
-    e.stopPropagation(); // ✅ 프리뷰 클릭 이벤트 방해 방지
-    onChange(null);
+    e.stopPropagation();
+    setLocalPreview(null);
+    onFileSelect(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
   };
+
+  useEffect(() => {
+    if (previewUrl) {
+      setLocalPreview(previewUrl);
+    }
+  }, [previewUrl]);
 
   return (
     <div className="flex flex-col gap-3">
@@ -49,40 +56,22 @@ export default function ImageUploader({ value, onChange }: Props) {
         />
       </label>
 
-      {value && (
-        <>
-          <div
-            className="relative w-40 h-40 rounded-lg overflow-hidden border border-hr-gray-20 shadow-sm bg-hr-gray-5 cursor-pointer"
-            onClick={() => setIsPreviewOpen(true)}
+      {localPreview && (
+        <div className="relative w-40 h-40 rounded-lg overflow-hidden border border-hr-gray-20 shadow-sm bg-hr-gray-5 cursor-pointer">
+          <img
+            src={localPreview}
+            alt="이미지 미리보기"
+            className="w-full h-full object-cover transition hover:opacity-80"
+          />
+          <button
+            type="button"
+            onClick={handleRemove}
+            className="absolute top-1 right-1 p-1 bg-hr-white rounded-full shadow hover:bg-hr-gray-10 transition z-10"
+            aria-label="이미지 제거"
           >
-            <img
-              src={value}
-              alt="이미지 미리보기"
-              className="w-full h-full object-cover transition hover:opacity-80"
-            />
-            <button
-              type="button"
-              onClick={handleRemove}
-              className="absolute top-1 right-1 p-1 bg-hr-white rounded-full shadow hover:bg-hr-gray-10 transition z-10"
-              aria-label="이미지 제거"
-            >
-              <XCircleIcon className="w-5 h-5 text-hr-danger-default hover:text-hr-danger-hover" />
-            </button>
-          </div>
-
-          {isPreviewOpen && (
-            <div
-              className="fixed inset-0 z-50 bg-black bg-opacity-80 flex items-center justify-center"
-              onClick={() => setIsPreviewOpen(false)}
-            >
-              <img
-                src={value}
-                alt="확대 이미지"
-                className="max-w-[90vw] max-h-[90vh] object-contain rounded-lg shadow-lg"
-              />
-            </div>
-          )}
-        </>
+            <XCircleIcon className="w-5 h-5 text-hr-danger-default hover:text-hr-danger-hover" />
+          </button>
+        </div>
       )}
     </div>
   );

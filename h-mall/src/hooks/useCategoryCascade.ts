@@ -67,8 +67,8 @@ export function useCategoryCascade() {
       const supabase = createSupabaseBrowserClient();
       const { data, error } = await supabase.from('categories').select('*');
 
-      console.log('categories (manual fetch):', data);
-      console.log('error:', error);
+      // console.log('categories (manual fetch):', data);
+      // console.log('error:', error);
     };
 
     checkCategories();

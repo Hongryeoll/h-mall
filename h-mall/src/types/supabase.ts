@@ -31,6 +31,8 @@ export type Database = {
         Row: {
           created_date: string | null
           description: string | null
+          discount_rate: number | null
+          final_price: number | null
           id: string
           image_url: string
           name: string
@@ -40,6 +42,8 @@ export type Database = {
         Insert: {
           created_date?: string | null
           description?: string | null
+          discount_rate?: number | null
+          final_price?: number | null
           id?: string
           image_url: string
           name: string
@@ -49,6 +53,8 @@ export type Database = {
         Update: {
           created_date?: string | null
           description?: string | null
+          discount_rate?: number | null
+          final_price?: number | null
           id?: string
           image_url?: string
           name?: string

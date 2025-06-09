@@ -9,6 +9,9 @@ import ImageUploader from '@/components/uploader/ImageUploader';
 import { useCategoryCascade } from '@/hooks/useCategoryCascade';
 import HrSelectbox from '@/components/common/HrSelectbox';
 import { HrInput } from '@/components/common/HrInput';
+import ProductBasicForm from '@/components/product/ProductBasicForm';
+import ProductPriceForm from './ProductPriceForm';
+import ProductDetailForm from './ProductDetailForm';
 
 export default function ProductForm({
   productId,
@@ -22,6 +25,7 @@ export default function ProductForm({
   const methods = useForm<ProductFormProps>();
   const {
     register,
+    watch,
     handleSubmit,
     reset,
     setValue,
@@ -29,28 +33,68 @@ export default function ProductForm({
   } = methods;
   const { selected, set, options } = useCategoryCascade();
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [activeTab, setActiveTab] = useState<
+    'basic' | 'price' | 'detail' | 'ship'
+  >('basic');
 
   useEffect(() => {
+    if (!productId) return;
+
     const fetchProduct = async () => {
-      if (!productId) return;
       const { data, error } = await supabase
         .from('products')
-        .select('*')
+        .select(
+          `
+          id,
+          name,
+          price,
+          discount_rate,
+          final_price,
+          image_url,
+          description,
+          subtab_id,
+          subtabs (
+            id,
+            label,
+            subsection_id,
+            subsections (
+              id,
+              section_id,
+              sections (
+                id,
+                category_id
+              )
+            )
+          )
+        `
+        )
         .eq('id', productId)
         .single();
-      if (error) {
+
+      if (error || !data) {
         alert('상품 정보를 불러오지 못했습니다.');
-      } else {
-        reset({
-          name: data.name,
-          image_url: data.image_url,
-          price: data.price,
-          description: data.description ?? undefined,
-          subtab_id: data.subtab_id ?? undefined,
-        });
-        setImagePreview(data.image_url);
+        return;
       }
+
+      reset({
+        name: data.name,
+        image_url: data.image_url,
+        price: data.price,
+        discount_rate: data.discount_rate ?? undefined,
+        final_price: data.final_price ?? undefined,
+        description: data.description ?? undefined,
+        subtab_id: data.subtab_id ?? undefined,
+      });
+
+      setImagePreview(data.image_url);
+
+      set.category(data.subtabs?.subsections?.sections?.category_id || '');
+      set.section(data.subtabs?.subsections?.section_id || '');
+      set.subsection(data.subtabs?.subsection_id || '');
+      set.subtab(data.subtab_id || '');
     };
+
     fetchProduct();
   }, [productId, reset, supabase]);
 
@@ -84,9 +128,43 @@ export default function ProductForm({
     },
   });
 
-  const onSubmit = (data: ProductFormProps) => {
-    console.log('📦 폼에 담긴 데이터:', data);
-    mutation.mutate(data);
+  const uploadImageToSupabase = async (file: File): Promise<string> => {
+    const supabase = createSupabaseBrowserClient();
+    const fileName = `${Date.now()}.${file.name.split('.').pop()}`;
+    const filePath = `${fileName}`;
+    const { error } = await supabase.storage
+      .from('product-images')
+      .upload(filePath, file, {
+        cacheControl: '3600',
+        upsert: false,
+      });
+    if (error) throw error;
+
+    const {
+      data: { publicUrl },
+    } = supabase.storage.from('product-images').getPublicUrl(filePath);
+
+    return publicUrl;
+  };
+
+  const onSubmit = async (form: ProductFormProps) => {
+    if (!selectedImage && !form.image_url) {
+      alert('이미지를 선택해주세요');
+      return;
+    }
+
+    let imageUrl = form.image_url;
+
+    if (selectedImage) {
+      imageUrl = await uploadImageToSupabase(selectedImage);
+    }
+
+    const payload: ProductFormProps = {
+      ...form,
+      image_url: imageUrl,
+    };
+
+    mutation.mutate(payload);
   };
 
   return (
@@ -98,89 +176,59 @@ export default function ProductForm({
         <h2 className="text-lg font-semibold">
           {productId ? '상품 수정' : '상품 등록'}
         </h2>
-
-        <HrSelectbox
-          value={selected.categoryId}
-          onChange={(v) => set.category(v)}
-          placeholder="카테고리 선택"
-          options={options.categories.map((c) => ({
-            value: c.id,
-            label: c.name,
-          }))}
-        />
-        <HrSelectbox
-          value={selected.sectionId}
-          onChange={(v) => set.section(v)}
-          placeholder="섹션 선택"
-          options={options.sections.map((s) => ({
-            value: s.id,
-            label: s.title,
-          }))}
-        />
-        <HrSelectbox
-          value={selected.subsectionId}
-          onChange={(v) => set.subsection(v)}
-          placeholder="서브섹션 선택"
-          options={options.subsections.map((s) => ({
-            value: s.id,
-            label: s.title,
-          }))}
-        />
-        <HrSelectbox
-          value={selected.subtabId}
-          onChange={(v) => set.subtab(v)}
-          placeholder="서브탭 선택"
-          options={options.subtabs.map((s) => ({
-            value: s.id,
-            label: s.label,
-          }))}
-        />
-
-        <HrInput name="name" placeholder="상품명" required size="md" />
-        {errors.name && (
-          <p className="text-hr-danger-default text-sm">
-            {errors.name.message}
-          </p>
+        <div className="flex space-x-4 border-b mb-4">
+          {['basic', 'price', 'detail', 'ship'].map((tab) => (
+            <button
+              type="button"
+              key={tab}
+              className={`pb-2 text-sm font-semibold ${
+                activeTab === tab
+                  ? 'border-b-2 border-hr-purple-default text-hr-purple-default'
+                  : 'text-gray-400'
+              }`}
+              onClick={() => setActiveTab(tab as any)}
+            >
+              {
+                {
+                  basic: '기본 정보',
+                  price: '가격 정보',
+                  detail: '상세 설명',
+                  ship: '배송',
+                }[tab]
+              }
+            </button>
+          ))}
+        </div>
+        {activeTab === 'basic' && (
+          <>
+            <ProductBasicForm
+              register={register}
+              selected={selected}
+              set={set}
+              options={options}
+              errors={errors}
+            />
+          </>
         )}
-
-        <ImageUploader
-          value={imagePreview}
-          onChange={(img) => {
-            setImagePreview(img);
-            setValue('image_url', img || '');
-          }}
-        />
-        <input
-          type="hidden"
-          {...register('image_url', { required: '이미지를 선택해주세요' })}
-        />
-        {errors.image_url && (
-          <p className="text-hr-danger-default text-sm">
-            {errors.image_url.message}
-          </p>
+        {activeTab === 'price' && (
+          <>
+            <ProductPriceForm
+              errors={errors}
+              register={register}
+              watch={methods.watch}
+              setValue={setValue}
+            />
+          </>
         )}
-
-        <HrInput name="price" placeholder="가격" required size="md" />
-        {errors.price && (
-          <p className="text-hr-danger-default text-sm">
-            {errors.price.message}
-          </p>
-        )}
-
-        <textarea
-          {...register('description')}
-          placeholder="설명"
-          className="w-full border border-hr-gray-30 bg-hr-white text-hr-gray-60 text-sm rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-hr-purple-default transition"
-        />
-
-        <input
-          type="hidden"
-          {...register('subtab_id', { required: '소탭 ID를 선택해주세요' })}
-        />
-        {errors.subtab_id && (
-          <p className="text-hr-danger-default text-sm">
-            {errors.subtab_id.message}
-          </p>
+        {activeTab === 'detail' && (
+          <>
+            <ProductDetailForm
+              errors={errors}
+              previewUrl={imagePreview}
+              onFileSelect={(file) => setSelectedImage(file)}
+              register={register}
+            />
+          </>
         )}
 
         <div className="flex gap-2">
