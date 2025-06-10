@@ -13,23 +13,7 @@ export const useFilteredProducts = ({
     queryFn: async () => {
       const supabase = createSupabaseBrowserClient();
 
-      // 1. subsectionSlug가 있을 경우, 실제 id를 조회
-      let subsectionId: string | undefined = undefined;
-
-      if (subsectionSlug) {
-        const { data: subsection } = await supabase
-          .from('subsections')
-          .select('id')
-          .eq('slug', subsectionSlug)
-          .single();
-
-        subsectionId = subsection?.id;
-      }
-
-      // 2. product 데이터 조회 쿼리 구성
-      let query = supabase
-        .from('products')
-        .select(`
+      let query = supabase.from('products').select(`
           id,
           name,
           price,
@@ -40,36 +24,55 @@ export const useFilteredProducts = ({
           detaile_image,
           created_date,
           subtab_id,
-          subtabs (
+          subsection_id,
+          subtabs:subtab_id (
             id,
             slug,
-            label,
-            subsection_id,
-            subsections (
-              id,
-              slug,
-              title,
-              sections (
-                id,
-                title,
-                categories (
-                  id,
-                  name
-                )
-              )
-            )
+            label
           )
         `);
 
+      // 1. sub=bootcut 등 특정 subtab인 경우
       if (subtabSlug && subtabSlug !== 'all') {
-        query = query.eq('subtabs.slug', subtabSlug);
-      } else if (subsectionId) {
-        query = query.eq('subtabs.subsection_id', subsectionId);
+        const { data: subtab, error } = await supabase
+          .from('subtabs')
+          .select('id')
+          .ilike('slug', subtabSlug) // 대소문자 구분 없이
+          .limit(1)
+          .single(); // 조건 느슨하게 유지
+
+        if (error || !subtab?.id) {
+          console.warn(
+            `❗ subtabSlug "${subtabSlug}"에 해당하는 id를 찾을 수 없습니다.`
+          );
+          return [];
+        }
+
+        query = query.eq('subtab_id', subtab.id);
+      }
+
+      // 2. sub=all인 경우 subsection 기준
+      else if (subsectionSlug) {
+        const { data: subsection, error } = await supabase
+          .from('subsections')
+          .select('id')
+          .ilike('slug', subsectionSlug)
+          .limit(1)
+          .single();
+
+        if (error || !subsection?.id) {
+          console.warn(
+            `❗ subsectionSlug "${subsectionSlug}"에 해당하는 id를 찾을 수 없습니다.`
+          );
+          return [];
+        }
+
+        query = query.eq('subsection_id', subsection.id);
       }
 
       const { data, error } = await query;
-
       if (error) throw error;
+
       return data;
     },
   });
