@@ -31,8 +31,10 @@ export default function ProductForm({
     formState: { errors },
   } = methods;
   const { selected, set, options } = useCategoryCascade();
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [thumbnailImage, setThumbnailImage] = useState<File | null>(null);
+  const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
+  const [detailImage, setDetailImage] = useState<File | null>(null);
+  const [detailPreview, setDetailPreview] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<
     'category' | 'basic' | 'price' | 'detail' | 'ship'
   >('category');
@@ -51,7 +53,8 @@ export default function ProductForm({
           price,
           discount_rate,
           final_price,
-          image_url,
+          thumbnail_image,
+          detaile_image,
           description,
           subtab_id,
           subtabs (
@@ -79,15 +82,14 @@ export default function ProductForm({
 
       reset({
         name: data.name,
-        image_url: data.image_url,
+        thumbnail_image: data.thumbnail_image,
+        detaile_image: data.detaile_image,
         price: data.price,
         discount_rate: data.discount_rate ?? undefined,
         final_price: data.final_price ?? undefined,
         description: data.description ?? undefined,
         subtab_id: data.subtab_id ?? undefined,
       });
-
-      setImagePreview(data.image_url);
 
       set.category(data.subtabs?.subsections?.sections?.category_id || '');
       set.section(data.subtabs?.subsections?.section_id || '');
@@ -132,6 +134,7 @@ export default function ProductForm({
     const supabase = createSupabaseBrowserClient();
     const fileName = `${Date.now()}.${file.name.split('.').pop()}`;
     const filePath = `${fileName}`;
+
     const { error } = await supabase.storage
       .from('product-images')
       .upload(filePath, file, {
@@ -148,20 +151,25 @@ export default function ProductForm({
   };
 
   const onSubmit = async (form: ProductFormProps) => {
-    if (!selectedImage && !form.image_url) {
-      alert('이미지를 선택해주세요');
-      return;
+    // if (!selectedImage && !form.image_url) {
+    //   alert('이미지를 선택해주세요');
+    //   return;
+    // }
+
+    let thumbnailUrl = form.thumbnail_image ?? null;
+    let detailUrl = form.detaile_image ?? null;
+
+    if (thumbnailImage) {
+      thumbnailUrl = await uploadImageToSupabase(thumbnailImage);
     }
-
-    let imageUrl = form.image_url;
-
-    if (selectedImage) {
-      imageUrl = await uploadImageToSupabase(selectedImage);
+    if (detailImage) {
+      detailUrl = await uploadImageToSupabase(detailImage);
     }
 
     const payload: ProductFormProps = {
       ...form,
-      image_url: imageUrl,
+      thumbnail_image: thumbnailUrl,
+      detaile_image: detailUrl,
     };
 
     mutation.mutate(payload);
@@ -222,34 +230,56 @@ export default function ProductForm({
         )}
         {activeTab === 'detail' && (
           <ProductDetailForm
-            errors={errors}
-            previewUrl={imagePreview}
-            onFileSelect={(file) => setSelectedImage(file)}
             register={register}
+            errors={errors}
+            previewThumbnail={thumbnailPreview}
+            previewDetail={detailPreview}
+            onSelectThumbnail={(file) => {
+              setThumbnailImage(file);
+              if (file) {
+                const objectUrl = URL.createObjectURL(file);
+                setThumbnailPreview(objectUrl);
+              } else {
+                setThumbnailPreview(null);
+              }
+            }}
+            onSelectDetail={(file) => {
+              setDetailImage(file);
+              if (file) {
+                const objectUrl = URL.createObjectURL(file);
+                setDetailPreview(objectUrl);
+              } else {
+                setDetailPreview(null);
+              }
+            }}
+            // onSelectThumbnail={(file) => setThumbnailImage(file)}
+            // onSelectDetail={(file) => setDetailImage(file)}
+            // previewUrl={imagePreview}
+            // onFileSelect={(file) => setSelectedImage(file)}
           />
         )}
+        {/* 하단 버튼 정렬 */}
+        <div className="flex justify-between items-center mt-6">
+          <button
+            type="submit"
+            disabled={mutation.isPending}
+            className="bg-hr-purple-default hover:bg-hr-purple-dark text-white text-sm font-hr-semi-bold py-2 px-4 rounded-md transition"
+          >
+            {mutation.isPending
+              ? '처리 중...'
+              : productId
+                ? '상품 수정'
+                : '상품 등록'}
+          </button>
+          <button
+            type="button"
+            onClick={onClose}
+            className="bg-hr-gray-20 hover:bg-hr-gray-30 text-hr-gray-60 text-sm font-hr-semi-bold py-2 px-4 rounded-md transition"
+          >
+            닫기
+          </button>
+        </div>
       </form>
-      {/* 하단 버튼 정렬 */}
-      <div className="flex justify-between items-center mt-6">
-        <button
-          type="submit"
-          disabled={mutation.isPending}
-          className="bg-hr-purple-default hover:bg-hr-purple-dark text-white text-sm font-hr-semi-bold py-2 px-4 rounded-md transition"
-        >
-          {mutation.isPending
-            ? '처리 중...'
-            : productId
-              ? '상품 수정'
-              : '상품 등록'}
-        </button>
-        <button
-          type="button"
-          onClick={onClose}
-          className="bg-hr-gray-20 hover:bg-hr-gray-30 text-hr-gray-60 text-sm font-hr-semi-bold py-2 px-4 rounded-md transition"
-        >
-          닫기
-        </button>
-      </div>
     </FormProvider>
   );
 }

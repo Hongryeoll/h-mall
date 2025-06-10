@@ -1,6 +1,7 @@
 export interface ProductFormProps {
   name: string;
-  image_url: string;
+  thumbnail_image: string;
+  detaile_image: string;
   price: number;
   discount_rate: number;
   final_price: number;

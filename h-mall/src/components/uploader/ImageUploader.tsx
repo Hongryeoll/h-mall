@@ -38,9 +38,6 @@ export default function ImageUploader({ onFileSelect, previewUrl }: Props) {
   return (
     <div className="flex flex-col gap-3">
       <label className="block">
-        <span className="block mb-1 text-hr-gray-60 text-hr-b4 font-hr-semi-bold">
-          이미지 업로드
-        </span>
         <input
           type="file"
           accept="image/*"

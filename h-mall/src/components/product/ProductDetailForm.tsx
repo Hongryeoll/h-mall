@@ -4,25 +4,51 @@ import ImageUploader from '../uploader/ImageUploader';
 
 type Props = {
   register: UseFormRegister<ProductFormProps>;
-  previewUrl: string | null;
-  onFileSelect: (file: File | null) => void;
   errors: FieldErrors<ProductFormProps>;
+  previewThumbnail: string | null;
+  previewDetail: string | null;
+  onSelectThumbnail: (file: File | null) => void;
+  onSelectDetail: (file: File | null) => void;
 };
 
 export default function ProductDetailForm({
   register,
-  previewUrl,
-  onFileSelect,
   errors,
+  previewThumbnail,
+  previewDetail,
+  onSelectThumbnail,
+  onSelectDetail,
 }: Props) {
   return (
     <>
-      <ImageUploader previewUrl={previewUrl} onFileSelect={onFileSelect} />
-      {errors.image_url && (
-        <p className="text-hr-danger-default text-sm">
-          {errors.image_url.message}
-        </p>
-      )}
+      <div>
+        <label className="block text-hr-b4 font-hr-semi-bold text-hr-gray-60">
+          썸네일 이미지
+        </label>
+        <ImageUploader
+          previewUrl={previewThumbnail}
+          onFileSelect={onSelectThumbnail}
+        />
+        {errors.thumbnail_image && (
+          <p className="text-hr-danger-default text-sm">
+            {errors.thumbnail_image.message}
+          </p>
+        )}
+      </div>
+      <div>
+        <label className="block text-hr-b4 font-hr-semi-bold text-hr-gray-60">
+          상세페이지 이미지
+        </label>
+        <ImageUploader
+          previewUrl={previewDetail}
+          onFileSelect={onSelectDetail}
+        />
+        {errors.detaile_image && (
+          <p className="text-hr-danger-default text-sm">
+            {errors.detaile_image.message}
+          </p>
+        )}
+      </div>
       <textarea
         {...register('description')}
         placeholder="설명"
