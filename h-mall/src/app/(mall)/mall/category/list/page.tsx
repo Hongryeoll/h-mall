@@ -1,19 +1,25 @@
-// import ProductGrid from '@/components/category/ProductGrid'
+'use client';
 
+import { useSearchParams } from 'next/navigation';
+import { useFilteredProducts } from '@/hooks/useFilteredProducts';
+import ProductGrid from '@/components/category/ProductGrid';
 
 export default function CategoryListPage() {
-  // const category = searchParams.category;
-  // const section = searchParams.section;
+  const searchParams = useSearchParams();
+  const subtabSlug = searchParams.get('sub') ?? undefined;
+  const subsectionSlug = searchParams.get('subsection') ?? undefined;
 
-  // if (!category || !section) {
-  //   return <p>잘못된 접근입니다.</p>;
-  // }
+  const { data: products, isLoading } = useFilteredProducts({
+    subtabSlug,
+    subsectionSlug,
+  });
+
+  if (isLoading) return <p>로딩 중...</p>;
+  if (!products) return <p>상품이 없습니다.</p>;
 
   return (
-    <div className="flex gap-8 px-4 max-w-screen-xl mx-auto mt-8">
-      <div className="flex-1 space-y-6">
-        {/* <ProductGrid category={category} section={section} /> */}
-      </div>
+    <div className="max-w-screen-xl mx-auto mt-8 px-4">
+      <ProductGrid products={products} />
     </div>
   );
 }
