@@ -4,11 +4,12 @@ export const ROUTES: Record<string, string> = {
   LOGIN: '/login',
   SIGNUP: '/signup',
   MYPAGE: '/mall/mypage',
-  CART: '/mall/order/cart'
+  CART: '/mall/order/cart',
+  CATALOG: '/mall/catalog',
 };
 // Auth-Helpers가 쿠키를 읽도록 돕는 옵션
 export const SUPABASE_COOKIE_OPTIONS = {
-  name: 'sb',                                // cookie prefix: sb-access-token, sb-refresh-token
+  name: 'sb', // cookie prefix: sb-access-token, sb-refresh-token
   domain: process.env.NEXT_PUBLIC_COOKIE_DOMAIN || 'localhost',
   path: '/',
   sameSite: 'lax' as const,
@@ -19,8 +20,7 @@ export const ERROR_MESSAGE = {
 };
 
 export const ROUTE_TITLES = {
-  
-    [ROUTES.MALL_LOGIN_HOME]: '로그인',
-    [ROUTES.MALL_LOGIN]: '로그인',
-    [ROUTES.MALL_HOME]: '메인',
-  };
+  [ROUTES.MALL_LOGIN_HOME]: '로그인',
+  [ROUTES.MALL_LOGIN]: '로그인',
+  [ROUTES.MALL_HOME]: '메인',
+};

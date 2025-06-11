@@ -1,6 +1,6 @@
 import { JSX } from 'react';
 
-type TProps = {
+type Props = {
   text: JSX.Element | string;
   size?: 'xxl' | 'xl' | 'l' | 'm' | 's' | 'xs' | 'xxs';
   type?: 'default' | 'line' | 'light' | 'flat' | 'danger';
@@ -18,7 +18,7 @@ export const HrButton = ({
   onClick,
   SvgComp,
   className = '',
-}: TProps) => {
+}: Props) => {
   return (
     <>
       <button
@@ -46,8 +46,8 @@ const sizeClasses = {
 };
 
 const typeClasses = {
-  default: 'bg-hr-gray-40 border-none text-white',
-  line: 'bg-hr-white border border-hr-gray-40 text-hr-gray-40',
+  default: 'bg-hr-purple-default border-none text-white',
+  line: 'bg-hr-white border border-hr-purple-default text-hr-purple-default',
   light: 'bg-hr-white text-hr-gray-40',
   flat: 'bg-hr-gray-10 text-hr-gray-40',
   danger: 'bg-hr-white border border-hr-danger-default text-hr-danger-default',

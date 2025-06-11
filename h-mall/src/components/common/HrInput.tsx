@@ -11,14 +11,14 @@ import {
   PathValue,
 } from 'react-hook-form';
 
-type TProps<TFormValues extends FieldValues> = {
+type Props<FormValues extends FieldValues> = {
   type?: 'text' | 'password';
   placeholder?: string;
   size?: 'lg' | 'md' | 'xs';
   disabled?: boolean;
-  name: Path<TFormValues>;
+  name: Path<FormValues>;
   required?: boolean;
-  rules?: RegisterOptions<TFormValues, Path<TFormValues>>;
+  rules?: RegisterOptions<FormValues, Path<FormValues>>;
   containerClassName?: string;
   inputClassName?: string;
   closeBtnHidden?: boolean;
@@ -26,7 +26,7 @@ type TProps<TFormValues extends FieldValues> = {
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   timer?: number; // 밀리초 단위의 타이머 초기값
   leftIcon?: 'search';
-  resetValue?: PathValue<TFormValues, Path<TFormValues>>;
+  resetValue?: PathValue<FormValues, Path<FormValues>>;
 };
 
 // 타이머 포맷 함수
@@ -42,7 +42,7 @@ function formatMillisecondsToTime(milliseconds: number) {
   return `${formattedMinutes}:${formattedSeconds}`;
 }
 
-export const HrInput = <TFormValues extends FieldValues>({
+export const HrInput = <FormValues extends FieldValues>({
   type = 'text',
   size = 'md',
   placeholder = '',
@@ -57,8 +57,8 @@ export const HrInput = <TFormValues extends FieldValues>({
   onKeyDown,
   timer,
   leftIcon,
-}: TProps<TFormValues>) => {
-  const { register, resetField, watch } = useFormContext<TFormValues>();
+}: Props<FormValues>) => {
+  const { register, resetField, watch } = useFormContext<FormValues>();
   const inputValue = watch(name);
   const [isFocused, setIsFocused] = useState(false);
   const [isShowPwd, setIsShowPwd] = useState(false);

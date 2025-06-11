@@ -31,41 +31,41 @@ export type Database = {
         Row: {
           created_date: string | null;
           description: string | null;
-          detaile_image: string;
+          detail_image: string;
           discount_rate: number | null;
           final_price: number | null;
           id: string;
+          images: string;
           name: string;
           price: number;
           subsection_id: string | null;
           subtab_id: string | null;
-          thumbnail_image: string;
         };
         Insert: {
           created_date?: string | null;
           description?: string | null;
-          detaile_image: string;
+          detail_image: string;
           discount_rate?: number | null;
           final_price?: number | null;
           id?: string;
+          images: string;
           name: string;
           price: number;
           subsection_id?: string | null;
           subtab_id?: string | null;
-          thumbnail_image: string;
         };
         Update: {
           created_date?: string | null;
           description?: string | null;
-          detaile_image?: string;
+          detail_image?: string;
           discount_rate?: number | null;
           final_price?: number | null;
           id?: string;
+          images?: string;
           name?: string;
           price?: number;
           subsection_id?: string | null;
           subtab_id?: string | null;
-          thumbnail_image?: string;
         };
         Relationships: [
           {

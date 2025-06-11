@@ -13,7 +13,7 @@ import LogoutSVG from '@/assets/icons/logout.svg';
 import CogwheelSVG from '@/assets/icons/cogwhell.svg';
 import { createSupabaseBrowserClient } from '@/library/client/supabase';
 
-type TProps = {
+type Props = {
   user?: User | null;
   className?: string;
   style?: React.CSSProperties;
@@ -25,7 +25,7 @@ export const HrHeader = ({
   className = '',
   style = {},
   isHiddenLeftIcon = false,
-}: TProps) => {
+}: Props) => {
   const router = useRouter();
   const pathname = usePathname();
 

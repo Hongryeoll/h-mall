@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 
-type TProps = { tabs: { title: string; id: string }[]; offset?: number };
+type Props = { tabs: { title: string; id: string }[]; offset?: number };
 
-export const useScrollTabs = ({ tabs, offset = 0 }: TProps) => {
+export const useScrollTabs = ({ tabs, offset = 0 }: Props) => {
   const [activeIdx, setActiveIdx] = useState(0);
 
   const handleScroll = useCallback(() => {

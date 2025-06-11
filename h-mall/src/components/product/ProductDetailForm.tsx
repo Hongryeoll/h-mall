@@ -29,9 +29,9 @@ export default function ProductDetailForm({
           previewUrl={previewThumbnail}
           onFileSelect={onSelectThumbnail}
         />
-        {errors.thumbnail_image && (
+        {errors.images && (
           <p className="text-hr-danger-default text-sm">
-            {errors.thumbnail_image.message}
+            {errors.images.message}
           </p>
         )}
       </div>
@@ -43,9 +43,9 @@ export default function ProductDetailForm({
           previewUrl={previewDetail}
           onFileSelect={onSelectDetail}
         />
-        {errors.detaile_image && (
+        {errors.detail_image && (
           <p className="text-hr-danger-default text-sm">
-            {errors.detaile_image.message}
+            {errors.detail_image.message}
           </p>
         )}
       </div>

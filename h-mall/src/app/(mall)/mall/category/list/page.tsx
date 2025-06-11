@@ -3,9 +3,12 @@
 import { useSearchParams } from 'next/navigation';
 import { useFilteredProducts } from '@/hooks/useFilteredProducts';
 import ProductGrid from '@/components/category/ProductGrid';
+import { useRouter } from 'next/navigation';
+import { ROUTES } from '@/types/constants';
 
 export default function CategoryListPage() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const subtabSlug = searchParams.get('sub') ?? undefined;
   const subsectionSlug = searchParams.get('subsection') ?? undefined;
 
@@ -19,7 +22,10 @@ export default function CategoryListPage() {
 
   return (
     <div className="max-w-screen-xl mx-auto mt-8 px-4">
-      <ProductGrid products={products} />
+      <ProductGrid
+        products={products}
+        onClick={() => router.push(ROUTES.CATALOG)}
+      />
     </div>
   );
 }

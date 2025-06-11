@@ -53,8 +53,8 @@ export default function ProductForm({
           price,
           discount_rate,
           final_price,
-          thumbnail_image,
-          detaile_image,
+          images,
+          detail_image,
           description,
           subtab_id,
           subtabs (
@@ -82,8 +82,8 @@ export default function ProductForm({
 
       reset({
         name: data.name,
-        thumbnail_image: data.thumbnail_image,
-        detaile_image: data.detaile_image,
+        images: data.images,
+        detail_image: data.detail_image,
         price: data.price,
         discount_rate: data.discount_rate ?? undefined,
         final_price: data.final_price ?? undefined,
@@ -156,8 +156,8 @@ export default function ProductForm({
     //   return;
     // }
 
-    let thumbnailUrl = form.thumbnail_image ?? null;
-    let detailUrl = form.detaile_image ?? null;
+    let thumbnailUrl = form.images ?? null;
+    let detailUrl = form.detail_image ?? null;
 
     if (thumbnailImage) {
       thumbnailUrl = await uploadImageToSupabase(thumbnailImage);
@@ -168,8 +168,8 @@ export default function ProductForm({
 
     const payload: ProductFormProps = {
       ...form,
-      thumbnail_image: thumbnailUrl,
-      detaile_image: detailUrl,
+      images: thumbnailUrl,
+      detail_image: detailUrl,
     };
 
     mutation.mutate(payload);

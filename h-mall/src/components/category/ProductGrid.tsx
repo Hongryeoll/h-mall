@@ -2,8 +2,10 @@ import type { Tables } from '@/types/supabase';
 
 export default function ProductGrid({
   products,
+  onClick,
 }: {
   products: Tables<'products'>[];
+  onClick?: () => void;
 }) {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
@@ -11,6 +13,7 @@ export default function ProductGrid({
         <div
           key={product.id}
           className="border rounded p-4 hover:shadow transition"
+          onClick={onClick}
         >
           <div className="font-semibold">{product.name}</div>
           <div className="text-sm text-gray-500">

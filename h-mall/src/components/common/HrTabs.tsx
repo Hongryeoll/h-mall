@@ -1,19 +1,18 @@
 'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
-type TProps = {
+type Props = {
   tabs: { title: string; link?: string }[];
   activeIdx?: number;
   onClick?: (e: React.MouseEvent<HTMLElement>, i: number) => void;
 };
 
 const activeTabClasses =
-  'border-b-2 text-hr-pupple-default font-hr-semi-bold border-hr-pupple-default';
+  'border-b-2 text-hr-purple-default font-hr-semi-bold border-hr-purple-default';
 const normalTabClasses = 'text-hr-gray-50 border-b border-hr-gray-20 pb-[1px]';
 
-export const LsTabs = ({ tabs, activeIdx, onClick }: TProps) => {
+export const HrTabs = ({ tabs, activeIdx, onClick }: Props) => {
   const pathname = usePathname();
   const router = useRouter();
 
