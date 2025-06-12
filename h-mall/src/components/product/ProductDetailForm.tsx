@@ -5,33 +5,39 @@ import ImageUploader from '../uploader/ImageUploader';
 type Props = {
   register: UseFormRegister<ProductFormProps>;
   errors: FieldErrors<ProductFormProps>;
-  previewThumbnail: string | null;
-  previewDetail: string | null;
-  onSelectThumbnail: (file: File | null) => void;
-  onSelectDetail: (file: File | null) => void;
+  productImage: File[];
+  detailImage: File[];
+  previewProduct: string[];
+  previewDetail: string[];
+  onSelectProduct: (file: File[]) => void;
+  onSelectDetail: (file: File[]) => void;
 };
 
 export default function ProductDetailForm({
   register,
   errors,
-  previewThumbnail,
+  productImage,
+  detailImage,
+  previewProduct,
   previewDetail,
-  onSelectThumbnail,
+  onSelectProduct,
   onSelectDetail,
 }: Props) {
   return (
     <>
       <div>
         <label className="block text-hr-b4 font-hr-semi-bold text-hr-gray-60">
-          썸네일 이미지
+          상품 이미지
         </label>
         <ImageUploader
-          previewUrl={previewThumbnail}
-          onFileSelect={onSelectThumbnail}
+          multiple
+          files={productImage}
+          previewUrls={previewProduct}
+          onFileSelect={onSelectProduct}
         />
-        {errors.images && (
+        {errors.product_images && (
           <p className="text-hr-danger-default text-sm">
-            {errors.images.message}
+            {errors.product_images.message}
           </p>
         )}
       </div>
@@ -40,12 +46,14 @@ export default function ProductDetailForm({
           상세페이지 이미지
         </label>
         <ImageUploader
-          previewUrl={previewDetail}
+          multiple
+          files={detailImage}
+          previewUrls={previewDetail}
           onFileSelect={onSelectDetail}
         />
-        {errors.detail_image && (
+        {errors.detail_images && (
           <p className="text-hr-danger-default text-sm">
-            {errors.detail_image.message}
+            {errors.detail_images.message}
           </p>
         )}
       </div>

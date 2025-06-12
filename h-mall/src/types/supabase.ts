@@ -29,44 +29,50 @@ export type Database = {
       }
       products: {
         Row: {
+          avg_rating: number | null
           brand: string | null
           created_date: string | null
           description: string | null
-          detail_image: string
+          detail_images: string[]
           discount_rate: number | null
           final_price: number | null
           id: string
-          images: string
           name: string
           price: number
+          product_images: string[]
+          review_count: number | null
           subsection_id: string | null
           subtab_id: string | null
         }
         Insert: {
+          avg_rating?: number | null
           brand?: string | null
           created_date?: string | null
           description?: string | null
-          detail_image: string
+          detail_images: string[]
           discount_rate?: number | null
           final_price?: number | null
           id?: string
-          images: string
           name: string
           price: number
+          product_images: string[]
+          review_count?: number | null
           subsection_id?: string | null
           subtab_id?: string | null
         }
         Update: {
+          avg_rating?: number | null
           brand?: string | null
           created_date?: string | null
           description?: string | null
-          detail_image?: string
+          detail_images?: string[]
           discount_rate?: number | null
           final_price?: number | null
           id?: string
-          images?: string
           name?: string
           price?: number
+          product_images?: string[]
+          review_count?: number | null
           subsection_id?: string | null
           subtab_id?: string | null
         }

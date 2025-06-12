@@ -31,14 +31,25 @@ export default function ProductForm({
     formState: { errors },
   } = methods;
   const { selected, set, options } = useCategoryCascade();
-  const [thumbnailImage, setThumbnailImage] = useState<File | null>(null);
-  const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
-  const [detailImage, setDetailImage] = useState<File | null>(null);
-  const [detailPreview, setDetailPreview] = useState<string | null>(null);
+  const [productImage, setProductImage] = useState<File[]>([]);
+  const [productPreview, setProductPreview] = useState<string[]>([]);
+  const [detailImage, setDetailImage] = useState<File[]>([]);
+  const [detailPreview, setDetailPreview] = useState<string[]>([]);
   const [activeTab, setActiveTab] = useState<
     'category' | 'basic' | 'price' | 'detail' | 'ship'
   >('category');
   const tabList: TabKey[] = ['category', 'basic', 'price', 'detail', 'ship'];
+
+  const makePreviews = (files: File[]): string[] =>
+    files.map((file) => URL.createObjectURL(file));
+  const syncProductImage = (files: File[]) => {
+    setProductImage(files);
+    setProductPreview(makePreviews(files));
+  };
+  const syncDetailImage = (files: File[]) => {
+    setDetailImage(files);
+    setDetailPreview(makePreviews(files));
+  };
 
   useEffect(() => {
     if (!productId) return;
@@ -53,8 +64,10 @@ export default function ProductForm({
           price,
           discount_rate,
           final_price,
-          images,
-          detail_image,
+          review_count,
+          avg_rating,
+          product_images,
+          detail_images,
           description,
           subtab_id,
           subtabs (
@@ -82,8 +95,8 @@ export default function ProductForm({
 
       reset({
         name: data.name,
-        images: data.images,
-        detail_image: data.detail_image,
+        product_images: data.product_images,
+        detail_images: data.detail_images,
         price: data.price,
         discount_rate: data.discount_rate ?? undefined,
         final_price: data.final_price ?? undefined,
@@ -98,7 +111,9 @@ export default function ProductForm({
     };
 
     fetchProduct();
-  }, [productId, reset, supabase, set]);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [productId]);
 
   useEffect(() => {
     if (selected.subtabId) {
@@ -130,46 +145,44 @@ export default function ProductForm({
     },
   });
 
-  const uploadImageToSupabase = async (file: File): Promise<string> => {
+  const uploadImagesToSupabase = async (files: File[]): Promise<string[]> => {
     const supabase = createSupabaseBrowserClient();
-    const fileName = `${Date.now()}.${file.name.split('.').pop()}`;
-    const filePath = `${fileName}`;
+    const urls: string[] = [];
 
-    const { error } = await supabase.storage
-      .from('product-images')
-      .upload(filePath, file, {
-        cacheControl: '3600',
-        upsert: false,
-      });
-    if (error) throw error;
+    for (const file of files) {
+      const fileName = `${Date.now()}-${file.name}`;
+      const filePath = fileName;
+      const { error } = await supabase.storage
+        .from('product-images')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false,
+        });
+      if (error) throw error;
 
-    const {
-      data: { publicUrl },
-    } = supabase.storage.from('product-images').getPublicUrl(filePath);
-
-    return publicUrl;
+      const { data } = supabase.storage
+        .from('product-images')
+        .getPublicUrl(filePath);
+      urls.push(data.publicUrl);
+    }
+    return urls;
   };
 
   const onSubmit = async (form: ProductFormProps) => {
-    // if (!selectedImage && !form.image_url) {
-    //   alert('이미지를 선택해주세요');
-    //   return;
-    // }
+    let productUrl = form.product_images ?? [];
+    let detailUrl = form.detail_images ?? [];
 
-    let thumbnailUrl = form.images ?? null;
-    let detailUrl = form.detail_image ?? null;
-
-    if (thumbnailImage) {
-      thumbnailUrl = await uploadImageToSupabase(thumbnailImage);
+    if (productImage.length > 0) {
+      productUrl = await uploadImagesToSupabase(productImage);
     }
     if (detailImage) {
-      detailUrl = await uploadImageToSupabase(detailImage);
+      detailUrl = await uploadImagesToSupabase(detailImage);
     }
 
     const payload: ProductFormProps = {
       ...form,
-      images: thumbnailUrl,
-      detail_image: detailUrl,
+      product_images: productUrl,
+      detail_images: detailUrl,
     };
 
     mutation.mutate(payload);
@@ -232,30 +245,12 @@ export default function ProductForm({
           <ProductDetailForm
             register={register}
             errors={errors}
-            previewThumbnail={thumbnailPreview}
+            previewProduct={productPreview}
             previewDetail={detailPreview}
-            onSelectThumbnail={(file) => {
-              setThumbnailImage(file);
-              if (file) {
-                const objectUrl = URL.createObjectURL(file);
-                setThumbnailPreview(objectUrl);
-              } else {
-                setThumbnailPreview(null);
-              }
-            }}
-            onSelectDetail={(file) => {
-              setDetailImage(file);
-              if (file) {
-                const objectUrl = URL.createObjectURL(file);
-                setDetailPreview(objectUrl);
-              } else {
-                setDetailPreview(null);
-              }
-            }}
-            // onSelectThumbnail={(file) => setThumbnailImage(file)}
-            // onSelectDetail={(file) => setDetailImage(file)}
-            // previewUrl={imagePreview}
-            // onFileSelect={(file) => setSelectedImage(file)}
+            productImage={productImage}
+            detailImage={detailImage}
+            onSelectProduct={syncProductImage}
+            onSelectDetail={syncDetailImage}
           />
         )}
         {/* 하단 버튼 정렬 */}

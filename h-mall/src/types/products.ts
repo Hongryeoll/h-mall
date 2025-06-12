@@ -1,7 +1,7 @@
 export interface ProductFormProps {
   name: string;
-  images: string;
-  detail_image: string;
+  product_images: string[];
+  detail_images: string[];
   price: number;
   discount_rate: number;
   final_price: number;

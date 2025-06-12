@@ -1,48 +1,44 @@
-'use client';
-
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { XCircleIcon } from '@heroicons/react/24/solid';
 
 type Props = {
-  onFileSelect: (file: File | null) => void;
-  previewUrl: string | null;
+  onFileSelect: (files: File[]) => void;
+  files: File[];
+  previewUrls: string[];
+  multiple?: boolean;
 };
 
-export default function ImageUploader({ onFileSelect, previewUrl }: Props) {
+export default function ImageUploader({
+  onFileSelect,
+  files,
+  previewUrls,
+  multiple = false,
+}: Props) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const [localPreview, setLocalPreview] = useState<string | null>(previewUrl);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const objectUrl = URL.createObjectURL(file);
-    setLocalPreview(objectUrl);
-    onFileSelect(file);
+    const newFiles = Array.from(e.target.files ?? []);
+    onFileSelect([...files, ...newFiles]);
   };
 
-  const handleRemove = (e: React.MouseEvent) => {
+  const handleRemove = (idx: number) => (e: React.MouseEvent) => {
     e.stopPropagation();
-    setLocalPreview(null);
-    onFileSelect(null);
+    const updatedFiles = files.filter((_, i) => i !== idx);
+    onFileSelect(updatedFiles);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
   };
 
-  useEffect(() => {
-    if (previewUrl) {
-      setLocalPreview(previewUrl);
-    }
-  }, [previewUrl]);
-
   return (
     <div className="flex flex-col gap-3">
-      <label className="block">
+      <label>
         <input
           type="file"
           accept="image/*"
           ref={fileInputRef}
           onChange={handleFileChange}
+          multiple={multiple}
           className="block w-full text-sm text-hr-gray-60
             file:mr-4 file:py-2 file:px-4
             file:rounded-md file:border-0
@@ -53,23 +49,28 @@ export default function ImageUploader({ onFileSelect, previewUrl }: Props) {
         />
       </label>
 
-      {localPreview && (
-        <div className="relative w-40 h-40 rounded-lg overflow-hidden border border-hr-gray-20 shadow-sm bg-hr-gray-5 cursor-pointer">
-          <img
-            src={localPreview}
-            alt="이미지 미리보기"
-            className="w-full h-full object-cover transition hover:opacity-80"
-          />
-          <button
-            type="button"
-            onClick={handleRemove}
-            className="absolute top-1 right-1 p-1 bg-hr-white rounded-full shadow hover:bg-hr-gray-10 transition z-10"
-            aria-label="이미지 제거"
+      <div className="flex flex-wrap gap-2 mt-2">
+        {previewUrls.map((url, idx) => (
+          <div
+            key={idx}
+            className="relative w-24 h-24 rounded-lg overflow-hidden border border-hr-gray-20 bg-hr-gray-5 shadow-sm"
           >
-            <XCircleIcon className="w-5 h-5 text-hr-danger-default hover:text-hr-danger-hover" />
-          </button>
-        </div>
-      )}
+            <img
+              src={url}
+              alt={`미리보기${idx + 1}`}
+              className="w-full h-full object-cover"
+            />
+            <button
+              type="button"
+              onClick={handleRemove(idx)}
+              className="absolute top-1 right-1 p-1 bg-hr-white rounded-full shadow hover:bg-hr-gray-10 transition z-10"
+              aria-label="이미지 제거"
+            >
+              <XCircleIcon className="w-5 h-5 text-hr-danger-default hover:text-hr-danger-hover" />
+            </button>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
