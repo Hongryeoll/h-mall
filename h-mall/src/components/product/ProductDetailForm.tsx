@@ -1,6 +1,7 @@
 import { ProductFormProps } from '@/types/products';
 import { FieldErrors, UseFormRegister } from 'react-hook-form';
-import ImageUploader from '../uploader/ImageUploader';
+import ImageUploader from '@/components/uploader/ImageUploader';
+import EditorJodit from '@/components/editor/JoditEditor';
 
 type Props = {
   register: UseFormRegister<ProductFormProps>;
@@ -11,6 +12,8 @@ type Props = {
   previewDetail: string[];
   onSelectProduct: (file: File[]) => void;
   onSelectDetail: (file: File[]) => void;
+  description: string;
+  setDescription: (value: string) => void;
 };
 
 export default function ProductDetailForm({
@@ -22,6 +25,8 @@ export default function ProductDetailForm({
   previewDetail,
   onSelectProduct,
   onSelectDetail,
+  description,
+  setDescription,
 }: Props) {
   return (
     <>
@@ -57,10 +62,15 @@ export default function ProductDetailForm({
           </p>
         )}
       </div>
-      <textarea
+      {/* <textarea
         {...register('description')}
         placeholder="설명"
         className="w-full border border-hr-gray-30 bg-hr-white text-hr-gray-60 text-sm rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-hr-purple-default transition"
+      /> */}
+      <EditorJodit
+        value={description}
+        onChange={setDescription}
+        config={{ placeholder: '설명' }}
       />
     </>
   );

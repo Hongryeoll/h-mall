@@ -35,6 +35,7 @@ export default function ProductForm({
   const [productPreview, setProductPreview] = useState<string[]>([]);
   const [detailImage, setDetailImage] = useState<File[]>([]);
   const [detailPreview, setDetailPreview] = useState<string[]>([]);
+  const description = methods.watch('description') || '';
   const [activeTab, setActiveTab] = useState<
     'category' | 'basic' | 'price' | 'detail' | 'ship'
   >('category');
@@ -251,6 +252,10 @@ export default function ProductForm({
             detailImage={detailImage}
             onSelectProduct={syncProductImage}
             onSelectDetail={syncDetailImage}
+            description={description}
+            setDescription={(value: string) =>
+              setValue('description', value, { shouldValidate: true })
+            }
           />
         )}
         {/* 하단 버튼 정렬 */}
