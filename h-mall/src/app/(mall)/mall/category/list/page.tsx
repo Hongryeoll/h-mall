@@ -21,10 +21,10 @@ export default function CategoryListPage() {
   if (!products) return <p>상품이 없습니다.</p>;
 
   return (
-    <div className="max-w-screen-xl mx-auto mt-8 px-4">
+    <div className="max-w-screen-xl mx-auto">
       <ProductGrid
         products={products}
-        onClick={() => router.push(ROUTES.CATALOG)}
+        onClick={() => router.push(ROUTES.MALL_CATALOG)}
       />
     </div>
   );

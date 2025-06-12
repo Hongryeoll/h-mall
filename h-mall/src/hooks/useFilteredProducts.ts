@@ -17,6 +17,7 @@ export const useFilteredProducts = ({
           id,
           name,
           price,
+          brand,
           discount_rate,
           final_price,
           description,
