@@ -6,7 +6,7 @@ import type { CookieSerializeOptions } from 'cookie';
 
 type UserInfo = {
   id: string;
-  role: 'user' | 'admin';
+  role: 'user' | 'admin' | 'readAdmin';
   email: string;
 };
 
@@ -117,7 +117,8 @@ export async function supabaseMiddleware(
       .eq("id", user.id)
       .single<UserInfo>();
 
-    if (error || !profile || profile.role !== "admin") {
+    if (error || !profile || (profile.role !== "admin" && profile.role !== "readAdmin")
+    ) {
       const unauthorizedUrl = url.clone();
       unauthorizedUrl.pathname = "/not-authorized";
       return NextResponse.redirect(unauthorizedUrl);

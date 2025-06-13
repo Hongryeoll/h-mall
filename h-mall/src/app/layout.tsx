@@ -5,7 +5,8 @@ import './globals.css';
 import { getUser } from '@/actions/auth/user.action';
 import { HrHeader } from '@/components/common/HrHeader';
 import HrNav from '@/components/common/HrNav';
-import Providers from '@/components/provider/provider';
+import QueryProvider from '@/components/provider/QueryProvider';
+import { UserProvider } from '@/components/provider/UserProvider';
 
 const notoSansKR = Noto_Sans_KR({
   subsets: ['cyrillic', 'latin', 'latin-ext', 'vietnamese'],
@@ -36,11 +37,13 @@ export default async function RootLayout({
     >
       <body className="h-full flex flex-col font-pretendard">
         <div className="h-full flex flex-col min-h-0">
-          <Providers>
-            <HrHeader user={user} />
-            <HrNav />
-            {children}
-          </Providers>
+          <QueryProvider>
+            <UserProvider>
+              <HrHeader />
+              <HrNav />
+              {children}
+            </UserProvider>
+          </QueryProvider>
         </div>
       </body>
     </html>

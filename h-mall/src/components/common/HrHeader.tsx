@@ -1,8 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { User } from '@supabase/supabase-js';
 import Image from 'next/image';
 import { ROUTES } from '@/types/constants';
 import SearchSVG from '@/assets/icons/search.svg';
@@ -12,45 +10,30 @@ import LoginSVG from '@/assets/icons/login.svg';
 import LogoutSVG from '@/assets/icons/logout.svg';
 import CogwheelSVG from '@/assets/icons/cogwhell.svg';
 import { createSupabaseBrowserClient } from '@/library/client/supabase';
+import { useUserContext } from '@/components/provider/UserProvider';
 
 type Props = {
-  user?: User | null;
   className?: string;
   style?: React.CSSProperties;
   isHiddenLeftIcon?: boolean;
 };
 
 export const HrHeader = ({
-  user,
   className = '',
   style = {},
   isHiddenLeftIcon = false,
 }: Props) => {
   const router = useRouter();
   const pathname = usePathname();
+  const { user, role, loading } = useUserContext();
 
-  const [role, setRole] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchRole = async () => {
-      if (!user?.id) {
-        setRole(null);
-        return;
-      }
-      const supabase = createSupabaseBrowserClient();
-      const { data, error } = await supabase
-        .from('userinfo')
-        .select('role')
-        .eq('id', user.id)
-        .single();
-
-      if (!error && data?.role) {
-        setRole(data.role);
-      }
-    };
-
-    fetchRole();
-  }, [user]);
+  if (loading) {
+    return (
+      <div className="h-[56px] flex items-center justify-center bg-hr-white border-b">
+        <span>로딩중...</span>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -134,7 +117,7 @@ export const HrHeader = ({
           )}
         </span>
 
-        {role === 'admin' && (
+        {(role === 'admin' || role === 'readAdmin') && (
           <span
             className="inline-flex items-center gap-1 p-2 cursor-pointer text-red-600 font-semibold"
             onClick={() => router.push('/admin')}

@@ -3,7 +3,7 @@
 import AdminSidebar from '@/components/layout/AdminSidebar';
 import { useState } from 'react';
 import { Bars3Icon } from '@heroicons/react/24/outline';
-import Providers from '@/components/provider/provider';
+import QueryProvider from '@/components/provider/QueryProvider';
 
 export default function AdminLayout({
   children,
@@ -44,7 +44,7 @@ export default function AdminLayout({
 
         {/* children */}
         <div className="flex-1 p-4 sm:p-5 md:p-6">
-          <Providers>{children}</Providers>
+          <QueryProvider>{children}</QueryProvider>
         </div>
       </main>
     </div>

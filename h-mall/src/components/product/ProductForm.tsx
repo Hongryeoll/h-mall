@@ -10,6 +10,7 @@ import ProductBasicForm from '@/components/product/ProductBasicForm';
 import ProductPriceForm from '@/components/product/ProductPriceForm';
 import ProductDetailForm from '@/components/product/ProductDetailForm';
 import ProductCategoryForm from '@/components/product/ProductCategoryForm';
+import { useUserContext } from '@/components/provider/UserProvider';
 
 type TabKey = 'category' | 'basic' | 'price' | 'detail' | 'ship';
 
@@ -22,6 +23,7 @@ export default function ProductForm({
 }) {
   const supabase = createSupabaseBrowserClient();
   const queryClient = useQueryClient();
+  const { user, role, loading } = useUserContext();
   const methods = useForm<ProductFormProps>();
   const {
     register,
@@ -262,8 +264,12 @@ export default function ProductForm({
         <div className="flex justify-between items-center mt-6">
           <button
             type="submit"
-            disabled={mutation.isPending}
-            className="bg-hr-purple-default hover:bg-hr-purple-dark text-white text-sm font-hr-semi-bold py-2 px-4 rounded-md transition"
+            disabled={role !== 'admin' || mutation.isPending}
+            // className="bg-hr-purple-default hover:bg-hr-purple-dark text-white text-sm font-hr-semi-bold py-2 px-4 rounded-md transition"
+            className={`
+            text-white text-sm font-hr-semi-bold py-2 px-4 rounded-md transition
+            ${role === 'admin' ? 'bg-hr-purple-default hover:bg-hr-purple-hover' : 'bg-hr-purple-bg cursor-not-allowed'}
+          `}
           >
             {mutation.isPending
               ? '처리 중...'
@@ -271,6 +277,11 @@ export default function ProductForm({
                 ? '상품 수정'
                 : '상품 등록'}
           </button>
+          {role !== 'admin' && (
+            <div className="text-xs text-red-400 mt-2">
+              관리자만 등록/수정 가능합니다.
+            </div>
+          )}
           <button
             type="button"
             onClick={onClose}
