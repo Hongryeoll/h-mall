@@ -33,9 +33,9 @@ export default function ProductForm({
     formState: { errors },
   } = methods;
   const { selected, set, options } = useCategoryCascade();
-  const [productImage, setProductImage] = useState<File[]>([]);
+  const [productImage, setProductImage] = useState<(File | string)[]>([]);
   const [productPreview, setProductPreview] = useState<string[]>([]);
-  const [detailImage, setDetailImage] = useState<File[]>([]);
+  const [detailImage, setDetailImage] = useState<(File | string)[]>([]);
   const [detailPreview, setDetailPreview] = useState<string[]>([]);
   const description = methods.watch('description') || '';
   const [activeTab, setActiveTab] = useState<
@@ -175,8 +175,8 @@ export default function ProductForm({
   };
 
   const onSubmit = async (form: ProductFormProps) => {
-    let productUrl = form.product_images ?? [];
-    let detailUrl = form.detail_images ?? [];
+    let productUrls = form.product_images ?? [];
+    let detailUrls = form.detail_images ?? [];
 
     try {
       productUrls = await uploadImagesToSupabase(productImage);
@@ -188,8 +188,8 @@ export default function ProductForm({
 
     const payload: ProductFormProps = {
       name: form.name,
-      product_images: productUrl,
-      detail_images: detailUrl,
+      product_images: productUrls,
+      detail_images: detailUrls,
       price: form.price,
       discount_rate: form.discount_rate,
       final_price: form.final_price,
