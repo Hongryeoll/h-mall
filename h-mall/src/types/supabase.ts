@@ -31,6 +31,7 @@ export type Database = {
         Row: {
           avg_rating: number | null
           brand: string | null
+          category_id: string | null
           created_date: string | null
           description: string | null
           detail_images: string[]
@@ -41,12 +42,14 @@ export type Database = {
           price: number
           product_images: string[]
           review_count: number | null
+          section_id: string | null
           subsection_id: string | null
           subtab_id: string | null
         }
         Insert: {
           avg_rating?: number | null
           brand?: string | null
+          category_id?: string | null
           created_date?: string | null
           description?: string | null
           detail_images: string[]
@@ -57,12 +60,14 @@ export type Database = {
           price: number
           product_images: string[]
           review_count?: number | null
+          section_id?: string | null
           subsection_id?: string | null
           subtab_id?: string | null
         }
         Update: {
           avg_rating?: number | null
           brand?: string | null
+          category_id?: string | null
           created_date?: string | null
           description?: string | null
           detail_images?: string[]
@@ -73,10 +78,25 @@ export type Database = {
           price?: number
           product_images?: string[]
           review_count?: number | null
+          section_id?: string | null
           subsection_id?: string | null
           subtab_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "products_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "products_section_id_fkey"
+            columns: ["section_id"]
+            isOneToOne: false
+            referencedRelation: "sections"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "products_subtab_id_fkey"
             columns: ["subtab_id"]

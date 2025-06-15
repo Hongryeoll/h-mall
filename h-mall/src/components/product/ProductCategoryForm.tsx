@@ -1,6 +1,10 @@
-import { ProductFormProps } from '@/types/products';
+'use client';
+
+import { useEffect } from 'react';
+import { useFormContext } from 'react-hook-form';
 import HrSelectbox from '../common/HrSelectbox';
-import { FieldErrors, UseFormRegister } from 'react-hook-form';
+import { ProductFormProps } from '@/types/products';
+import type { FieldErrors } from 'react-hook-form';
 
 type Props = {
   selected: {
@@ -22,18 +26,53 @@ type Props = {
     subtabs: { id: string; label: string | null }[];
   };
   errors: FieldErrors<ProductFormProps>;
-  register: UseFormRegister<ProductFormProps>;
 };
 
 export default function ProductCategoryForm({
-  register,
   selected,
   set,
   options,
   errors,
 }: Props) {
+  const { register, setValue } = useFormContext<ProductFormProps>();
+
+  useEffect(() => {
+    setValue('category_id', selected.categoryId ?? '', {
+      shouldValidate: true,
+    });
+    setValue('section_id', selected.sectionId ?? '', { shouldValidate: true });
+    setValue('subsection_id', selected.subsectionId ?? '', {
+      shouldValidate: true,
+    });
+    setValue('subtab_id', selected.subtabId ?? '', { shouldValidate: true });
+  }, [
+    selected.categoryId,
+    selected.sectionId,
+    selected.subsectionId,
+    selected.subtabId,
+    setValue,
+  ]);
+
   return (
     <>
+      {/* 숨김 필드 등록 */}
+      <input
+        type="hidden"
+        {...register('category_id', { required: '카테고리를 선택해주세요' })}
+      />
+      <input
+        type="hidden"
+        {...register('section_id', { required: '섹션을 선택해주세요' })}
+      />
+      <input
+        type="hidden"
+        {...register('subsection_id', { required: '서브섹션을 선택해주세요' })}
+      />
+      <input
+        type="hidden"
+        {...register('subtab_id', { required: '서브탭을 선택해주세요' })}
+      />
+
       <div className="flex flex-col gap-4">
         <div>
           <label className="block text-hr-b4 font-hr-semi-bold text-hr-gray-60">

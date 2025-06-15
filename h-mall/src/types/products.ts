@@ -6,5 +6,8 @@ export interface ProductFormProps {
   discount_rate: number;
   final_price: number;
   description: string;
+  category_id: string;
+  section_id: string;
+  subsection_id: string;
   subtab_id: string;
 }

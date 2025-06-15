@@ -1,11 +1,24 @@
-import JoditEditor from 'jodit-react';
+import dynamic from 'next/dynamic';
 import { useRef, useMemo } from 'react';
+
+type EditorConfig = Partial<{
+  toolbarAdaptive: boolean;
+  readonly: boolean;
+  placeholder: string;
+  buttons: string[];
+  [key: string]: unknown; // 기타 옵션...
+}>;
 
 type EditorProps = {
   value: string;
   onChange: (value: string) => void;
-  config?: Record<string, any>;
+  config?: EditorConfig;
 };
+
+const JoditEditor = dynamic(
+  () => import('jodit-react').then((mod) => mod.default),
+  { ssr: false }
+);
 
 export default function EditorJodit({ value, onChange, config }: EditorProps) {
   const editor = useRef(null);

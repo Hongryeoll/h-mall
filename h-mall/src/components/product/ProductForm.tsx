@@ -72,20 +72,10 @@ export default function ProductForm({
           product_images,
           detail_images,
           description,
-          subtab_id,
-          subtabs (
-            id,
-            label,
-            subsection_id,
-            subsections (
-              id,
-              section_id,
-              sections (
-                id,
-                category_id
-              )
-            )
-          )
+          category_id,
+          section_id,
+          subsection_id,
+          subtab_id
         `
         )
         .eq('id', productId)
@@ -104,12 +94,17 @@ export default function ProductForm({
         discount_rate: data.discount_rate ?? undefined,
         final_price: data.final_price ?? undefined,
         description: data.description ?? undefined,
+        // product_images: data.product_images,
+        // detail_images: data.detail_images,
+        category_id: data.category_id ?? '',
+        section_id: data.section_id ?? '',
+        subsection_id: data.subsection_id ?? '',
         subtab_id: data.subtab_id ?? undefined,
       });
 
-      set.category(data.subtabs?.subsections?.sections?.category_id || '');
-      set.section(data.subtabs?.subsections?.section_id || '');
-      set.subsection(data.subtabs?.subsection_id || '');
+      set.category(data.category_id || '');
+      set.section(data.section_id || '');
+      set.subsection(data.subsection_id || '');
       set.subtab(data.subtab_id || '');
     };
 
@@ -117,12 +112,6 @@ export default function ProductForm({
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productId]);
-
-  useEffect(() => {
-    if (selected.subtabId) {
-      setValue('subtab_id', selected.subtabId);
-    }
-  }, [selected.subtabId, setValue]);
 
   const mutation = useMutation({
     mutationFn: async (data: ProductFormProps) => {
@@ -183,10 +172,22 @@ export default function ProductForm({
     }
 
     const payload: ProductFormProps = {
-      ...form,
+      name: form.name,
       product_images: productUrl,
       detail_images: detailUrl,
+      price: form.price,
+      discount_rate: form.discount_rate,
+      final_price: form.final_price,
+      description: form.description,
+      // product_images: prodImgs,
+      // detail_images: detailImgs,
+      category_id: form.category_id,
+      section_id: form.section_id,
+      subsection_id: form.subsection_id,
+      subtab_id: form.subtab_id,
     };
+
+    console.log('selected', selected);
 
     mutation.mutate(payload);
   };
@@ -228,7 +229,6 @@ export default function ProductForm({
 
         {activeTab === 'category' && (
           <ProductCategoryForm
-            register={register}
             selected={selected}
             set={set}
             options={options}
@@ -265,7 +265,6 @@ export default function ProductForm({
           <button
             type="submit"
             disabled={role !== 'admin' || mutation.isPending}
-            // className="bg-hr-purple-default hover:bg-hr-purple-dark text-white text-sm font-hr-semi-bold py-2 px-4 rounded-md transition"
             className={`
             text-white text-sm font-hr-semi-bold py-2 px-4 rounded-md transition
             ${role === 'admin' ? 'bg-hr-purple-default hover:bg-hr-purple-hover' : 'bg-hr-purple-bg cursor-not-allowed'}

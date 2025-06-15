@@ -22,7 +22,7 @@ export default function ProductGrid({
       {products.map((product) => {
         const {
           id,
-          images,
+          product_images,
           brand,
           name,
           price,
@@ -46,7 +46,7 @@ export default function ProductGrid({
             {/* 상품 이미지 */}
             <div className="relative w-full p-10 aspect-[1] bg-hr-gray-10 overflow-hidden">
               <Image
-                src={images}
+                src={product_images[0]}
                 alt={`썸네일 이미지`}
                 fill
                 className="object-cover"
