@@ -6,12 +6,12 @@ import EditorJodit from '@/components/editor/JoditEditor';
 type Props = {
   register: UseFormRegister<ProductFormProps>;
   errors: FieldErrors<ProductFormProps>;
-  productImage: File[];
-  detailImage: File[];
+  productImage: (File | string)[];
+  detailImage: (File | string)[];
   previewProduct: string[];
   previewDetail: string[];
-  onSelectProduct: (file: File[]) => void;
-  onSelectDetail: (file: File[]) => void;
+  onSelectProduct: (file: (File | string)[]) => void;
+  onSelectDetail: (file: (File | string)[]) => void;
   description: string;
   setDescription: (value: string) => void;
 };

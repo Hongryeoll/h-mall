@@ -43,13 +43,15 @@ export default function ProductForm({
   >('category');
   const tabList: TabKey[] = ['category', 'basic', 'price', 'detail', 'ship'];
 
-  const makePreviews = (files: File[]): string[] =>
-    files.map((file) => URL.createObjectURL(file));
-  const syncProductImage = (files: File[]) => {
+  const makePreviews = (files: (File | string)[]): string[] =>
+    files.map((f) => (typeof f === 'string' ? f : URL.createObjectURL(f)));
+
+  const syncProductImage = (files: (File | string)[]) => {
     setProductImage(files);
     setProductPreview(makePreviews(files));
   };
-  const syncDetailImage = (files: File[]) => {
+
+  const syncDetailImage = (files: (File | string)[]) => {
     setDetailImage(files);
     setDetailPreview(makePreviews(files));
   };
@@ -104,7 +106,10 @@ export default function ProductForm({
       set.section(data.section_id || '');
       set.subsection(data.subsection_id || '');
       set.subtab(data.subtab_id || '');
+      setProductImage(data.product_images || []);
       setProductPreview(data.product_images || []);
+
+      setDetailImage(data.detail_images || []);
       setDetailPreview(data.detail_images || []);
     };
 
@@ -137,26 +142,35 @@ export default function ProductForm({
     },
   });
 
-  const uploadImagesToSupabase = async (files: File[]): Promise<string[]> => {
+  const uploadImagesToSupabase = async (
+    files: (File | string)[]
+  ): Promise<string[]> => {
     const supabase = createSupabaseBrowserClient();
     const urls: string[] = [];
 
     for (const file of files) {
+      if (typeof file === 'string') {
+        urls.push(file);
+        continue;
+      }
+
       const fileName = `${Date.now()}-${file.name}`;
-      const filePath = fileName;
       const { error } = await supabase.storage
         .from('product-images')
-        .upload(filePath, file, {
+        .upload(fileName, file, {
           cacheControl: '3600',
           upsert: false,
         });
+
       if (error) throw error;
 
       const { data } = supabase.storage
         .from('product-images')
-        .getPublicUrl(filePath);
+        .getPublicUrl(fileName);
+
       urls.push(data.publicUrl);
     }
+
     return urls;
   };
 
@@ -164,11 +178,12 @@ export default function ProductForm({
     let productUrl = form.product_images ?? [];
     let detailUrl = form.detail_images ?? [];
 
-    if (productImage.length > 0) {
-      productUrl = await uploadImagesToSupabase(productImage);
-    }
-    if (detailImage.length > 0) {
-      detailUrl = await uploadImagesToSupabase(detailImage);
+    try {
+      productUrls = await uploadImagesToSupabase(productImage);
+      detailUrls = await uploadImagesToSupabase(detailImage);
+    } catch (err: any) {
+      alert(`이미지 업로드 실패: ${err.message}`);
+      return;
     }
 
     const payload: ProductFormProps = {

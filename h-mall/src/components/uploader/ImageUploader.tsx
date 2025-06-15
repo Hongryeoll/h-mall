@@ -1,53 +1,52 @@
-import { useRef } from 'react';
+import { useCallback } from 'react';
+import { useDropzone } from 'react-dropzone';
 import { XCircleIcon } from '@heroicons/react/24/solid';
 
-type Props = {
-  onFileSelect: (files: File[]) => void;
-  files: File[];
+interface Props {
+  files: (File | string)[];
   previewUrls: string[];
+  onFileSelect: (files: (File | string)[]) => void;
   multiple?: boolean;
-};
+}
 
 export default function ImageUploader({
-  onFileSelect,
   files,
   previewUrls,
+  onFileSelect,
   multiple = false,
 }: Props) {
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const onDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      const newFiles = [...files, ...acceptedFiles];
+      onFileSelect(newFiles);
+    },
+    [files, onFileSelect]
+  );
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newFiles = Array.from(e.target.files ?? []);
-    onFileSelect([...files, ...newFiles]);
-  };
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: { 'image/*': ['.png', '.jpg', '.jpeg', '.gif', '.webp'] },
+    multiple,
+  });
 
-  const handleRemove = (idx: number) => (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const handleRemove = (idx: number) => () => {
     const updatedFiles = files.filter((_, i) => i !== idx);
     onFileSelect(updatedFiles);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
   };
 
   return (
     <div className="flex flex-col gap-3">
-      <label>
-        <input
-          type="file"
-          accept="image/*"
-          ref={fileInputRef}
-          onChange={handleFileChange}
-          multiple={multiple}
-          className="block w-full text-sm text-hr-gray-60
-            file:mr-4 file:py-2 file:px-4
-            file:rounded-md file:border-0
-            file:text-sm file:font-hr-semi-bold
-            file:bg-hr-light file:text-hr-gray-60
-            hover:file:bg-hr-gray-10
-            transition cursor-pointer"
-        />
-      </label>
+      <div
+        {...getRootProps()}
+        className="border border-hr-gray-30 rounded-md p-4 text-center cursor-pointer bg-hr-light hover:bg-hr-gray-10 transition"
+      >
+        <input {...getInputProps()} />
+        {isDragActive ? (
+          <p>이미지를 여기에 드롭하세요...</p>
+        ) : (
+          <p>여기를 클릭하거나 드래그해서 이미지를 업로드하세요</p>
+        )}
+      </div>
 
       <div className="flex flex-wrap gap-2 mt-2">
         {previewUrls.map((url, idx) => (
