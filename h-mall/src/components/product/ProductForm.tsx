@@ -94,8 +94,6 @@ export default function ProductForm({
         discount_rate: data.discount_rate ?? undefined,
         final_price: data.final_price ?? undefined,
         description: data.description ?? undefined,
-        // product_images: data.product_images,
-        // detail_images: data.detail_images,
         category_id: data.category_id ?? '',
         section_id: data.section_id ?? '',
         subsection_id: data.subsection_id ?? '',
@@ -106,6 +104,8 @@ export default function ProductForm({
       set.section(data.section_id || '');
       set.subsection(data.subsection_id || '');
       set.subtab(data.subtab_id || '');
+      setProductPreview(data.product_images || []);
+      setDetailPreview(data.detail_images || []);
     };
 
     fetchProduct();
@@ -167,7 +167,7 @@ export default function ProductForm({
     if (productImage.length > 0) {
       productUrl = await uploadImagesToSupabase(productImage);
     }
-    if (detailImage) {
+    if (detailImage.length > 0) {
       detailUrl = await uploadImagesToSupabase(detailImage);
     }
 
@@ -179,15 +179,11 @@ export default function ProductForm({
       discount_rate: form.discount_rate,
       final_price: form.final_price,
       description: form.description,
-      // product_images: prodImgs,
-      // detail_images: detailImgs,
       category_id: form.category_id,
       section_id: form.section_id,
       subsection_id: form.subsection_id,
       subtab_id: form.subtab_id,
     };
-
-    console.log('selected', selected);
 
     mutation.mutate(payload);
   };
