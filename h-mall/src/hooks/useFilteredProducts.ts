@@ -2,78 +2,105 @@ import { createSupabaseBrowserClient } from '@/library/client/supabase';
 import { useQuery } from '@tanstack/react-query';
 
 export const useFilteredProducts = ({
-  subtabSlug,
+  categorySlug,
+  sectionSlug,
   subsectionSlug,
+  subtabSlug,
 }: {
-  subtabSlug?: string;
+  categorySlug?: string;
+  sectionSlug?: string;
   subsectionSlug?: string;
+  subtabSlug?: string;
 }) => {
   return useQuery({
-    queryKey: ['filtered-products', subtabSlug, subsectionSlug],
+    queryKey: [
+      'filtered-products',
+      categorySlug,
+      sectionSlug,
+      subsectionSlug,
+      subtabSlug,
+    ],
     queryFn: async () => {
       const supabase = createSupabaseBrowserClient();
 
       let query = supabase.from('products').select(`
-          id,
-          name,
-          price,
-          brand,
-          discount_rate,
-          final_price,
-          description,
-          product_images,
-          detail_images,
+          id, name, price, brand,
+          discount_rate, final_price,
+          description, product_images, detail_images,
+          avg_rating, review_count,
           created_date,
-          subtab_id,
-          subsection_id,
-          subtabs:subtab_id (
-            id,
-            slug,
-            label
-          )
+          category_id, section_id,
+          subsection_id, subtab_id,
+          subtabs:subtab_id ( id, slug, label )
         `);
 
-      // 1. sub=bootcut 등 특정 subtab인 경우
-      if (subtabSlug && subtabSlug !== 'all') {
-        const { data: subtab, error } = await supabase
-          .from('subtabs')
+      let categoryId: string | null = null;
+      if (categorySlug) {
+        const { data: cat, error: catErr } = await supabase
+          .from('categories')
           .select('id')
-          .ilike('slug', subtabSlug) // 대소문자 구분 없이
+          .ilike('slug', categorySlug)
           .limit(1)
-          .single(); // 조건 느슨하게 유지
-
-        if (error || !subtab?.id) {
-          console.warn(
-            `❗ subtabSlug "${subtabSlug}"에 해당하는 id를 찾을 수 없습니다.`
-          );
-          return [];
-        }
-
-        query = query.eq('subtab_id', subtab.id);
+          .single();
+        if (catErr || !cat?.id) return [];
+        categoryId = cat.id;
+        query = query.eq('category_id', categoryId);
       }
 
-      // 2. sub=all인 경우 subsection 기준
-      else if (subsectionSlug) {
-        const { data: subsection, error } = await supabase
+      let sectionId: string | null = null;
+      if (sectionSlug) {
+        const { data: sec, error: secErr } = await supabase
+          .from('sections')
+          .select('id')
+          .ilike('slug', sectionSlug)
+          .eq('category_id', categoryId!)
+          .limit(1)
+          .single();
+        if (secErr || !sec?.id) return [];
+        sectionId = sec.id;
+        query = query.eq('section_id', sectionId);
+      }
+
+      let subsectionId: string | null = null;
+      if (subsectionSlug) {
+        if (!sectionId) {
+          console.warn('❗ sectionSlug가 없어서 subsection 조회 불가');
+          return [];
+        }
+        const { data: subsection, error: subsectionErr } = await supabase
           .from('subsections')
           .select('id')
           .ilike('slug', subsectionSlug)
+          .eq('section_id', sectionId)
           .limit(1)
           .single();
-
-        if (error || !subsection?.id) {
-          console.warn(
-            `❗ subsectionSlug "${subsectionSlug}"에 해당하는 id를 찾을 수 없습니다.`
-          );
-          return [];
-        }
-
-        query = query.eq('subsection_id', subsection.id);
+        if (subsectionErr || !subsection?.id) return [];
+        subsectionId = subsection.id;
       }
 
+      if (subsectionId) {
+        const { data: allSubtabs } = await supabase
+          .from('subtabs')
+          .select('id')
+          .eq('subsection_id', subsectionId);
+        const subtabIds = (allSubtabs ?? []).map((t) => String(t.id));
+
+        if (subtabSlug && subtabSlug !== 'all') {
+          const { data: oneTab, error: oneErr } = await supabase
+            .from('subtabs')
+            .select('id')
+            .ilike('slug', subtabSlug)
+            .eq('subsection_id', subsectionId)
+            .limit(1)
+            .single();
+          if (oneErr || !oneTab?.id) return [];
+          query = query.eq('subtab_id', oneTab.id);
+        } else {
+          query = query.in('subtab_id', subtabIds);
+        }
+      }
       const { data, error } = await query;
       if (error) throw error;
-
       return data;
     },
   });

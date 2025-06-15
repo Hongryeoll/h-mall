@@ -9,14 +9,14 @@ import { ROUTES } from '@/types/constants';
 export default function CategoryListPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  // const categorySlug = searchParams.get('category') ?? undefined;
-  // const sectionSlug = searchParams.get('section') ?? undefined;
+  const categorySlug = searchParams.get('category') ?? undefined;
+  const sectionSlug = searchParams.get('section') ?? undefined;
   const subsectionSlug = searchParams.get('subsection') ?? undefined;
   const subtabSlug = searchParams.get('sub') ?? undefined;
 
   const { data: products, isLoading } = useFilteredProducts({
-    // categorySlug,
-    // sectionSlug,
+    categorySlug,
+    sectionSlug,
     subsectionSlug,
     subtabSlug,
   });
