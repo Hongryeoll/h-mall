@@ -22,8 +22,8 @@ export default function CategorySidebar() {
   if (!currentSection) return null;
 
   return (
-    <nav className="space-y-6 min-w-[200px] max-w-[260px] pr-4">
-      <h2 className="text-xl font-bold border-b-2 pb-2">
+    <nav className="space-y-6 w-[130px] pr-2">
+      <h2 className="text-hr-h5 font-hr-bold border-b-1 pb-2">
         {currentSection.title}
       </h2>
       <ul className="flex flex-col gap-2">
