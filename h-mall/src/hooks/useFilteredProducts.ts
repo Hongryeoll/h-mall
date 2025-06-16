@@ -1,24 +1,19 @@
 import { createSupabaseBrowserClient } from '@/library/client/supabase';
 import { useQuery } from '@tanstack/react-query';
+import type { Tables } from '@/types/supabase';
 
-export const useFilteredProducts = ({
-  categorySlug,
-  sectionSlug,
-  subsectionSlug,
-  subtabSlug,
-}: {
+type Filters = {
   categorySlug?: string;
   sectionSlug?: string;
   subsectionSlug?: string;
   subtabSlug?: string;
-}) => {
-  return useQuery({
+};
+
+export const useFilteredProducts = (filters: Filters) => {
+  return useQuery<Tables<'products'>[], Error>({
     queryKey: [
       'filtered-products',
-      categorySlug,
-      sectionSlug,
-      subsectionSlug,
-      subtabSlug,
+      filters
     ],
     queryFn: async () => {
       const supabase = createSupabaseBrowserClient();
@@ -35,11 +30,11 @@ export const useFilteredProducts = ({
         `);
 
       let categoryId: string | null = null;
-      if (categorySlug) {
+      if (filters.categorySlug) {
         const { data: cat, error: catErr } = await supabase
           .from('categories')
           .select('id')
-          .ilike('slug', categorySlug)
+          .ilike('slug', filters.categorySlug)
           .limit(1)
           .single();
         if (catErr || !cat?.id) return [];
@@ -48,11 +43,11 @@ export const useFilteredProducts = ({
       }
 
       let sectionId: string | null = null;
-      if (sectionSlug) {
+      if (filters.sectionSlug) {
         const { data: sec, error: secErr } = await supabase
           .from('sections')
           .select('id')
-          .ilike('slug', sectionSlug)
+          .ilike('slug', filters.sectionSlug)
           .eq('category_id', categoryId!)
           .limit(1)
           .single();
@@ -62,7 +57,7 @@ export const useFilteredProducts = ({
       }
 
       let subsectionId: string | null = null;
-      if (subsectionSlug) {
+      if (filters.subsectionSlug) {
         if (!sectionId) {
           console.warn('❗ sectionSlug가 없어서 subsection 조회 불가');
           return [];
@@ -70,7 +65,7 @@ export const useFilteredProducts = ({
         const { data: subsection, error: subsectionErr } = await supabase
           .from('subsections')
           .select('id')
-          .ilike('slug', subsectionSlug)
+          .ilike('slug', filters.subsectionSlug)
           .eq('section_id', sectionId)
           .limit(1)
           .single();
@@ -85,11 +80,11 @@ export const useFilteredProducts = ({
           .eq('subsection_id', subsectionId);
         const subtabIds = (allSubtabs ?? []).map((t) => String(t.id));
 
-        if (subtabSlug && subtabSlug !== 'all') {
+        if (filters.subtabSlug && filters.subtabSlug !== 'all') {
           const { data: oneTab, error: oneErr } = await supabase
             .from('subtabs')
             .select('id')
-            .ilike('slug', subtabSlug)
+            .ilike('slug', filters.subtabSlug)
             .eq('subsection_id', subsectionId)
             .limit(1)
             .single();

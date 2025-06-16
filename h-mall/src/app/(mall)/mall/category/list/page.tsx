@@ -5,6 +5,8 @@ import { useFilteredProducts } from '@/hooks/useFilteredProducts';
 import ProductGrid from '@/components/category/ProductGrid';
 import { useRouter } from 'next/navigation';
 import { ROUTES } from '@/types/constants';
+import { ProductGridSkeleton } from '@/components/skeleton/ProductSkeletonComponents';
+import { Tables } from '@/types/supabase';
 
 export default function CategoryListPage() {
   const searchParams = useSearchParams();
@@ -21,8 +23,16 @@ export default function CategoryListPage() {
     subtabSlug,
   });
 
-  if (isLoading) return <p>로딩 중...</p>;
-  if (!products || products.length === 0) return <p>상품이 없습니다.</p>;
+  if (isLoading) {
+    return (
+      <div className="max-w-screen-xl mx-auto">
+        <ProductGridSkeleton count={products} />
+      </div>
+    );
+  }
+  if (!products || products.length === 0) {
+    return <p className="text-center py-10">상품이 없습니다.</p>;
+  }
 
   return (
     <div className="max-w-screen-xl mx-auto">

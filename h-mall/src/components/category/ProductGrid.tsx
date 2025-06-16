@@ -1,19 +1,19 @@
+// components/category/ProductGrid.tsx
 import Image from 'next/image';
 import type { Tables } from '@/types/supabase';
 import StarSvg from '@/assets/icons/star.svg';
 
-export default function ProductGrid({
-  products,
-  onClick,
-}: {
+type Props = {
   products: Tables<'products'>[];
-  onClick?: (product: Tables<'products'>) => void;
-}) {
+  onClick?: (p: Tables<'products'>) => void;
+};
+
+export default function ProductGrid({ products, onClick }: Props) {
   return (
     <div
       className="
         grid
-        grid-cols-[repeat(auto-fit,minmax(170px,1fr))]
+        grid-cols-[repeat(auto-fit,minmax(170px,340px))]
         gap-3 sm:gap-4 md:gap-6
         px-2 sm:px-4 md:px-8
         w-full max-w-screen-2xl mx-auto
@@ -36,11 +36,11 @@ export default function ProductGrid({
           <div
             key={id}
             className="
-            flex flex-col bg-white rounded-2xl shadow-sm hover:shadow-lg transition
-            border border-hr-gray-10 hover:border-hr-purple-default
-            cursor-pointer overflow-hidden
-            min-w-0
-          "
+              flex flex-col bg-white rounded-2xl shadow-sm hover:shadow-lg transition
+              border border-hr-gray-10 hover:border-hr-purple-default
+              cursor-pointer overflow-hidden
+              min-w-0 max-w-full
+            "
             onClick={() => onClick?.(product)}
           >
             {/* 상품 이미지 */}
