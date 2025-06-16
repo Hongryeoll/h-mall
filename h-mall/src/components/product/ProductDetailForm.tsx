@@ -1,10 +1,9 @@
 import { ProductFormProps } from '@/types/products';
-import { FieldErrors, UseFormRegister } from 'react-hook-form';
+import { FieldErrors } from 'react-hook-form';
 import ImageUploader from '@/components/uploader/ImageUploader';
 import EditorJodit from '@/components/editor/JoditEditor';
 
 type Props = {
-  register: UseFormRegister<ProductFormProps>;
   errors: FieldErrors<ProductFormProps>;
   productImage: (File | string)[];
   detailImage: (File | string)[];
@@ -17,7 +16,6 @@ type Props = {
 };
 
 export default function ProductDetailForm({
-  register,
   errors,
   productImage,
   detailImage,

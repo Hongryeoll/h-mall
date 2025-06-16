@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
+import Image from 'next/image';
 import { XCircleIcon } from '@heroicons/react/24/solid';
 
 interface Props {
@@ -41,11 +42,7 @@ export default function ImageUploader({
         className="border border-hr-gray-30 rounded-md p-4 text-center cursor-pointer bg-hr-light hover:bg-hr-gray-10 transition"
       >
         <input {...getInputProps()} />
-        {isDragActive ? (
-          <p>이미지를 여기에 드롭하세요...</p>
-        ) : (
-          <p>여기를 클릭하거나 드래그해서 이미지를 업로드하세요</p>
-        )}
+        {isDragActive ? <p>Drag Images</p> : <p>Select & Drag Images</p>}
       </div>
 
       <div className="flex flex-wrap gap-2 mt-2">
@@ -54,10 +51,12 @@ export default function ImageUploader({
             key={idx}
             className="relative w-24 h-24 rounded-lg overflow-hidden border border-hr-gray-20 bg-hr-gray-5 shadow-sm"
           >
-            <img
+            <Image
               src={url}
               alt={`미리보기${idx + 1}`}
-              className="w-full h-full object-cover"
+              fill
+              className="object-cover"
+              unoptimized
             />
             <button
               type="button"

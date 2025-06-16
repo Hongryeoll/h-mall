@@ -181,8 +181,12 @@ export default function ProductForm({
     try {
       productUrls = await uploadImagesToSupabase(productImage);
       detailUrls = await uploadImagesToSupabase(detailImage);
-    } catch (err: any) {
-      alert(`이미지 업로드 실패: ${err.message}`);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        alert(`이미지 업로드 실패: ${err.message}`);
+      } else {
+        alert('이미지 업로드 실패: 알 수 없는 오류');
+      }
       return;
     }
 
@@ -257,7 +261,6 @@ export default function ProductForm({
         )}
         {activeTab === 'detail' && (
           <ProductDetailForm
-            register={register}
             errors={errors}
             previewProduct={productPreview}
             previewDetail={detailPreview}
