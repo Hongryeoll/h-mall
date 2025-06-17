@@ -6,15 +6,43 @@ import React from 'react';
 // 1. 상품 카드 Skeleton
 export function ProductCardSkeleton() {
   return (
-    <div className="flex flex-col bg-white rounded-2xl p-2 animate-pulse">
-      <SkeletonTheme baseColor="#e0e0e0" highlightColor="#f5f5f5">
-        <Skeleton width="100%" height={0} style={{ paddingTop: '100%' }} />
-      </SkeletonTheme>
-      <div className="mt-2 space-y-1">
-        <Skeleton width={60} height={16} />
-        <Skeleton count={2} height={14} />
-        <Skeleton width={80} height={18} />
-        <Skeleton width={40} height={14} />
+    <div
+      className={`
+          mb-5 pb-3
+          bg-white rounded-lg
+          space-y-2
+          animate-pulse
+          cursor-default overflow-hidden
+        `}
+    >
+      {/* 이미지 영역 Skeleton */}
+      <div className="w-full bg-hr-gray-10 overflow-hidden">
+        <SkeletonTheme baseColor="#e0e0e0" highlightColor="#f5f5f5">
+          {/* aspect-square 유지 */}
+          <Skeleton width="100%" height={0} style={{ paddingTop: '100%' }} />
+        </SkeletonTheme>
+      </div>
+      {/* 텍스트 정보 영역 */}
+      <div className="px-1 space-y-1">
+        {/* 브랜드 */}
+        <Skeleton width="40%" height={16} />
+        {/* 이름 (2줄 클램프) */}
+        <div className="space-y-1">
+          <Skeleton width="100%" height={14} />
+          <Skeleton width="80%" height={14} />
+        </div>
+        {/* 원가(취소선) 자리 */}
+        <Skeleton width="30%" height={14} />
+        {/* 할인율 + 가격 flex */}
+        <div className="flex justify-between items-baseline">
+          <Skeleton width="15%" height={18} />
+          <Skeleton width="25%" height={18} />
+        </div>
+        {/* 별점/리뷰 flex */}
+        <div className="flex items-center gap-2">
+          <Skeleton width="20%" height={14} />
+          <Skeleton width="15%" height={14} />
+        </div>
       </div>
     </div>
   );
