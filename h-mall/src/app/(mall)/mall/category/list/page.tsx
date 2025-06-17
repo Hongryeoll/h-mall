@@ -6,7 +6,6 @@ import ProductGrid from '@/components/category/ProductGrid';
 import { useRouter } from 'next/navigation';
 import { ROUTES } from '@/types/constants';
 import { ProductGridSkeleton } from '@/components/skeleton/ProductSkeletonComponents';
-import { Tables } from '@/types/supabase';
 
 export default function CategoryListPage() {
   const searchParams = useSearchParams();
@@ -38,7 +37,9 @@ export default function CategoryListPage() {
     <div className="max-w-screen-xl mx-auto">
       <ProductGrid
         products={products}
-        onClick={() => router.push(ROUTES.MALL_CATALOG)}
+        onClick={(p) => {
+          router.push(ROUTES.MALL_CATALOG(p.id));
+        }}
       />
     </div>
   );

@@ -2,12 +2,18 @@
 
 import { useState } from 'react';
 import { HrButton } from '@/components/common/HrButton';
+import Image from 'next/image';
+import { ProductFormProps } from '@/types/products';
 
-interface Props {
+type Props = {
   id: string;
-}
+  product: ProductFormProps;
+};
 
-export default function ProductDetailSection({ id }: Props) {
+export default function ProductDetailSection({
+  id,
+  product: { detail_images },
+}: Props) {
   const [isShowDetail, setIsShowDetail] = useState(false);
   const [collapsedScroll, setCollapsedScroll] = useState<number | null>(null);
 
@@ -24,10 +30,23 @@ export default function ProductDetailSection({ id }: Props) {
         <div className="mb-4 text-lg font-semibold text-hr-gray-70">
           상품상세 설명
         </div>
-        <div className="space-y-2 text-hr-gray-50">
-          {[...Array(50)].map((_, i) => (
-            <div key={i}>상세 내용 예시 줄 {i + 1}</div>
+        <div className="space-y-4">
+          {detail_images.map((src, idx) => (
+            <div
+              key={idx}
+              className="w-full aspect-square relative overflow-hidden"
+            >
+              <Image
+                src={src}
+                alt={`상세 이미지 ${idx + 1}`}
+                fill
+                style={{ objectFit: 'cover' }}
+              />
+            </div>
           ))}
+          {detail_images.length === 0 && (
+            <p className="text-hr-gray-50">등록된 상세 이미지가 없습니다.</p>
+          )}
         </div>
       </div>
 

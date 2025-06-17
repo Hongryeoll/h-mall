@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { Noto_Sans_KR } from 'next/font/google';
 import localFont from 'next/font/local';
 import './globals.css';
-import { getUser } from '@/actions/auth/user.action';
 import { HrHeader } from '@/components/common/HrHeader';
 import HrNav from '@/components/common/HrNav';
 import QueryProvider from '@/components/provider/QueryProvider';
@@ -27,8 +26,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const user = await getUser({ serverComponent: true });
-
   return (
     <html
       lang="ko"

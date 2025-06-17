@@ -1,14 +1,24 @@
+'use client';
+
+import DOMPurify from 'isomorphic-dompurify';
+import { ProductFormProps } from '@/types/products';
+
 interface Props {
   id: string;
+  product: ProductFormProps;
 }
 
-export default function ProductGuideSection({ id }: Props) {
+export default function ProductGuideSection({
+  id,
+  product: { description },
+}: Props) {
+  const cleanHtml = description
+    ? DOMPurify.sanitize(description)
+    : '<p>등록된 안내가 없습니다.</p>';
+
   return (
-    <div
-      id={id}
-      className="h-[600px] flex items-center justify-center text-3xl font-semibold bg-blue-50 border-b border-blue-200"
-    >
-      상품안내 영역
-    </div>
+    <section id={id} className="prose prose-lg prose-blue max-w-none px-6 py-8">
+      <div dangerouslySetInnerHTML={{ __html: cleanHtml }} />
+    </section>
   );
 }

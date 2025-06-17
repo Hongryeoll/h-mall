@@ -7,15 +7,24 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import Image from 'next/image';
 import { HrButton } from '@/components/common/HrButton';
+import { ProductFormProps } from '@/types/products';
 
-const images = [
-  '/images/h_logo.png',
-  '/images/h_logo.png',
-  '/images/h_logo.png',
-  '/images/h_logo.png',
-];
+type Props = {
+  product: ProductFormProps;
+};
 
-export default function ProductInfo() {
+export default function ProductInfo({
+  product: {
+    name,
+    brand,
+    product_images,
+    price,
+    discount_rate,
+    final_price,
+    avg_rating,
+    review_count,
+  },
+}: Props) {
   return (
     <>
       <div className="w-full max-w-5xl mx-auto flex gap-8 mt-8">
@@ -28,7 +37,7 @@ export default function ProductInfo() {
               loop={true}
               className="h-full"
             >
-              {images.map((img, idx) => (
+              {product_images.map((img, idx) => (
                 <SwiperSlide key={`${img}-${idx}`}>
                   <Image
                     src={img}
@@ -46,37 +55,36 @@ export default function ProductInfo() {
 
         {/* 오른쪽: 상품 상세정보 */}
         <div className="flex-1 min-w-[340px] flex flex-col gap-2">
-          <h1 className="text-2xl font-bold leading-tight mb-1">
-            DAILY LITE DUFFLE BAG <br />
-            <span className="font-normal text-lg">
-              (3colors) 데일리 라이트 더플백
+          <h1 className="text-hr-h2 font-hr-bold leading-tight mb-1">
+            {name} <br />
+            <span className="font-hr-semi-bold text-hr-h5 text-hr-gray-50 ">
+              {brand}
             </span>
           </h1>
           <div className="flex items-center gap-2 mb-2">
-            <span className="text-yellow-500 text-xl">★★★★★</span>
+            <span className="text-hr-yellow-default text-hr-b1">
+              ★ {avg_rating}
+            </span>
             <span className="text-base font-semibold text-hr-gray-70">
-              61개 리뷰 보기
+              {review_count ?? 0}개 리뷰 보기
             </span>
           </div>
           {/* 가격/할인/첫구매 */}
           <div className="flex flex-col gap-1 mb-2">
-            <div className="text-gray-400 line-through text-lg">69,000원</div>
-            <div>
-              <span className="text-pink-600 font-bold text-2xl">17%</span>
-              <span className="text-2xl font-bold ml-2">57,270원</span>
+            <div className="text-hr-gray-40 line-through text-hr-b2">
+              {price.toLocaleString()}원
             </div>
             <div>
-              <span className="bg-pink-500 text-white px-2 py-1 rounded text-lg font-semibold mr-2">
-                29%
+              <span className="text-hr-pink-default font-hr-bold text-hr-h4">
+                {discount_rate}%
               </span>
-              <span className="text-pink-600 font-bold text-xl">48,680원</span>
-              <span className="ml-2 text-xs bg-gray-100 rounded px-2 py-0.5 text-pink-500">
-                첫 구매가
+              <span className="text-hr-h4 font-hr-bold ml-2">
+                {final_price?.toLocaleString()}원
               </span>
             </div>
           </div>
           {/* 구매 적립/무이자/배송정보 */}
-          <div className="grid grid-cols-2 gap-x-2 gap-y-1 text-base text-hr-gray-70 mb-2">
+          <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-base text-hr-gray-70 mb-2">
             <div>구매 적립금</div>
             <div className="text-right">최대 573 마일리지 적립 예정</div>
             <div>무이자 할부</div>
@@ -102,11 +110,11 @@ export default function ProductInfo() {
           </div>
           {/* 옵션/색상 선택 */}
           <div className="mt-3">
-            <label className="block text-base font-medium mb-1">색상</label>
+            <label className="block text-base font-medium mb-1">사이즈</label>
             <select className="border border-hr-gray-30 rounded w-full p-2">
-              <option>라이트블루</option>
-              <option>네이비</option>
-              <option>블랙</option>
+              <option>2XL</option>
+              <option>Xl</option>
+              <option>L</option>
             </select>
           </div>
           {/* 버튼영역 */}

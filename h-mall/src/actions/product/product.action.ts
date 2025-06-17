@@ -66,3 +66,31 @@ export const getSubtabsBySubsection = async (subsectionId: string) => {
   if (error) throw error;
   return data;
 };
+
+export const getProductById = async (id: string) => {
+  const supabase = await createServerSupabaseClient();
+  const { data, error } = await supabase
+    .from('products')
+    .select(
+      `
+      *,
+      subtabs (
+        *,
+        subsections (
+          *,
+          sections (
+            *,
+            categories (
+              *
+            )
+          )
+        )
+      )
+    `
+    )
+    .eq('id', id)
+    .single();
+
+  if (error) throw error;
+  return data;
+};
