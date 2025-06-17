@@ -1,17 +1,12 @@
-// 'use client';
-
-// import { HrButton } from '@/components/common/HrButton';
-// import { ROUTES } from '@/types/constants';
-// import { useMutation } from '@tanstack/react-query';
-// import { useRouter } from 'next/navigation';
-// import { useContext } from 'react';
+import CartInfo from '@/components/cart/CartInfo';
 
 export default function OrderCart() {
-
   return (
     <>
       <span />
-      <div className="p-4">OrderCart</div>
+      <div className="p-4">
+        <CartInfo />
+      </div>
     </>
   );
 }

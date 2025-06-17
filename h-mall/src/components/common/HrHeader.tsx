@@ -69,7 +69,7 @@ export const HrHeader = ({
 
         <span
           className="inline-flex items-center gap-1 p-2 cursor-pointer"
-          onClick={() => router.push(ROUTES.MYPAGE)}
+          onClick={() => router.push(ROUTES.MALL_MYPAGE)}
         >
           <UserSVG width={16} height={16} className="text-hr-gray-80" />
           <span className="text-hr-c3 text-hr-gray-50 leading-none hidden lg:inline">
@@ -79,7 +79,7 @@ export const HrHeader = ({
 
         <span
           className="inline-flex items-center gap-1 p-2 cursor-pointer"
-          onClick={() => router.push(ROUTES.CART)}
+          onClick={() => router.push(ROUTES.MALL_CART)}
         >
           <ShoppingBagSVG width={16} height={16} className="text-hr-gray-80" />
           <span className="text-hr-c3 text-hr-gray-50 leading-none hidden lg:inline">
