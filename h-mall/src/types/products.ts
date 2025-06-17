@@ -10,4 +10,5 @@ export interface ProductFormProps {
   section_id: string;
   subsection_id: string;
   subtab_id: string;
+  created_date?: string;
 }

@@ -66,6 +66,7 @@ export default function ProductForm({
           `
           id,
           name,
+          created_date,
           price,
           discount_rate,
           final_price,
@@ -90,6 +91,7 @@ export default function ProductForm({
 
       reset({
         name: data.name,
+        created_date: data.created_date ?? undefined,
         product_images: data.product_images,
         detail_images: data.detail_images,
         price: data.price,
@@ -250,7 +252,9 @@ export default function ProductForm({
             errors={errors}
           />
         )}
-        {activeTab === 'basic' && <ProductBasicForm errors={errors} />}
+        {activeTab === 'basic' && (
+          <ProductBasicForm errors={errors} isEditMode={!!productId} />
+        )}
         {activeTab === 'price' && (
           <ProductPriceForm
             errors={errors}
