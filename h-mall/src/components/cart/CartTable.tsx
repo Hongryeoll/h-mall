@@ -1,9 +1,10 @@
 // components/cart/CartTable.tsx
 import React from 'react';
-import CartItem, { CartItemRowProps } from './CartItem';
+import CartItem from '@/components/cart/CartItem';
+import type { CartItemProps } from '@/hooks/useCart';
 
 export type CartTableProps = {
-  items: CartItemRowProps[];
+  items: CartItemProps[]; // useCart 훅에서 가져온 CartItem 타입
   selectedIds: string[];
   toggleSelect: (id: string) => void;
   removeItem: (id: string) => void;
@@ -20,6 +21,15 @@ export default function CartTable({
   const allIds = items.map((it) => it.id);
   const allSelected = items.length > 0 && selectedIds.length === items.length;
 
+  // 전체 선택/해제 핸들러
+  const handleToggleAll = () => {
+    if (allSelected) {
+      allIds.forEach((id) => toggleSelect(id));
+    } else {
+      allIds.forEach((id) => toggleSelect(id));
+    }
+  };
+
   return (
     <div className="overflow-x-auto">
       <table className="w-full border-collapse">
@@ -29,11 +39,7 @@ export default function CartTable({
               <input
                 type="checkbox"
                 checked={allSelected}
-                onChange={() =>
-                  allIds.forEach((id) =>
-                    toggleSelect(allSelected ? '' /* deselect all */ : id)
-                  )
-                }
+                onChange={handleToggleAll}
               />
             </th>
             <th className="text-left py-3">상품 정보</th>
@@ -46,7 +52,9 @@ export default function CartTable({
           {items.map((item) => (
             <CartItem
               key={item.id}
-              {...item}
+              id={item.id}
+              product={item.product}
+              quantity={item.quantity}
               selected={selectedIds.includes(item.id)}
               onSelect={() => toggleSelect(item.id)}
               onRemove={() => removeItem(item.id)}

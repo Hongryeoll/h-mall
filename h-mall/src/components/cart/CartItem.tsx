@@ -1,11 +1,10 @@
-// components/cart/CartItemRow.tsx
 'use client';
 
 import React, { useMemo } from 'react';
 import Image from 'next/image';
 import CartQuantityControl, {
   QuantityControlProps,
-} from './CartQuantityControl';
+} from '@/components/cart/CartQuantityControl';
 
 export type CartItemRowProps = {
   id: string;

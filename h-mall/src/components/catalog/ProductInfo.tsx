@@ -8,9 +8,16 @@ import 'swiper/css/pagination';
 import Image from 'next/image';
 import { HrButton } from '@/components/common/HrButton';
 import { ProductFormProps } from '@/types/products';
+import { useState } from 'react';
 
 type Props = {
   product: ProductFormProps;
+};
+
+type SelectedOption = {
+  size: string;
+  quantity: number;
+  price: number;
 };
 
 export default function ProductInfo({
@@ -25,6 +32,46 @@ export default function ProductInfo({
     review_count,
   },
 }: Props) {
+  const [selectedSizes, setSelectedSizes] = useState<SelectedOption[]>([]);
+
+  const handleSizeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedSize = e.target.value;
+    if (!selectedSize) return;
+
+    const alreadySelected = selectedSizes.find(
+      (opt) => opt.size === selectedSize
+    );
+    if (alreadySelected) return;
+
+    if (typeof final_price !== 'number') {
+      console.error('상품가격이 유효하지 않습니다:', final_price);
+      return;
+    }
+
+    setSelectedSizes((prev) => [
+      ...prev,
+      {
+        size: selectedSize,
+        quantity: 1,
+        price: final_price,
+      },
+    ]);
+  };
+
+  const changeQuantity = (size: string, delta: number) => {
+    setSelectedSizes((prev) =>
+      prev.map((opt) =>
+        opt.size === size
+          ? { ...opt, quantity: Math.max(1, opt.quantity + delta) }
+          : opt
+      )
+    );
+  };
+
+  const totalPrice = selectedSizes.reduce(
+    (sum, opt) => sum + opt.quantity * opt.price,
+    0
+  );
   return (
     <>
       <div className="w-full max-w-5xl mx-auto flex gap-8 mt-8">
@@ -108,15 +155,64 @@ export default function ProductInfo({
               </span>
             </div>
           </div>
-          {/* 옵션/색상 선택 */}
+          {/* 사이즈 선택 */}
           <div className="mt-3">
             <label className="block text-base font-medium mb-1">사이즈</label>
-            <select className="border border-hr-gray-30 rounded w-full p-2">
-              <option>2XL</option>
-              <option>Xl</option>
-              <option>L</option>
+            <select
+              onChange={handleSizeSelect}
+              className="border border-hr-gray-30 rounded w-full p-2"
+              defaultValue=""
+            >
+              <option value="" disabled>
+                사이즈 선택
+              </option>
+              <option value="2XL">2XL</option>
+              <option value="XL">XL</option>
+              <option value="L">L</option>
             </select>
           </div>
+
+          {/* 선택된 사이즈 리스트 */}
+          {selectedSizes.length > 0 && (
+            <div className="mt-4 space-y-2">
+              {selectedSizes.map(({ size, quantity, price }) => (
+                <div
+                  key={size}
+                  className="flex items-center justify-between border-b py-2"
+                >
+                  <span className="font-hr-semi-bold">{size}</span>
+                  <div className="flex items-center border border-hr-gray-30 rounded">
+                    <button
+                      onClick={() => changeQuantity(size, -1)}
+                      className="px-2"
+                    >
+                      -
+                    </button>
+                    <span className="px-3">{quantity}</span>
+                    <button
+                      onClick={() => changeQuantity(size, 1)}
+                      className="px-2"
+                    >
+                      +
+                    </button>
+                  </div>
+                  <span className="font-hr-semi-bold">
+                    {(price * quantity).toLocaleString()}원
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* 총 상품 금액 */}
+          {selectedSizes.length > 0 && (
+            <div className="flex justify-between mt-4 text-hr-h5 font-hr-bold">
+              <span>총 상품 금액</span>
+              <span className="text-hr-yellow-default">
+                {totalPrice.toLocaleString()}원
+              </span>
+            </div>
+          )}
           {/* 버튼영역 */}
           <div className="flex gap-2 mt-5">
             <HrButton

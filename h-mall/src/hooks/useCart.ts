@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { createSupabaseBrowserClient } from '@/library/client/supabase';
 import type { Database } from '@/types/supabase';
 
-export type CartItem = {
+export type CartItemProps = {
   id: string;
   quantity: number;
   product: {
@@ -23,9 +23,9 @@ export function useCart() {
     data: items,
     isLoading,
     error: fetchError,
-  } = useQuery<CartItem[], Error>({
+  } = useQuery<CartItemProps[], Error>({
     queryKey: ['cart'],
-    queryFn: async (): Promise<CartItem[]> => {
+    queryFn: async (): Promise<CartItemProps[]> => {
       const { data, error } = await supabase
         .from('cart_items')
         .select(
@@ -41,7 +41,7 @@ export function useCart() {
         `
         );
       if (error) throw error;
-      return data as CartItem[];
+      return data as CartItemProps[];
     },
   });
 
