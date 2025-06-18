@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useCart } from '@/hooks/useCart';
 import { Navigation, Pagination, A11y } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -10,6 +11,8 @@ import 'swiper/css/pagination';
 import Image from 'next/image';
 import { HrButton } from '@/components/common/HrButton';
 import { ProductFormProps } from '@/types/products';
+import { useModal } from '@/components/provider/ModalProvider';
+import { ROUTES } from '@/types/constants';
 
 type Props = {
   product: ProductFormProps;
@@ -34,6 +37,8 @@ export default function ProductInfo({
     review_count,
   },
 }: Props) {
+  const router = useRouter();
+  const { showModal } = useModal();
   const { addItem } = useCart();
   const [selectedSizes, setSelectedSizes] = useState<SelectedOption[]>([]);
 
@@ -78,7 +83,10 @@ export default function ProductInfo({
 
   const handleAddToCart = () => {
     if (selectedSizes.length === 0) {
-      window.alert('옵션(사이즈)을 먼저 선택해주세요.');
+      showModal({
+        title: '옵션을 선택해주세요',
+        description: '상품을 담으려면 먼저 사이즈를 선택해주세요.',
+      });
       return;
     }
 
@@ -89,8 +97,29 @@ export default function ProductInfo({
       });
     });
 
+    showModal({
+      title: '장바구니 담기 완료',
+      description: '상품이 장바구니에 추가되었습니다.',
+      children: (
+        <div className="mt-6 flex justify-end gap-2">
+          <HrButton
+            text="계속 쇼핑"
+            type="line"
+            size="m"
+            onClick={() => {
+              showModal({ title: '', description: '' });
+            }}
+          />
+          <HrButton
+            text="장바구니로 이동"
+            type="default"
+            size="m"
+            onClick={() => router.push(ROUTES.MALL_CART)}
+          />
+        </div>
+      ),
+    });
     setSelectedSizes([]);
-    window.alert('장바구니에 담겼습니다.');
   };
 
   return (

@@ -11,6 +11,7 @@ import ProductPriceForm from '@/components/product/ProductPriceForm';
 import ProductDetailForm from '@/components/product/ProductDetailForm';
 import ProductCategoryForm from '@/components/product/ProductCategoryForm';
 import { useUserContext } from '@/components/provider/UserProvider';
+import { useModal } from '@/components/provider/ModalProvider';
 
 type TabKey = 'category' | 'basic' | 'price' | 'detail' | 'ship';
 
@@ -25,6 +26,7 @@ export default function ProductForm({
   const queryClient = useQueryClient();
   const { user, role, loading } = useUserContext();
   const methods = useForm<ProductFormProps>();
+  const { showModal } = useModal();
   const {
     register,
     handleSubmit,
@@ -85,7 +87,11 @@ export default function ProductForm({
         .single();
 
       if (error || !data) {
-        alert('상품 정보를 불러오지 못했습니다.');
+        showModal({
+          title: '상품 로드 실패',
+          description:
+            '상품 정보를 불러오지 못했습니다.\n잠시 후 다시 시도해주세요.',
+        });
         return;
       }
 
@@ -136,11 +142,34 @@ export default function ProductForm({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products'] });
       reset();
-      alert(productId ? '수정 완료!' : '상품이 등록되었습니다!');
+      showModal({
+        title: productId ? '수정 완료!' : '상품 등록 완료!',
+        description: productId
+          ? '상품 정보가 성공적으로 수정되었습니다.'
+          : '새 상품이 성공적으로 등록되었습니다.',
+        children: (
+          <div className="mt-6 flex justify-end">
+            <button
+              className="px-4 py-2 bg-hr-purple-default text-white rounded"
+              onClick={() => {
+                onClose();
+                // 모달도 닫기
+                showModal({ title: '', description: '' });
+              }}
+            >
+              확인
+            </button>
+          </div>
+        ),
+      });
+
       onClose();
     },
     onError: (error) => {
-      alert(`${productId ? '수정 실패' : '등록 실패'}: ${error.message}`);
+      showModal({
+        title: productId ? '수정 실패' : '등록 실패',
+        description: error.message,
+      });
     },
   });
 
@@ -185,14 +214,21 @@ export default function ProductForm({
       detailUrls = await uploadImagesToSupabase(detailImage);
     } catch (err: unknown) {
       if (err instanceof Error) {
-        alert(`이미지 업로드 실패: ${err.message}`);
+        showModal({
+          title: '이미지 업로드 실패',
+          description: `이미지 업로드 중 오류가 발생했습니다.\n${err.message}`,
+        });
       } else {
-        alert('이미지 업로드 실패: 알 수 없는 오류');
+        showModal({
+          title: '이미지 업로드 실패',
+          description: '알 수 없는 오류가 발생했습니다.',
+        });
       }
       return;
     }
 
     const payload: ProductFormProps = {
+      id: form.id,
       name: form.name,
       product_images: productUrls,
       detail_images: detailUrls,

@@ -6,6 +6,7 @@ import { HrHeader } from '@/components/common/HrHeader';
 import HrNav from '@/components/common/HrNav';
 import QueryProvider from '@/components/provider/QueryProvider';
 import { UserProvider } from '@/components/provider/UserProvider';
+import { ModalProvider } from '@/components/provider/ModalProvider';
 
 const notoSansKR = Noto_Sans_KR({
   subsets: ['cyrillic', 'latin', 'latin-ext', 'vietnamese'],
@@ -36,9 +37,11 @@ export default async function RootLayout({
         <div className="h-full flex flex-col min-h-0">
           <QueryProvider>
             <UserProvider>
-              <HrHeader />
-              <HrNav />
-              {children}
+              <ModalProvider>
+                <HrHeader />
+                <HrNav />
+                {children}
+              </ModalProvider>
             </UserProvider>
           </QueryProvider>
         </div>

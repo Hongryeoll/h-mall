@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { createSupabaseBrowserClient } from '@/library/client/supabase';
 import { useState } from 'react';
+import { useModal } from '@/components/provider/ModalProvider';
 
 type FormData = {
   email: string;
@@ -15,6 +16,7 @@ export default function SignUpPage() {
   const supabase = createSupabaseBrowserClient();
 
   const [serverError, setServerError] = useState('');
+  const { showModal } = useModal();
   const {
     register,
     handleSubmit,
@@ -32,7 +34,10 @@ export default function SignUpPage() {
       .maybeSingle();
 
     if (existingUser) {
-      alert('이미 가입된 이메일입니다. 로그인해주세요.');
+      showModal({
+        title: '이미 가입된 이메일',
+        description: '이미 가입된 이메일입니다. 로그인 페이지로 이동합니다.',
+      });
       router.push('/login');
       return;
     }
@@ -44,20 +49,32 @@ export default function SignUpPage() {
 
     if (error) {
       if (error.message === 'User already registered') {
-        alert('이미 인증된 이메일입니다. 로그인해주세요.');
+        showModal({
+          title: '이미 인증된 이메일',
+          description: '이미 인증된 이메일입니다. 로그인 페이지로 이동합니다.',
+        });
         router.push('/login');
       } else {
-        alert(`회원가입 실패: ${error.message}`);
+        showModal({
+          title: '회원가입 실패',
+          description: `회원가입에 실패했습니다.\n${error.message}`,
+        });
       }
       return;
     }
 
     if (!signUpData.user) {
-      alert('이미 등록된 이메일입니다. 이메일 인증을 완료해주세요.');
+      showModal({
+        title: '이메일 인증 필요',
+        description: '이미 등록된 이메일입니다. 이메일 인증을 완료해주세요.',
+      });
       return;
     }
 
-    alert('이메일 확인 후 로그인 해주세요.');
+    showModal({
+      title: '가입 완료',
+      description: '메일함을 확인하신 후 로그인해주세요.',
+    });
     router.push('/login');
   };
 

@@ -1,5 +1,5 @@
 import type { Config } from 'tailwindcss';
-import { heroui } from '@heroui/theme';
+import headlessuiPlugin from '@headlessui/tailwindcss';
 import typography from '@tailwindcss/typography';
 
 const config: Config = {
@@ -7,10 +7,29 @@ const config: Config = {
     './src/views/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
-    './node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}',
+    './node_modules/@headlessui/theme/dist/**/*.{js,ts,jsx,tsx}',
+    './node_modules/@headlessui/**/*.{js,ts}',
   ],
   theme: {
     extend: {
+      zIndex: {
+        modal: '1000',
+        dropdown: '50',
+        overlay: '999',
+      },
+      backgroundColor: {
+        'modal-overlay': 'rgba(0,0,0,0.5)',
+      },
+      animation: {
+        'fade-in': 'fade-in 0.2s ease-out',
+      },
+      transitionProperty: {
+        height: 'height',
+        spacing: 'margin, padding',
+      },
+      transitionTimingFunction: {
+        'bounce-in': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+      },
       colors: {
         'hr-purple-default': '#732DCE',
         'hr-purple-bg': '#F4EFFB',
@@ -76,7 +95,7 @@ const config: Config = {
       },
     },
   },
-  plugins: [heroui(), typography],
+  plugins: [typography, headlessuiPlugin({ prefix: 'ui' })],
 };
 
 export default config;
