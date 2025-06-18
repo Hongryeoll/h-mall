@@ -17,7 +17,17 @@ export default function CartInfo() {
     );
 
   const handleDeleteSelected = async () => {
-    await Promise.all(selectedIds.map((id) => removeItem.mutateAsync(id)));
+    await Promise.all(
+      selectedIds.map((id) => {
+        const item = items.find((it) => it.id === id);
+        if (!item) return Promise.resolve();
+
+        return removeItem.mutateAsync({
+          product_id: item.product.id,
+          size: item.size,
+        });
+      })
+    );
     setSelectedIds([]);
   };
 
@@ -28,8 +38,12 @@ export default function CartInfo() {
         items={items}
         selectedIds={selectedIds}
         toggleSelect={toggleSelect}
-        removeItem={(id) => removeItem.mutate(id)}
-        updateItem={(id, qty) => updateItem.mutate({ id, quantity: qty })}
+        removeItem={(product_id, size) =>
+          removeItem.mutate({ product_id, size })
+        }
+        updateItem={(product_id, size, qty) =>
+          updateItem.mutate({ product_id, size, quantity: qty })
+        }
       />
       <CartActionButton onDeleteSelected={handleDeleteSelected} />
       <CartSummary items={items} />

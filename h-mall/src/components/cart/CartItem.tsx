@@ -6,30 +6,33 @@ import CartQuantityControl, {
   QuantityControlProps,
 } from '@/components/cart/CartQuantityControl';
 
-export type CartItemRowProps = {
+export type CartItemProps = {
   id: string;
+  size: string;
   quantity: number;
   product: {
     id: string;
     name: string;
+    brand: string;
     final_price: number;
     product_images: string[];
   };
   selected: boolean;
   onSelect: () => void;
-  onRemove: () => void;
-  onUpdate: (newQty: number) => void;
+  onRemove: (product_id: string, size: string) => void;
+  onUpdate: (product_id: string, size: string, newQty: number) => void;
 };
 
 export default function CartItem({
   id,
+  size,
   product,
   quantity,
   selected,
   onSelect,
   onRemove,
   onUpdate,
-}: CartItemRowProps) {
+}: CartItemProps) {
   const totalPrice = useMemo(
     () => quantity * product.final_price,
     [quantity, product.final_price]
@@ -52,13 +55,13 @@ export default function CartItem({
           />
         </div>
         <div className="flex-1">
-          <p className="text-sm text-gray-500">브랜드명</p>
+          <p className="text-sm text-gray-500">{product.brand}</p>
           <p className="font-medium truncate">{product.name}</p>
-          <p className="text-xs text-gray-500">옵션: [SIZE]F</p>
+          <p className="text-xs text-gray-500">옵션: [{size}]</p>
         </div>
         <button
           className="text-gray-400 hover:text-gray-600"
-          onClick={onRemove}
+          onClick={() => onRemove(product.id, size)}
         >
           &times;
         </button>
@@ -66,8 +69,8 @@ export default function CartItem({
       <td className="py-4 text-center">
         <CartQuantityControl
           quantity={quantity}
-          onDecrease={() => onUpdate(quantity - 1)}
-          onIncrease={() => onUpdate(quantity + 1)}
+          onDecrease={() => onUpdate(product.id, size, quantity - 1)}
+          onIncrease={() => onUpdate(product.id, size, quantity + 1)}
         />
       </td>
       <td className="py-4 text-right">

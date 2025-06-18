@@ -4,11 +4,11 @@ import CartItem from '@/components/cart/CartItem';
 import type { CartItemProps } from '@/hooks/useCart';
 
 export type CartTableProps = {
-  items: CartItemProps[]; // useCart 훅에서 가져온 CartItem 타입
+  items: CartItemProps[];
   selectedIds: string[];
   toggleSelect: (id: string) => void;
-  removeItem: (id: string) => void;
-  updateItem: (id: string, qty: number) => void;
+  removeItem: (product_id: string, size: string) => void;
+  updateItem: (product_id: string, size: string, qty: number) => void;
 };
 
 export default function CartTable({
@@ -54,11 +54,12 @@ export default function CartTable({
               key={item.id}
               id={item.id}
               product={item.product}
+              size={item.size}
               quantity={item.quantity}
               selected={selectedIds.includes(item.id)}
               onSelect={() => toggleSelect(item.id)}
-              onRemove={() => removeItem(item.id)}
-              onUpdate={(qty) => updateItem(item.id, qty)}
+              onRemove={() => removeItem(item.product.id, item.size)}
+              onUpdate={updateItem}
             />
           ))}
         </tbody>

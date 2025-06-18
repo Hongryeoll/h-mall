@@ -1,10 +1,9 @@
-// components/cart/QuantityControl.tsx
 import React from 'react';
 
 export type QuantityControlProps = {
   quantity: number;
-  onDecrease: () => void;
-  onIncrease: () => void;
+  onDecrease: (newQty: number) => void;
+  onIncrease: (newQty: number) => void;
 };
 
 export default function CartQuantityControl({
@@ -12,13 +11,26 @@ export default function CartQuantityControl({
   onDecrease,
   onIncrease,
 }: QuantityControlProps) {
+  const handleDecrease = () => {
+    if (quantity <= 1) return;
+    onDecrease(quantity - 1);
+  };
+
+  const handleIncrease = () => {
+    onIncrease(quantity + 1);
+  };
+
   return (
     <div className="inline-flex items-center border border-gray-300 rounded">
-      <button onClick={onDecrease} disabled={quantity <= 1} className="px-2">
+      <button
+        onClick={handleDecrease}
+        disabled={quantity <= 1}
+        className="px-2"
+      >
         –
       </button>
       <span className="px-4">{quantity}</span>
-      <button onClick={onIncrease} className="px-2">
+      <button onClick={handleIncrease} className="px-2">
         +
       </button>
     </div>

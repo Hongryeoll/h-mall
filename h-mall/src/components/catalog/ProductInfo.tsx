@@ -10,6 +10,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import Image from 'next/image';
 import { HrButton } from '@/components/common/HrButton';
+import HrSelectbox from '@/components/common/HrSelectbox';
 import { ProductFormProps } from '@/types/products';
 import { useModal } from '@/components/provider/ModalProvider';
 import { ROUTES } from '@/types/constants';
@@ -40,30 +41,25 @@ export default function ProductInfo({
   const router = useRouter();
   const { showModal, closeModal } = useModal();
   const { addItem } = useCart();
+  const [sizeValue, setSizeValue] = useState<string | null>(null);
   const [selectedSizes, setSelectedSizes] = useState<SelectedOption[]>([]);
+  const ClothesSizeOptions = ['2XL', 'XL', 'L', 'M', 'S'].map((sz) => ({
+    value: sz,
+    label: sz,
+  }));
 
-  const handleSizeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedSize = e.target.value;
+  const handleSizeSelect = (selectedSize: string) => {
     if (!selectedSize) return;
-
-    const alreadySelected = selectedSizes.find(
-      (opt) => opt.size === selectedSize
-    );
-    if (alreadySelected) return;
-
+    if (selectedSizes.some((opt) => opt.size === selectedSize)) return;
     if (typeof final_price !== 'number') {
       console.error('상품가격이 유효하지 않습니다:', final_price);
       return;
     }
-
     setSelectedSizes((prev) => [
       ...prev,
-      {
-        size: selectedSize,
-        quantity: 1,
-        price: final_price,
-      },
+      { size: selectedSize, quantity: 1, price: final_price },
     ]);
+    setSizeValue(null);
   };
 
   const changeQuantity = (size: string, delta: number) => {
@@ -93,6 +89,7 @@ export default function ProductInfo({
     selectedSizes.forEach(({ size, quantity }) => {
       addItem.mutate({
         product_id: id,
+        size,
         quantity,
       });
     });
@@ -209,18 +206,13 @@ export default function ProductInfo({
           {/* 사이즈 선택 */}
           <div className="mt-3">
             <label className="block text-base font-medium mb-1">사이즈</label>
-            <select
+            <HrSelectbox
+              value={sizeValue}
               onChange={handleSizeSelect}
-              className="border border-hr-gray-30 rounded w-full p-2"
-              defaultValue=""
-            >
-              <option value="" disabled>
-                사이즈 선택
-              </option>
-              <option value="2XL">2XL</option>
-              <option value="XL">XL</option>
-              <option value="L">L</option>
-            </select>
+              options={ClothesSizeOptions}
+              placeholder="사이즈 선택"
+              className="w-full"
+            />
           </div>
 
           {/* 선택된 사이즈 리스트 */}

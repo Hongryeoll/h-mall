@@ -5,10 +5,12 @@ import type { Database } from '@/types/supabase';
 
 export type CartItemProps = {
   id: string;
+  size: string;
   quantity: number;
   product: {
     id: string;
     name: string;
+    brand: string;
     final_price: number;
     product_images: string[];
   };
@@ -26,28 +28,32 @@ export function useCart() {
   } = useQuery<CartItemProps[], Error>({
     queryKey: ['cart'],
     queryFn: async (): Promise<CartItemProps[]> => {
-      const { data, error } = await supabase
-        .from('cart_items')
-        .select(
-          `
+      const { data, error } = await supabase.from('cart_items').select(
+        `
           id,
+          size,
           quantity,
           product:products (
             id,
             name,
+            brand,
             final_price,
             product_images
           )
         `
-        );
+      );
       if (error) throw error;
       return data as CartItemProps[];
     },
   });
 
   // 장바구니에 아이템 추가
-  const addItem = useMutation<any, Error, { product_id: string; quantity: number }>({
-    mutationFn: async ({ product_id, quantity }) => {
+  const addItem = useMutation<
+    Database['public']['Tables']['cart_items']['Row'][],
+    Error,
+    { product_id: string; quantity: number; size: string }
+  >({
+    mutationFn: async ({ product_id, size, quantity }) => {
       const {
         data: { user },
         error: authError,
@@ -57,10 +63,11 @@ export function useCart() {
       const { data, error } = await supabase
         .from('cart_items')
         .upsert(
-          { user_id: user.id, product_id, quantity },
-          { onConflict: 'user_id,product_id' }
+          { user_id: user.id, product_id, size, quantity },
+          { onConflict: 'user_id,product_id,size' }
         );
       if (error) throw error;
+      if (!data) throw new Error('Failed to add to cart');
       return data;
     },
     onSuccess: () => {
@@ -69,12 +76,23 @@ export function useCart() {
   });
 
   // 3) 수량 업데이트
-  const updateItem = useMutation<void, Error, { id: string; quantity: number }>({
-    mutationFn: async ({ id, quantity }) => {
+  type UpdateBySizeInput = {
+    product_id: string;
+    size: string;
+    quantity: number;
+  };
+  const updateItem = useMutation<void, Error, UpdateBySizeInput>({
+    mutationFn: async ({ product_id, size, quantity }) => {
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser();
+      if (authError || !user) throw authError || new Error('User not found');
+
       const { error } = await supabase
         .from('cart_items')
         .update({ quantity, updated_at: new Date().toISOString() })
-        .eq('id', id);
+        .match({ user_id: user.id, product_id, size });
       if (error) throw error;
     },
     onSuccess: () => {
@@ -83,12 +101,19 @@ export function useCart() {
   });
 
   // 4) 아이템 삭제
-  const removeItem = useMutation<void, Error, string>({
-    mutationFn: async (id) => {
+  type RemoveBySizeInput = { product_id: string; size: string };
+  const removeItem = useMutation<void, Error, RemoveBySizeInput>({
+    mutationFn: async ({ product_id, size }) => {
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser();
+      if (authError || !user) throw authError || new Error('User not found');
+
       const { error } = await supabase
         .from('cart_items')
         .delete()
-        .eq('id', id);
+        .match({ user_id: user.id, product_id, size });
       if (error) throw error;
     },
     onSuccess: () => {
