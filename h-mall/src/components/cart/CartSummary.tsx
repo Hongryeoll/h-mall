@@ -1,9 +1,8 @@
-// components/cart/Summary.tsx
 import React, { useMemo } from 'react';
-import type { CartItem } from '@/hooks/useCart';
+import type { CartItemProps } from '@/hooks/useCart';
 
 export type SummaryProps = {
-  items: CartItem[];
+  items: CartItemProps[];
 };
 
 export default function CasrtSummary({ items }: SummaryProps) {
