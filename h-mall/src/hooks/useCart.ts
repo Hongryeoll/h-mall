@@ -15,11 +15,10 @@ export type CartItem = {
 };
 
 export function useCart() {
-  // 브라우저 전용 Supabase 클라이언트
   const supabase = useMemo(() => createSupabaseBrowserClient(), []);
   const queryClient = useQueryClient();
 
-  // 1) 장바구니 조회
+  // 장바구니 조회
   const {
     data: items,
     isLoading,
@@ -46,7 +45,7 @@ export function useCart() {
     },
   });
 
-  // 2) 장바구니에 아이템 추가 (upsert)
+  // 장바구니에 아이템 추가
   const addItem = useMutation<any, Error, { product_id: string; quantity: number }>({
     mutationFn: async ({ product_id, quantity }) => {
       const {
