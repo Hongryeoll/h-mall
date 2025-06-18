@@ -1,4 +1,3 @@
-// components/HrModal.tsx
 'use client';
 
 import {
@@ -7,6 +6,7 @@ import {
   DialogTitle,
   Description,
   Transition,
+  TransitionChild,
 } from '@headlessui/react';
 import { Fragment, ReactNode } from 'react';
 
@@ -27,19 +27,32 @@ export default function HrModal({
 }: HrModalProps) {
   return (
     <Transition show={isOpen} as={Fragment}>
-      <Dialog onClose={onClose} className="fixed inset-0 z-50">
-        <div className="flex items-center justify-center min-h-screen">
-          <DialogPanel className="bg-white rounded-lg p-6 shadow-lg">
-            <DialogTitle>{title}</DialogTitle>
-            <Description>{description}</Description>
-            {children}
-            <button
-              className="mt-4 px-4 py-2 bg-gray-200 rounded"
-              onClick={onClose}
-            >
-              확인
-            </button>
-          </DialogPanel>
+      <Dialog onClose={onClose} className="fixed inset-0 z-modal">
+        <div className="fixed inset-0 bg-modal-overlay transition-opacity" />
+
+        <div className="fixed inset-0 flex items-center justify-center p-4">
+          <TransitionChild as={Fragment}>
+            <DialogPanel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-8 text-left shadow-xl transition-all font-pretendard space-y-4">
+              <DialogTitle className="text-hr-h4 font-hr-bold text-hr-gray-90">
+                {title}
+              </DialogTitle>
+              <Description className="text-hr-b2 text-hr-gray-60 leading-hr-body">
+                {description}
+              </Description>
+              {children ? (
+                <div>{children}</div>
+              ) : (
+                <div className="pt-4 text-right">
+                  <button
+                    onClick={onClose}
+                    className="inline-flex items-center justify-center rounded-xl bg-hr-purple-default px-4 py-2 text-white text-hr-b3 font-hr-semi-bold hover:bg-hr-purple-hover transition-colors"
+                  >
+                    확인
+                  </button>
+                </div>
+              )}
+            </DialogPanel>
+          </TransitionChild>
         </div>
       </Dialog>
     </Transition>

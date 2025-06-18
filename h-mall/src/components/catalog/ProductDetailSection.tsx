@@ -66,21 +66,24 @@ export default function ProductDetailSection({
           </div>
         </div>
       ) : (
-        <div className="px-6 pb-6 w-full bg-white">
-          <HrButton
-            text="접기"
-            type="line"
-            size="xl"
-            onClick={() => {
-              setIsShowDetail(false);
-              if (collapsedScroll !== null) {
-                window.scrollTo({
-                  top: collapsedScroll,
-                  behavior: 'auto',
-                });
-              }
-            }}
-          />
+        <div className="absolute left-0 bottom-0 w-full">
+          <div className="w-full h-[48px] bg-gradient-to-t from-white via-white/80 to-transparent pointer-events-none z-10" />
+          <div className="px-6 pb-6 w-full ">
+            <HrButton
+              text="접기"
+              type="line"
+              size="xl"
+              onClick={() => {
+                setIsShowDetail(false);
+                if (collapsedScroll !== null) {
+                  window.scrollTo({
+                    top: collapsedScroll,
+                    behavior: 'auto',
+                  });
+                }
+              }}
+            />
+          </div>
         </div>
       )}
     </div>

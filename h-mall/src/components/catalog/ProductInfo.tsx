@@ -38,7 +38,7 @@ export default function ProductInfo({
   },
 }: Props) {
   const router = useRouter();
-  const { showModal } = useModal();
+  const { showModal, closeModal } = useModal();
   const { addItem } = useCart();
   const [selectedSizes, setSelectedSizes] = useState<SelectedOption[]>([]);
 
@@ -106,15 +106,16 @@ export default function ProductInfo({
             text="계속 쇼핑"
             type="line"
             size="m"
-            onClick={() => {
-              showModal({ title: '', description: '' });
-            }}
+            onClick={closeModal}
           />
           <HrButton
             text="장바구니로 이동"
             type="default"
             size="m"
-            onClick={() => router.push(ROUTES.MALL_CART)}
+            onClick={() => {
+              closeModal();
+              router.push(ROUTES.MALL_CART);
+            }}
           />
         </div>
       ),

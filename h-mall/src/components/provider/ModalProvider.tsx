@@ -7,6 +7,7 @@ type ModalOptions = Omit<HrModalProps, 'isOpen' | 'onClose'>;
 
 type ModalContextType = {
   showModal: (opts: ModalOptions) => void;
+  closeModal: () => void;
 };
 
 const ModalContext = createContext<ModalContextType | undefined>(undefined);
@@ -24,7 +25,7 @@ export function ModalProvider({ children }: { children: ReactNode }) {
   const closeModal = () => setModalOpts(null);
 
   return (
-    <ModalContext.Provider value={{ showModal }}>
+    <ModalContext.Provider value={{ showModal, closeModal }}>
       {children}
 
       <HrModal
