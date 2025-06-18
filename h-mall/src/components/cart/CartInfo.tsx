@@ -1,13 +1,16 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import CartStepIndicator from '@/components/cart/CartStepIndicator';
 import CartTable from './CartTable';
 import CartActionButton from '@/components/cart/CartActionButton';
 import CartSummary from '@/components/cart/CartSummary';
 import { useCart } from '@/hooks/useCart';
+import { ROUTES } from '@/types/constants';
 
 export default function CartInfo() {
+  const router = useRouter();
   const { items = [], isLoading, removeItem, updateItem } = useCart();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
@@ -51,7 +54,10 @@ export default function CartInfo() {
         <button className="px-6 py-3 border border-gray-900 hover:bg-gray-100">
           CONTINUE SHOPPING
         </button>
-        <button className="px-6 py-3 bg-black text-white hover:opacity-90">
+        <button
+          className="px-6 py-3 bg-black text-white hover:opacity-90"
+          onClick={() => router.push(ROUTES.MALL_CHECKOUT)}
+        >
           CHECK OUT
         </button>
       </div>

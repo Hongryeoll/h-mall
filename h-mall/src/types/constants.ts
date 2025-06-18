@@ -6,6 +6,7 @@ export const ROUTES = {
   MALL_MYPAGE: '/mall/mypage',
   MALL_CART: '/mall/order/cart',
   MALL_CATALOG: (id: string) => `/mall/catalog/${id}`,
+  MALL_CHECKOUT: '/mall/order/checkout',
 } as const;
 // Auth-Helpers가 쿠키를 읽도록 돕는 옵션
 export const SUPABASE_COOKIE_OPTIONS = {
