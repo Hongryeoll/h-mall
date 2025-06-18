@@ -1,14 +1,15 @@
 'use client';
 
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { useState } from 'react';
+import { useCart } from '@/hooks/useCart';
 import { Navigation, Pagination, A11y } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import Image from 'next/image';
 import { HrButton } from '@/components/common/HrButton';
 import { ProductFormProps } from '@/types/products';
-import { useState } from 'react';
 
 type Props = {
   product: ProductFormProps;
@@ -22,6 +23,7 @@ type SelectedOption = {
 
 export default function ProductInfo({
   product: {
+    id,
     name,
     brand,
     product_images,
@@ -32,6 +34,7 @@ export default function ProductInfo({
     review_count,
   },
 }: Props) {
+  const { addItem } = useCart();
   const [selectedSizes, setSelectedSizes] = useState<SelectedOption[]>([]);
 
   const handleSizeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -72,6 +75,24 @@ export default function ProductInfo({
     (sum, opt) => sum + opt.quantity * opt.price,
     0
   );
+
+  const handleAddToCart = () => {
+    if (selectedSizes.length === 0) {
+      window.alert('옵션(사이즈)을 먼저 선택해주세요.');
+      return;
+    }
+
+    selectedSizes.forEach(({ size, quantity }) => {
+      addItem.mutate({
+        product_id: id,
+        quantity,
+      });
+    });
+
+    setSelectedSizes([]);
+    window.alert('장바구니에 담겼습니다.');
+  };
+
   return (
     <>
       <div className="w-full max-w-5xl mx-auto flex gap-8 mt-8">
@@ -219,9 +240,7 @@ export default function ProductInfo({
               text="장바구니 담기"
               type="line"
               size="xl"
-              onClick={() => {
-                // 장바구니 담기 로직
-              }}
+              onClick={handleAddToCart}
               className="flex-1"
             />
             <HrButton
