@@ -6,18 +6,7 @@ import DaumPostcode from 'react-daum-postcode';
 import { HrInput } from '@/components/common/HrInput';
 import { HrButton } from '@/components/common/HrButton';
 import HrSelectbox from '@/components/common/HrSelectbox';
-
-export interface ShippingFormValues {
-  label: string;
-  receiver: string;
-  postcode: string;
-  address: string;
-  addressDetail: string;
-  phone1: string;
-  phone2: string;
-  isDefault: boolean;
-  request: string;
-}
+import { ShippingFormValues } from '@/types/checkout';
 
 export default function CheckoutShippingForm() {
   const { register, setValue, watch } = useFormContext<ShippingFormValues>();

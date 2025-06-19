@@ -8,17 +8,7 @@ import CheckoutShippingForm from '@/components/chekout/CheckoutShippingForm';
 import CheckoutPaymentMethods from '@/components/chekout/CheckoutPaymentMethods';
 import CheckoutProductInfo from '@/components/chekout/CheckoutProductInfo';
 import CheckoutOrderSummary from '@/components/chekout/CheckoutOrderSummary';
-
-interface ShippingFormValues {
-  label: string;
-  receiver: string;
-  postcode: string;
-  addressDetail: string;
-  phone1: string;
-  phone2: string;
-  isDefault: boolean;
-  request: string;
-}
+import { ShippingFormValues } from '@/types/checkout';
 
 export default function CheckoutInfo() {
   const { items = [] } = useCart();
@@ -34,6 +24,7 @@ export default function CheckoutInfo() {
       label: '',
       receiver: '',
       postcode: '',
+      address: '',
       addressDetail: '',
       phone1: '',
       phone2: '',
