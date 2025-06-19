@@ -2,6 +2,8 @@
 
 import React, { useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
+import { useSearchParams } from 'next/navigation';
+import { useCart } from '@/hooks/useCart';
 import CheckoutShippingForm from '@/components/chekout/CheckoutShippingForm';
 import CheckoutPaymentMethods from '@/components/chekout/CheckoutPaymentMethods';
 import CheckoutProductInfo from '@/components/chekout/CheckoutProductInfo';
@@ -19,6 +21,10 @@ interface ShippingFormValues {
 }
 
 export default function CheckoutInfo() {
+  const { items = [] } = useCart();
+  const searchParams = useSearchParams();
+  const selectedIds = searchParams.get('ids')?.split(',') ?? [];
+  const selectedItems = items.filter((item) => selectedIds.includes(item.id));
   const [paymentMethod, setPaymentMethod] = useState<
     'toss' | 'kakao' | 'card' | 'etc'
   >('card');
@@ -56,8 +62,8 @@ export default function CheckoutInfo() {
             />
           </div>
           <div className="bg-white p-6 border rounded space-y-6">
-            <CheckoutProductInfo />
-            <CheckoutOrderSummary />
+            <CheckoutProductInfo items={selectedItems} />
+            <CheckoutOrderSummary items={selectedItems} />
           </div>
         </div>
       </div>

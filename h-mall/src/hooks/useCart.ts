@@ -11,6 +11,7 @@ export type CartItemProps = {
     id: string;
     name: string;
     brand: string;
+    discount_rate: number;
     final_price: number;
     product_images: string[];
   };
@@ -37,6 +38,7 @@ export function useCart() {
             id,
             name,
             brand,
+            discount_rate,
             final_price,
             product_images
           )

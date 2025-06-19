@@ -128,7 +128,7 @@ export default function CheckoutShippingForm() {
         </div>
 
         {/* 기본배송지 체크 */}
-        <div className="flex items-center space-x-2">
+        {/* <div className="flex items-center space-x-2">
           <input
             type="checkbox"
             id="defaultAddress"
@@ -136,7 +136,7 @@ export default function CheckoutShippingForm() {
             className="h-4 w-4"
           />
           <label htmlFor="defaultAddress">기본배송지로 등록</label>
-        </div>
+        </div> */}
 
         {/* 요청사항 */}
         <div>

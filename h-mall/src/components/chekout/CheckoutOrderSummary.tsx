@@ -1,8 +1,39 @@
 'use client';
 
 import React from 'react';
+import type { CartItemProps } from '@/hooks/useCart';
 
-export default function CheckoutOrderSummary() {
+interface CheckoutOrderSummaryProps {
+  items: CartItemProps[];
+}
+
+export default function CheckoutOrderSummary({
+  items,
+}: CheckoutOrderSummaryProps) {
+  const totalProductPrice = items.reduce(
+    (sum, item) => sum + item.product.final_price * item.quantity,
+    0
+  );
+
+  const adminDiscount = items.reduce((sum, item) => {
+    const { final_price, discount_rate } = item.product;
+    const quantity = item.quantity;
+    const discountPerItem = Math.floor(final_price * (discount_rate / 100));
+    return sum + discountPerItem * quantity;
+  }, 0);
+
+  const shippingFee = totalProductPrice >= 50000 ? 0 : 3000;
+  const couponDiscount = 0;
+  const mileageUsed = 0;
+  const instantDiscount = 0;
+
+  const totalPayable =
+    totalProductPrice +
+    shippingFee -
+    adminDiscount -
+    couponDiscount -
+    mileageUsed -
+    instantDiscount;
   return (
     <section className="space-y-6">
       <div>
@@ -10,28 +41,32 @@ export default function CheckoutOrderSummary() {
         <ul className="space-y-2 mb-4">
           <li className="flex justify-between">
             <span>총 상품 금액</span>
-            <span>64,800원</span>
+            <span>{totalProductPrice.toLocaleString()}원</span>
           </li>
           <li className="flex justify-between">
             <span>배송비</span>
-            <span>무료</span>
+            <span>
+              {shippingFee === 0 ? '무료' : `${shippingFee.toLocaleString()}원`}
+            </span>
           </li>
           <li className="flex justify-between">
-            <span>쿠폰 할인 금액</span>
-            <span className="text-red-500">-9,072원</span>
+            <span>주인장 마음대로 할인</span>
+            <span className="text-hr-danger-default">
+              -{adminDiscount.toLocaleString()}원
+            </span>
           </li>
           <li className="flex justify-between">
             <span>마일리지 사용</span>
-            <span>0P</span>
+            <span>{mileageUsed}P</span>
           </li>
           <li className="flex justify-between">
             <span>결제 즉시 할인</span>
-            <span>0원</span>
+            <span>{instantDiscount.toLocaleString()}원</span>
           </li>
         </ul>
         <div className="flex justify-between text-xl font-bold">
           <span>총 결제 금액</span>
-          <span>55,728원</span>
+          <span>{totalPayable.toLocaleString()}원</span>
         </div>
       </div>
 

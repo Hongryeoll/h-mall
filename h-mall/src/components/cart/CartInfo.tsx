@@ -14,6 +14,12 @@ export default function CartInfo() {
   const { items = [], isLoading, removeItem, updateItem } = useCart();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
+  const handleCheckout = () => {
+    const query = new URLSearchParams();
+    query.set('ids', selectedIds.join(','));
+    router.push(`${ROUTES.MALL_CHECKOUT}?${query.toString()}`);
+  };
+
   const toggleSelect = (id: string) =>
     setSelectedIds((prev) =>
       prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
@@ -56,7 +62,7 @@ export default function CartInfo() {
         </button>
         <button
           className="px-6 py-3 bg-black text-white hover:opacity-90"
-          onClick={() => router.push(ROUTES.MALL_CHECKOUT)}
+          onClick={handleCheckout}
         >
           CHECK OUT
         </button>
