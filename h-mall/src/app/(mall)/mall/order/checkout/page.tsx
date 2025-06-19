@@ -1,9 +1,8 @@
 import ChekoutInfo from '@/components/chekout/ChekoutInfo';
 
-export default function checkout() {
+export default function Checkout() {
   return (
     <>
-      <div>Ordersheet</div>
       <div>
         <ChekoutInfo />
       </div>
