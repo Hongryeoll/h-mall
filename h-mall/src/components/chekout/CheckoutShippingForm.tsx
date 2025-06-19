@@ -109,11 +109,10 @@ export default function CheckoutShippingForm() {
         <label className="block">연락처</label>
         <div className="grid grid-cols-2 gap-2">
           <HrInput<ShippingFormValues>
-            name="phone1"
-            placeholder="연락처1"
+            name="phone"
+            placeholder="연락처"
             required
           />
-          <HrInput<ShippingFormValues> name="phone2" placeholder="연락처2" />
         </div>
 
         {/* 기본배송지 체크 */}

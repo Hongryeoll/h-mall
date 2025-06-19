@@ -5,35 +5,22 @@ import type { CartItemProps } from '@/hooks/useCart';
 
 interface CheckoutOrderSummaryProps {
   items: CartItemProps[];
+  totalProductPrice: number;
+  adminDiscount: number;
+  shippingFee: number;
+  mileageUsed: number;
+  instantDiscount: number;
+  totalPayable: number;
 }
 
 export default function CheckoutOrderSummary({
-  items,
+  totalProductPrice,
+  adminDiscount,
+  shippingFee,
+  mileageUsed,
+  instantDiscount,
+  totalPayable,
 }: CheckoutOrderSummaryProps) {
-  const totalProductPrice = items.reduce(
-    (sum, item) => sum + item.product.final_price * item.quantity,
-    0
-  );
-
-  const adminDiscount = items.reduce((sum, item) => {
-    const { final_price, discount_rate } = item.product;
-    const quantity = item.quantity;
-    const discountPerItem = Math.floor(final_price * (discount_rate / 100));
-    return sum + discountPerItem * quantity;
-  }, 0);
-
-  const shippingFee = totalProductPrice >= 50000 ? 0 : 3000;
-  const couponDiscount = 0;
-  const mileageUsed = 0;
-  const instantDiscount = 0;
-
-  const totalPayable =
-    totalProductPrice +
-    shippingFee -
-    adminDiscount -
-    couponDiscount -
-    mileageUsed -
-    instantDiscount;
   return (
     <section className="space-y-6">
       <div>
@@ -97,9 +84,6 @@ export default function CheckoutOrderSummary({
             </label>
           </div>
         </div>
-        <button className="w-full bg-black text-white py-3 rounded">
-          55,728원 결제하기
-        </button>
       </div>
     </section>
   );

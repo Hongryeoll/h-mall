@@ -116,33 +116,72 @@ export type Database = {
       }
       orders: {
         Row: {
+          address: string
+          address_detail: string
+          admin_discount: number
+          card_company: string | null
+          coupon_discount: number
           created_at: string | null
           id: string
-          recipient_name: string | null
-          recipient_phone: string | null
-          shipping_address: string | null
+          instant_discount: number
+          mileage_used: number
+          payment_method: string
+          postcode: string
+          recipient_name: string
+          recipient_phone: string
+          shipping_fee: number
+          shipping_label: string
+          shipping_request: string
           status: string | null
+          total_payable: number
           total_price: number
+          updated_at: string
           user_id: string | null
         }
         Insert: {
+          address: string
+          address_detail?: string
+          admin_discount?: number
+          card_company?: string | null
+          coupon_discount?: number
           created_at?: string | null
           id?: string
-          recipient_name?: string | null
-          recipient_phone?: string | null
-          shipping_address?: string | null
+          instant_discount?: number
+          mileage_used?: number
+          payment_method: string
+          postcode?: string
+          recipient_name: string
+          recipient_phone: string
+          shipping_fee?: number
+          shipping_label?: string
+          shipping_request?: string
           status?: string | null
+          total_payable: number
           total_price: number
+          updated_at?: string
           user_id?: string | null
         }
         Update: {
+          address?: string
+          address_detail?: string
+          admin_discount?: number
+          card_company?: string | null
+          coupon_discount?: number
           created_at?: string | null
           id?: string
-          recipient_name?: string | null
-          recipient_phone?: string | null
-          shipping_address?: string | null
+          instant_discount?: number
+          mileage_used?: number
+          payment_method?: string
+          postcode?: string
+          recipient_name?: string
+          recipient_phone?: string
+          shipping_fee?: number
+          shipping_label?: string
+          shipping_request?: string
           status?: string | null
+          total_payable?: number
           total_price?: number
+          updated_at?: string
           user_id?: string | null
         }
         Relationships: [

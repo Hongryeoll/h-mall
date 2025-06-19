@@ -4,8 +4,7 @@ export interface ShippingFormValues {
   postcode: string;
   address: string;
   addressDetail: string;
-  phone1: string;
-  phone2: string;
+  phone: string;
   isDefault: boolean;
   request: string;
 }

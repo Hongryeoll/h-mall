@@ -14,6 +14,7 @@ export type CartItemProps = {
     id: string;
     name: string;
     brand: string;
+    price: number;
     final_price: number;
     product_images: string[];
   };
