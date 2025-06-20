@@ -6,7 +6,7 @@ export function useOrder() {
   const supabase = createSupabaseBrowserClient();
   const queryClient = useQueryClient();
 
-  const createOrder = useMutation<void, Error, CreateOrderInput>({
+  const createOrder = useMutation<{ id: string }, Error, CreateOrderInput>({
     mutationFn: async (input) => {
       const {
         items,
@@ -85,6 +85,7 @@ export function useOrder() {
           items.map((item) => item.id)
         );
       if (deleteError) throw deleteError;
+      return orderData;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cart'] });

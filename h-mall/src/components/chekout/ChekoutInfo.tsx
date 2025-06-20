@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { useCart } from '@/hooks/useCart';
 import CheckoutShippingForm from '@/components/chekout/CheckoutShippingForm';
 import CheckoutPaymentMethods from '@/components/chekout/CheckoutPaymentMethods';
@@ -10,8 +10,12 @@ import CheckoutProductInfo from '@/components/chekout/CheckoutProductInfo';
 import CheckoutOrderSummary from '@/components/chekout/CheckoutOrderSummary';
 import { useOrder } from '@/hooks/useOrder';
 import { CheckoutFormValues } from '@/types/checkout';
+import { ROUTES } from '@/types/constants';
+import { useModal } from '@/components/provider/ModalProvider';
 
 export default function CheckoutInfo() {
+  const router = useRouter();
+  const { showModal } = useModal();
   const { items = [] } = useCart();
   const searchParams = useSearchParams();
   const selectedIds = searchParams.get('ids')?.split(',') ?? [];
@@ -87,8 +91,20 @@ export default function CheckoutInfo() {
     };
 
     createOrder.mutate(payload, {
-      onSuccess: () => alert('주문이 정상 처리되었습니다.'),
-      onError: () => alert('주문 처리 중 오류가 발생했습니다.'),
+      onSuccess: (order) => {
+        showModal({
+          title: '주문완료',
+          description: '주문이 정상적으로 완료되었습니다.',
+        });
+        router.push(ROUTES.MALL_CHECKOUT_CONFIRMED(order.id));
+      },
+      onError: (error) => {
+        showModal({
+          title: '주문실패',
+          description: '주문 처리 중 오류가 발생했습니다.',
+        });
+        console.error(error);
+      },
     });
   };
 
