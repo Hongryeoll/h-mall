@@ -66,7 +66,7 @@ export default function CheckoutInfo() {
 
   const onSubmit = (data: CheckoutFormValues) => {
     const payload = {
-      items: data.items,
+      items: itemsInput,
       shipping_label: data.label,
       recipient_name: data.receiver,
       recipient_phone: data.phone,
