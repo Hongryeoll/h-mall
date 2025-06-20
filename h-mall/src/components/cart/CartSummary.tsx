@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import type { CartItemProps } from '@/hooks/useCart';
+import type { CartItemProps } from '@/types/cart';
 
 export type SummaryProps = {
   items: CartItemProps[];

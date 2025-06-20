@@ -2,21 +2,8 @@ import { useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { createSupabaseBrowserClient } from '@/library/client/supabase';
 import type { Database } from '@/types/supabase';
+import {CartItemProps} from "@/types/cart"
 
-export type CartItemProps = {
-  id: string;
-  size: string;
-  quantity: number;
-  product: {
-    id: string;
-    name: string;
-    brand: string;
-    discount_rate: number;
-    price: number;
-    final_price: number;
-    product_images: string[];
-  };
-};
 
 export function useCart() {
   const supabase = useMemo(() => createSupabaseBrowserClient(), []);

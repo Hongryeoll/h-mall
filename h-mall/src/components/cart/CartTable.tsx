@@ -1,7 +1,7 @@
 // components/cart/CartTable.tsx
 import React from 'react';
 import CartItem from '@/components/cart/CartItem';
-import type { CartItemProps } from '@/hooks/useCart';
+import type { CartItemProps } from '@/types/cart';
 
 export type CartTableProps = {
   items: CartItemProps[];

@@ -5,25 +5,14 @@ import Image from 'next/image';
 import CartQuantityControl, {
   QuantityControlProps,
 } from '@/components/cart/CartQuantityControl';
+import type { CartItemProps } from '@/types/cart';
 
-export type CartItemProps = {
-  id: string;
-  size: string;
-  quantity: number;
-  product: {
-    id: string;
-    name: string;
-    brand: string;
-    price: number;
-    final_price: number;
-    product_images: string[];
-  };
+export interface CartItemComponentProps extends CartItemProps {
   selected: boolean;
   onSelect: () => void;
   onRemove: (product_id: string, size: string) => void;
   onUpdate: (product_id: string, size: string, newQty: number) => void;
-};
-
+}
 export default function CartItem({
   id,
   size,
@@ -33,7 +22,7 @@ export default function CartItem({
   onSelect,
   onRemove,
   onUpdate,
-}: CartItemProps) {
+}: CartItemComponentProps) {
   const totalPrice = useMemo(
     () => quantity * product.final_price,
     [quantity, product.final_price]
