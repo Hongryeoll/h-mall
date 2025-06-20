@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="88"
+  height="88"
+  viewBox="0 0 88 88"
+  aria-hidden="true"
+>
+  
+  <rect width="88" height="88" fill="#FFEB00"/>
+
+  
+  <circle cx="30" cy="36" r="20" fill="#000"/>
+  <polygon points="24,50 30,58 36,50" fill="#000"/>
+
+  
+  <text
+    x="52" y="52"
+    font-family="Helvetica, Arial, sans-serif"
+    font-size="24"
+    font-weight="bold"
+    fill="#000"
+  >
+    pay
+  </text>
+</svg>

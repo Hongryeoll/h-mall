@@ -85,18 +85,18 @@ export default function CheckoutShippingForm() {
         </div>
 
         {/* 배송지명 */}
-        <div>
+        {/* <div>
           <label className="block mb-1">배송지명</label>
           <HrInput<ShippingFormValues>
             name="label"
             placeholder="배송지명 입력"
           />
-        </div>
+        </div> */}
 
         {/* 수령인 */}
         <div>
           <label className="block mb-1">
-            수령인 <span className="text-red-500">*</span>
+            수령인 <span className="text-hr-danger-default">*</span>
           </label>
           <HrInput<ShippingFormValues>
             name="receiver"
@@ -106,8 +106,9 @@ export default function CheckoutShippingForm() {
         </div>
 
         {/* 연락처 */}
-        <label className="block">연락처</label>
-        <div className="grid grid-cols-2 gap-2">
+
+        <div>
+          <label className="block mb-1">연락처</label>
           <HrInput<ShippingFormValues>
             name="phone"
             placeholder="연락처"

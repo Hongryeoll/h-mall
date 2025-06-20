@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="88"
+  height="88"
+  viewBox="0 0 88 88"
+  aria-hidden="true"
+>
+  <defs>
+    
+    <linearGradient id="tossGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4FC3F7"/>
+      <stop offset="100%" stop-color="#1976D2"/>
+    </linearGradient>
+  </defs>
+
+  
+  <ellipse
+    cx="44" cy="44"
+    rx="36" ry="20"
+    fill="url(#tossGradient)"
+    transform="rotate(-25 44 44)"
+  />
+
+  
+  <ellipse
+    cx="44" cy="44"
+    rx="36" ry="20"
+    fill="url(#tossGradient)"
+    transform="rotate(155 44 44)"
+  />
+</svg>

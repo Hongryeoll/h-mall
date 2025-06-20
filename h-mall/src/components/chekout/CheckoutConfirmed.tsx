@@ -1,7 +1,7 @@
 'use client';
 
 import { HrButton } from '@/components/common/HrButton';
-import type { CartItemProps } from '@/hooks/useCart';
+import type { CartItemProps } from '@/types/cart';
 import CheckCircleSVG from '@/assets/icons/check-circle.svg';
 import { OrderConfirmedProps } from '@/types/orderConfirmed';
 

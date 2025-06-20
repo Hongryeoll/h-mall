@@ -1,92 +1,121 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useFormContext } from 'react-hook-form';
+import HrSelectbox from '@/components/common/HrSelectbox';
+import TossSVG from '@/assets/icons/toss-simbol.svg';
+import KakaoSVG from '@/assets/icons/kakaopay.svg';
+import NaverSVG from '@/assets/icons/naverpay.svg';
+import { CheckoutFormValues } from '@/types/checkout';
 
-interface PaymentMethodsProps {
-  paymentMethod: 'toss' | 'kakao' | 'card' | 'etc';
-  setPaymentMethod: (method: 'toss' | 'kakao' | 'card' | 'etc') => void;
-}
+export default function CheckoutPaymentMethods() {
+  const { register, watch, setValue } = useFormContext<CheckoutFormValues>();
+  const paymentMethod = watch('paymentMethod');
+  const cardCompany = watch('cardCompany');
 
-export default function CheckoutPaymentMethods({
-  paymentMethod,
-  setPaymentMethod,
-}: PaymentMethodsProps) {
+  useEffect(() => {
+    if (paymentMethod !== 'card') {
+      setValue('cardCompany', paymentMethod);
+    }
+  }, [paymentMethod, setValue]);
+
   return (
     <section>
       <h2 className="text-lg font-semibold mb-4">결제 방법</h2>
       <form className="space-y-4">
-        <div className="flex items-center">
-          <input
-            type="radio"
-            id="toss"
-            name="payment"
-            value="toss"
-            onChange={() => setPaymentMethod('toss')}
-          />
-          <label htmlFor="toss" className="ml-2 flex items-center">
-            <img
-              src="/icons/toss.svg"
-              alt="토스페이"
-              className="w-5 h-5 mr-2"
+        <div className="grid grid-cols-2 gap-4">
+          {/* Toss Pay */}
+          <label
+            htmlFor="toss"
+            className="flex items-center p-3 border rounded-lg cursor-pointer transition hover:shadow peer-checked:ring-2 peer-checked:ring-yellow-400 peer-checked:bg-yellow-50"
+          >
+            <input
+              id="toss"
+              type="radio"
+              {...register('paymentMethod')}
+              value="toss"
+              className="sr-only peer"
             />
-            토스페이
+            <span className="w-4 h-4 mr-1 flex-shrink-0 border-2 border-gray-300 rounded-full peer-checked:border-yellow-400 peer-checked:bg-yellow-400 transition" />
+            <TossSVG width={20} height={20} />
+            <span className="font-medium">토스페이</span>
           </label>
-        </div>
 
-        <div className="flex items-center">
-          <input
-            type="radio"
-            id="kakao"
-            name="payment"
-            value="kakao"
-            onChange={() => setPaymentMethod('kakao')}
-          />
-          <label htmlFor="kakao" className="ml-2 flex items-center">
-            <img
-              src="/icons/kakaopay.svg"
-              alt="카카오페이"
-              className="w-5 h-5 mr-2"
+          {/* Kakao Pay */}
+          <label
+            htmlFor="kakao"
+            className="flex items-center p-3 border rounded-lg cursor-pointer transition hover:shadow peer-checked:ring-2 peer-checked:ring-yellow-400 peer-checked:bg-yellow-50"
+          >
+            <input
+              id="kakao"
+              type="radio"
+              {...register('paymentMethod')}
+              value="kakao"
+              className="sr-only peer"
             />
-            카카오페이
+            <span className="w-4 h-4 mr-1 flex-shrink-0 border-2 border-gray-300 rounded-full peer-checked:border-yellow-400 peer-checked:bg-yellow-400 transition" />
+            <KakaoSVG width={25} height={25} className="mr-1" />
+            <span className="font-medium">카카오페이</span>
+          </label>
+
+          {/* Naver Pay */}
+          <label
+            htmlFor="naver"
+            className="flex items-center p-3 border rounded-lg cursor-pointer transition hover:shadow peer-checked:ring-2 peer-checked:ring-yellow-400 peer-checked:bg-green-50"
+          >
+            <input
+              id="naver"
+              type="radio"
+              {...register('paymentMethod')}
+              value="naver"
+              className="sr-only peer"
+            />
+            <span className="w-4 h-4 mr-1 flex-shrink-0 border-2 border-gray-300 rounded-full peer-checked:border-yellow-400 peer-checked:bg-yellow-400 transition" />
+            <NaverSVG width={25} height={25} className="mr-1" />
+            <span className="font-medium">네이버페이</span>
+          </label>
+
+          {/* Card Payment */}
+          <label
+            htmlFor="card"
+            className="flex items-center p-3 border rounded-lg cursor-pointer transition hover:shadow peer-checked:ring-2 peer-checked:ring-yellow-400 peer-checked:bg-yellow-50"
+          >
+            <input
+              id="card"
+              type="radio"
+              {...register('paymentMethod')}
+              value="card"
+              checked={paymentMethod === 'card'}
+              className="sr-only peer"
+            />
+            <span className="w-4 h-4 mr-3 flex-shrink-0 border-2 border-gray-300 rounded-full peer-checked:border-yellow-400 peer-checked:bg-yellow-400 transition" />
+            <span className="font-medium">카드 결제</span>
           </label>
         </div>
 
-        <div className="flex items-center">
-          <input
-            type="radio"
-            id="card"
-            name="payment"
-            value="card"
-            checked={paymentMethod === 'card'}
-            onChange={() => setPaymentMethod('card')}
-          />
-          <label htmlFor="card" className="ml-2">
-            카드 결제
-          </label>
-        </div>
-
+        {/* Card Company Select */}
         {paymentMethod === 'card' && (
-          <select className="w-full border px-3 py-2 rounded">
-            <option>카드사를 선택해주세요.</option>
-            <option>현대카드</option>
-            <option>삼성카드</option>
-          </select>
+          <HrSelectbox
+            value={cardCompany}
+            onChange={(val) => setValue('cardCompany', val)}
+            options={[
+              { value: '', label: '카드사를 선택해주세요.' },
+              { value: 'HYUNDAI', label: '현대카드' },
+              { value: 'SAMSUNG', label: '삼성카드' },
+              { value: 'KB', label: 'KB국민카드' },
+              { value: 'SHINHAN', label: '신한카드' },
+              { value: 'HANA', label: '하나카드' },
+              { value: 'WOORI', label: '우리카드' },
+              { value: 'LOTTE', label: '롯데카드' },
+              { value: 'BC', label: 'BC카드' },
+              { value: 'NH', label: 'NH농협카드' },
+            ]}
+            className="mt-2"
+          />
         )}
 
-        <div className="flex items-center">
-          <input
-            type="radio"
-            id="etc"
-            name="payment"
-            value="etc"
-            onChange={() => setPaymentMethod('etc')}
-          />
-          <label htmlFor="etc" className="ml-2">
-            다른 결제 방법
-          </label>
-        </div>
-
-        {paymentMethod === 'etc' && (
+        {/* Etc Info */}
+        {paymentMethod === 'card' && (
           <div className="bg-gray-50 p-4 rounded space-y-2 text-sm">
             <div>
               <strong>안내:</strong> 결제수단별 즉시 할인 안내

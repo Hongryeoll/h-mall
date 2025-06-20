@@ -1,33 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createSupabaseBrowserClient } from '@/library/client/supabase';
-
-export type OrderItemInput = {
-  id: string;
-  product_id: string;
-  size: string;
-  quantity: number;
-  price: number;
-};
-
-export type CreateOrderInput = {
-  items: OrderItemInput[];
-  shipping_label: string;
-  recipient_name: string;
-  recipient_phone: string;
-  postcode: string;
-  address: string;
-  address_detail: string;
-  shipping_request?: string;
-  payment_method: string;
-  card_company?: string;
-  shipping_fee: number;
-  admin_discount: number;
-  coupon_discount: number;
-  mileage_used: number;
-  instant_discount: number;
-  total_price: number;
-  total_payable: number;
-};
+import {OrderItemInput, CreateOrderInput} from '@/types/checkout'
 
 export function useOrder() {
   const supabase = createSupabaseBrowserClient();

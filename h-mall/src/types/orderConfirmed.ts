@@ -1,4 +1,4 @@
-import type { CartItemProps } from '@/hooks/useCart';
+import type { CartItemProps } from '@/types/cart';
 
 export interface OrderConfirmedProps {
   orderId: string;
