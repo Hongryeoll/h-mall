@@ -1,64 +1,28 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { createSupabaseBrowserClient } from '@/library/client/supabase';
 import CheckCircleSVG from '@/assets/icons/check-circle.svg';
 import { HrButton } from '@/components/common/HrButton';
-import { OrderItem, OrderData } from '@/types/checkout';
+import { useOrderDetail } from '@/hooks/useOrder';
+import Image from 'next/image';
 
 export default function CheckoutConfirmed() {
   const params = useParams();
   const rawId = params.id;
   const router = useRouter();
-  const [order, setOrder] = useState<OrderData | null>(null);
-  const [loading, setLoading] = useState(true);
 
-  if (!rawId) {
+  const orderId =
+    typeof rawId === 'string' ? rawId : Array.isArray(rawId) ? rawId[0] : null;
+
+  const { data: order, isLoading, isError } = useOrderDetail(orderId);
+
+  if (!orderId || isError) {
     router.push('/');
     return null;
   }
 
-  const orderId = Array.isArray(rawId) ? rawId[0] : rawId;
-
-  useEffect(() => {
-    if (!orderId) {
-      router.push('/'); // 주문 id 없으면 홈
-      return;
-    }
-    (async () => {
-      const supabase = createSupabaseBrowserClient();
-      const { data, error } = await supabase
-        .from('orders')
-        .select(
-          `
-          *,
-          order_items (
-            *,
-            product:products (
-              id,
-              name,
-              brand,
-              product_images,
-              final_price
-            )
-          )
-        `
-        )
-        .eq('id', orderId)
-        .single();
-
-      if (error || !data) {
-        console.error('Order fetch error', error);
-        router.push('/');
-      } else {
-        setOrder(data as OrderData);
-      }
-      setLoading(false);
-    })();
-  }, [orderId, router]);
-
-  if (loading) {
+  if (isLoading) {
     return <p className="p-6 text-center">주문 정보를 불러오는 중…</p>;
   }
   if (!order) {
@@ -211,11 +175,14 @@ export default function CheckoutConfirmed() {
         <div className="space-y-4">
           {items.map((item) => (
             <div key={item.id} className="flex gap-3">
-              <img
-                src={item.product.product_images[0]}
-                alt={item.product.name}
-                className="w-20 h-20 object-cover rounded"
-              />
+              <div className="w-20 h-20 object-cover rounded">
+                <Image
+                  src={item.product.product_images[0]}
+                  alt={item.product.name}
+                  fill
+                  style={{ objectFit: 'cover' }}
+                />
+              </div>
               <div className="flex-1">
                 <div className="text-xs text-hr-gray-50">
                   {item.product.brand}
