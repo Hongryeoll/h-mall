@@ -9,6 +9,7 @@ import CartSummary from '@/components/cart/CartSummary';
 import { useCart } from '@/hooks/useCart';
 import { useModal } from '@/components/provider/ModalProvider';
 import { ROUTES } from '@/types/constants';
+import { HrButton } from '../common/HrButton';
 
 export default function CartInfo() {
   const router = useRouter();
@@ -20,7 +21,7 @@ export default function CartInfo() {
     if (selectedIds.length === 0) {
       showModal({
         title: '주문실패',
-        description: '장바구니에 상품이 없습니다.',
+        description: '선택된 상품이 없습니다.',
       });
       return;
     }
@@ -29,11 +30,19 @@ export default function CartInfo() {
     query.set('ids', selectedIds.join(','));
     router.push(`${ROUTES.MALL_CHECKOUT}?${query.toString()}`);
   };
+  const handleBuynow = (id: string) => {
+    router.push(`${ROUTES.MALL_CHECKOUT}?ids=${id}`);
+  };
 
   const toggleSelect = (id: string) =>
     setSelectedIds((prev) =>
       prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
     );
+  const toggleSelectAll = () => {
+    const allIds = items.map((item) => item.id);
+    const isAllSelected = selectedIds.length === allIds.length;
+    setSelectedIds(isAllSelected ? [] : allIds);
+  };
 
   const handleDeleteSelected = async () => {
     await Promise.all(
@@ -62,12 +71,11 @@ export default function CartInfo() {
         <p className="text-hr-h5 font-hr-bold mb-6">
           장바구니에 담은 상품이 없습니다.
         </p>
-        <button
+        <HrButton
+          text="CONTINUE SHOPPING"
+          type="line"
           onClick={() => router.push(ROUTES.HOME)}
-          className="px-6 py-3 border border-hr-gray-90 hover:bg-hr-gray-10 font-hr-bold"
-        >
-          CONTINUE SHOPPING
-        </button>
+        />
         <hr className="border-t border-black mt-10" />
       </div>
     );
@@ -80,6 +88,8 @@ export default function CartInfo() {
         items={items}
         selectedIds={selectedIds}
         toggleSelect={toggleSelect}
+        toggleSelectAll={toggleSelectAll}
+        handleBuynow={handleBuynow}
         removeItem={(product_id, size) =>
           removeItem.mutate({ product_id, size })
         }

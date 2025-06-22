@@ -5,7 +5,7 @@ export type SummaryProps = {
   items: CartItemProps[];
 };
 
-export default function CasrtSummary({ items }: SummaryProps) {
+export default function CartSummary({ items }: SummaryProps) {
   const totalOrderAmount = useMemo(
     () =>
       items.reduce((sum, it) => sum + it.quantity * it.product.final_price, 0),

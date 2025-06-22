@@ -46,21 +46,17 @@ const sizeClasses = {
 };
 
 const typeClasses = {
-  default: 'bg-hr-purple-default border-none text-white',
-  line: 'bg-hr-white border border-hr-purple-default text-hr-purple-default',
-  light: 'bg-hr-white text-hr-gray-40',
-  flat: 'bg-hr-gray-10 text-hr-gray-40',
-  danger: 'bg-hr-white border border-hr-danger-default text-hr-danger-default',
+  default:
+    'bg-hr-purple-default border-none text-white hover:bg-hr-purple-hover',
+
+  line: 'bg-hr-white border border-hr-purple-default text-hr-purple-default hover:bg-hr-purple-bg hover:text-hr-purple-hover',
+
+  light:
+    'bg-hr-white text-hr-gray-40 hover:bg-hr-gray-10 hover:text-hr-gray-60',
+
+  flat: 'bg-hr-gray-10 text-hr-gray-40 hover:bg-hr-gray-20 hover:text-hr-gray-70',
+
+  danger:
+    'bg-hr-white border border-hr-danger-default text-hr-danger-default hover:bg-hr-danger-bg hover:text-hr-danger-hover',
 };
-
 const disabledClasses = 'bg-hr-gray-10 text-hr-gray-40';
-
-// const iconSize = {
-//   xxl: 24,
-//   xl: 24,
-//   l: 20,
-//   m: 16,
-//   s: 16,
-//   xs: 16,
-//   xxs: 16,
-// };
