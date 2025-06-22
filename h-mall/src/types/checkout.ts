@@ -4,7 +4,7 @@ export interface OrderItemInput {
   size: string;
   quantity: number;
   price: number;
-};
+}
 
 export interface CreateOrderInput {
   items: OrderItemInput[];
@@ -24,7 +24,9 @@ export interface CreateOrderInput {
   instant_discount: number;
   total_price: number;
   total_payable: number;
-};
+  receipt_type?: '소득공제용' | '지출증빙용' | '미발행';
+  receipt_phone?: string;
+}
 
 export interface ShippingFormValues {
   label: string;
@@ -40,6 +42,8 @@ export interface ShippingFormValues {
 export interface CheckoutFormValues extends ShippingFormValues {
   paymentMethod: 'toss' | 'kakao' | 'naver' | 'card';
   cardCompany: string;
+  receipt_type?: '소득공제용' | '지출증빙용' | '미발행';
+  receipt_phone?: string;
   items: {
     id: string;
     product_id: string;
@@ -89,4 +93,15 @@ export interface OrderData {
   address_detail: string;
   shipping_request: string;
   order_items: OrderItem[];
+  receipt_type: string;
+  receipt_phone: string;
+}
+
+export interface DaumPostcodeData {
+  zonecode: string;
+  roadAddress: string;
+  jibunAddress: string;
+  addressType: string;
+  bname: string;
+  buildingName: string;
 }

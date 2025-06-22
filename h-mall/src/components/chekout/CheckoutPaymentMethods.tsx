@@ -7,6 +7,7 @@ import TossSVG from '@/assets/icons/toss-simbol.svg';
 import KakaoSVG from '@/assets/icons/kakaopay.svg';
 import NaverSVG from '@/assets/icons/naverpay.svg';
 import { CheckoutFormValues } from '@/types/checkout';
+import { HrInput } from '@/components/common/HrInput';
 
 export default function CheckoutPaymentMethods() {
   const { register, watch, setValue } = useFormContext<CheckoutFormValues>();
@@ -129,6 +130,71 @@ export default function CheckoutPaymentMethods() {
             <div>
               <strong>할부:</strong> 신용카드 무이자 할부 안내
             </div>
+          </div>
+        )}
+
+        {/* 현금영수증 */}
+        {['toss', 'kakao', 'naver'].includes(paymentMethod) && (
+          <div className="mt-6 border-t pt-4">
+            <h3 className="font-semibold text-base mb-2">현금 영수증</h3>
+            <p className="text-sm text-gray-400 mb-2">
+              선택한 결제수단의 현금결제(머니, 계좌 등)시 현금영수증이
+              발급됩니다.
+            </p>
+
+            {/* 발급 유형 선택 */}
+            <div className="flex gap-4 mb-4">
+              <label className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  {...register('receipt_phone')}
+                  value="소득공제용"
+                  defaultChecked
+                />
+                소득공제용
+              </label>
+              <label className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  {...register('receipt_type')}
+                  value="지출증빙용"
+                />
+                지출증빙용
+              </label>
+              <label className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  {...register('receipt_type')}
+                  value="미발행"
+                />
+                미발행
+              </label>
+            </div>
+
+            {/* 휴대폰 번호 */}
+            <div className="mb-2">
+              <HrSelectbox
+                value="휴대폰 번호"
+                onChange={() => {}}
+                options={[{ value: '휴대폰 번호', label: '휴대폰 번호' }]}
+              />
+            </div>
+            <HrInput<CheckoutFormValues>
+              name="receipt_phone"
+              type="tel"
+              placeholder="숫자만 입력해 주세요."
+              size="s"
+              maxLength={11}
+              containerClassName="w-full"
+              inputClassName="rounded"
+              rules={{
+                required: '필수 항목입니다.',
+                pattern: {
+                  value: /^[0-9]{9,11}$/,
+                  message: '숫자만 입력해 주세요. (9~11자리)',
+                },
+              }}
+            />
           </div>
         )}
       </form>

@@ -6,13 +6,13 @@ import DaumPostcode from 'react-daum-postcode';
 import { HrInput } from '@/components/common/HrInput';
 import { HrButton } from '@/components/common/HrButton';
 import HrSelectbox from '@/components/common/HrSelectbox';
-import { ShippingFormValues } from '@/types/checkout';
+import { ShippingFormValues, DaumPostcodeData } from '@/types/checkout';
 
 export default function CheckoutShippingForm() {
-  const { register, setValue, watch } = useFormContext<ShippingFormValues>();
+  const { setValue, watch } = useFormContext<ShippingFormValues>();
   const [openPostcode, setOpenPostcode] = useState(false);
 
-  const handleComplete = (data: any) => {
+  const handleComplete = (data: DaumPostcodeData) => {
     const { zonecode, roadAddress } = data;
     setValue('postcode', zonecode);
     setValue('address', roadAddress);
@@ -25,22 +25,7 @@ export default function CheckoutShippingForm() {
   return (
     <section>
       <h2 className="text-lg font-semibold mb-4">배송 정보</h2>
-      {/* <div className="flex border-b mb-4">
-        <HrButton
-          text="기존 배송지"
-          size="xs"
-          type="flat"
-          className="border-b-2 border-transparent text-hr-gray-50 px-4 py-2 rounded-none"
-        />
-        <HrButton
-          text="신규입력"
-          size="xs"
-          type="flat"
-          className="border-b-2 border-hr-yellow-default font-hr-regular px-4 py-2 rounded-none"
-        />
-      </div> */}
-
-      <div className="space-y-4">
+      <div className="space-y-3">
         {/* 주소 검색 */}
         <div>
           <label className="block mb-1">
@@ -49,15 +34,16 @@ export default function CheckoutShippingForm() {
           <div className="flex flex-wrap gap-2 items-center">
             <HrInput<ShippingFormValues>
               name="postcode"
+              size="xs"
               placeholder="우편번호"
-              required
-              containerClassName="w-[180px] rounded-lg !border-gray-300"
+              disabled
+              containerClassName="w-[180px] rounded-lg !border-hr-gray-30"
               inputClassName="rounded-lg"
             />
             <div className="w-[120px]">
               <HrButton
                 text="우편번호 검색"
-                size="xs"
+                size="m"
                 type="flat"
                 onClick={() => setOpenPostcode(true)}
               />
@@ -69,9 +55,9 @@ export default function CheckoutShippingForm() {
         <div>
           <HrInput<ShippingFormValues>
             name="address"
+            size="xs"
             placeholder="주소"
-            required
-            containerClassName="mt-2"
+            disabled
           />
         </div>
 
@@ -79,19 +65,10 @@ export default function CheckoutShippingForm() {
         <div>
           <HrInput<ShippingFormValues>
             name="addressDetail"
+            size="xs"
             placeholder="상세주소 입력 (예: 101동 202호)"
-            containerClassName="mt-2"
           />
         </div>
-
-        {/* 배송지명 */}
-        {/* <div>
-          <label className="block mb-1">배송지명</label>
-          <HrInput<ShippingFormValues>
-            name="label"
-            placeholder="배송지명 입력"
-          />
-        </div> */}
 
         {/* 수령인 */}
         <div>
@@ -100,32 +77,32 @@ export default function CheckoutShippingForm() {
           </label>
           <HrInput<ShippingFormValues>
             name="receiver"
+            size="xs"
             placeholder="수령인 입력"
             required
           />
         </div>
 
         {/* 연락처 */}
-
         <div>
           <label className="block mb-1">연락처</label>
           <HrInput<ShippingFormValues>
             name="phone"
-            placeholder="연락처"
-            required
+            type="tel"
+            placeholder="숫자만 입력해 주세요."
+            size="xs"
+            maxLength={11}
+            containerClassName="w-full"
+            inputClassName="rounded"
+            rules={{
+              required: '필수 항목입니다.',
+              pattern: {
+                value: /^[0-9]{9,11}$/,
+                message: '숫자만 입력해 주세요. (9~11자리)',
+              },
+            }}
           />
         </div>
-
-        {/* 기본배송지 체크 */}
-        {/* <div className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            id="defaultAddress"
-            {...register('isDefault')}
-            className="h-4 w-4"
-          />
-          <label htmlFor="defaultAddress">기본배송지로 등록</label>
-        </div> */}
 
         {/* 요청사항 */}
         <div>
@@ -134,9 +111,12 @@ export default function CheckoutShippingForm() {
             value={request}
             onChange={handleSelectChange}
             options={[
-              { value: '', label: '선택' },
-              { value: '경비실', label: '부재 시 경비실에 맡겨주세요' },
-              { value: '직접전달', label: '직접 전달해주세요' },
+              { value: '', label: '선택해주세요.' },
+              {
+                value: '부재 시 경비실에 맡겨주세요',
+                label: '부재 시 경비실에 맡겨주세요',
+              },
+              { value: '직접 전달해주세요', label: '직접 전달해주세요' },
             ]}
           />
         </div>
@@ -145,16 +125,16 @@ export default function CheckoutShippingForm() {
       {/* 다음 주소 모달 */}
       {openPostcode && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded shadow max-w-lg w-full">
-            <div className="mb-2 text-sm text-right">
+          <div className="bg-white p-5 rounded shadow max-w-lg w-full">
+            <DaumPostcode onComplete={handleComplete} />
+            <div className="mt-4 text-hr-b4 text-right">
               <HrButton
                 text="닫기"
                 size="xs"
-                type="light"
+                type="flat"
                 onClick={() => setOpenPostcode(false)}
               />
             </div>
-            <DaumPostcode onComplete={handleComplete} />
           </div>
         </div>
       )}

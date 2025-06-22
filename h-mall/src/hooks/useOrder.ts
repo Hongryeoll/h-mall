@@ -91,6 +91,8 @@ export function useOrder() {
           mileage_used,
           instant_discount,
           total_payable,
+          receipt_type: input.receipt_type ?? null,
+          receipt_phone: input.receipt_phone ?? null,
         })
         .select('id')
         .single();

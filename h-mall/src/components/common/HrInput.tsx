@@ -12,9 +12,9 @@ import {
 } from 'react-hook-form';
 
 type Props<FormValues extends FieldValues> = {
-  type?: 'text' | 'password';
+  type?: 'text' | 'password' | 'tel';
   placeholder?: string;
-  size?: 'lg' | 'md' | 'xs';
+  size?: 'lg' | 'md' | 's' | 'xs';
   disabled?: boolean;
   name: Path<FormValues>;
   required?: boolean;
@@ -62,7 +62,8 @@ export const HrInput = <FormValues extends FieldValues>({
   const inputValue = watch(name);
   const [isFocused, setIsFocused] = useState(false);
   const [isShowPwd, setIsShowPwd] = useState(false);
-  const inputType = type === 'password' && isShowPwd ? 'text' : type;
+  const inputType =
+    type === 'password' && isShowPwd ? 'text' : type === 'tel' ? 'tel' : type;
 
   return (
     <div
@@ -95,6 +96,13 @@ export const HrInput = <FormValues extends FieldValues>({
             onBlur: () => setIsFocused(false),
           })}
           onKeyDown={onKeyDown && onKeyDown}
+          onChange={(e) => {
+            if (type === 'tel') {
+              e.target.value = e.target.value.replace(/[^0-9]/g, '');
+            }
+            const registered = register(name);
+            if (registered?.onChange) registered.onChange(e);
+          }}
         />
       </div>
 
@@ -153,11 +161,13 @@ export const HrInput = <FormValues extends FieldValues>({
 const sizeClasses = {
   lg: 'h-[56px] text-hr-b1 rounded-lg px-4 font-hr-regular placeholder-16px gap-2',
   md: 'h-12 text-hr-b2 rounded-lg px-4 font-hr-regular placeholder-16px gap-2',
+  s: 'h-[42px] text-hr-b3 rounded-md px-3 font-hr-regular placeholder-14px gap-1.5',
   xs: 'h-9  text-hr-b5 rounded-md px-3 font-hr-regular placeholder-12px gap-1',
 };
 
 const iconSize = {
   lg: 24,
   md: 20,
+  s: 18,
   xs: 16,
 };

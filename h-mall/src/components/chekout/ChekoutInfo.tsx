@@ -56,6 +56,9 @@ export default function CheckoutInfo() {
       // 결제 수단 폼
       paymentMethod: 'card',
       cardCompany: '',
+      // 현금영수증 관련 필드
+      receipt_type: '소득공제용',
+      receipt_phone: '',
       // 계산된 값
       items: itemsInput,
       totalProductPrice,
@@ -88,6 +91,8 @@ export default function CheckoutInfo() {
       instant_discount: 0, // 즉시할인 로직 있을 때 치환
       total_price: data.totalProductPrice,
       total_payable: data.totalPayable,
+      receipt_type: data.receipt_type ?? null,
+      receipt_phone: data.receipt_phone ?? null,
     };
 
     createOrder.mutate(payload, {

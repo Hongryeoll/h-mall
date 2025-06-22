@@ -127,6 +127,8 @@ export type Database = {
           mileage_used: number
           payment_method: string
           postcode: string
+          receipt_phone: string | null
+          receipt_type: string | null
           recipient_name: string
           recipient_phone: string
           shipping_fee: number
@@ -150,6 +152,8 @@ export type Database = {
           mileage_used?: number
           payment_method: string
           postcode?: string
+          receipt_phone?: string | null
+          receipt_type?: string | null
           recipient_name: string
           recipient_phone: string
           shipping_fee?: number
@@ -173,6 +177,8 @@ export type Database = {
           mileage_used?: number
           payment_method?: string
           postcode?: string
+          receipt_phone?: string | null
+          receipt_type?: string | null
           recipient_name?: string
           recipient_phone?: string
           shipping_fee?: number
