@@ -1,4 +1,3 @@
-// components/cart/ActionButtons.tsx
 import React from 'react';
 
 export type ActionButtonProps = {
@@ -9,15 +8,12 @@ export default function CartActionButton({
   onDeleteSelected,
 }: ActionButtonProps) {
   return (
-    <div className="flex space-x-4 mt-4">
+    <div className="flex space-x-4 mt-6">
       <button
-        className="px-4 py-2 border border-gray-500 hover:bg-gray-100"
+        className="px-4 py-2 border border-hr-gray-50 hover:bg-hr-gray-10"
         onClick={onDeleteSelected}
       >
         선택상품 삭제
-      </button>
-      <button className="px-4 py-2 border border-gray-500 hover:bg-gray-100">
-        품절상품 삭제
       </button>
     </div>
   );

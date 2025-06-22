@@ -98,17 +98,26 @@ export default function CartInfo() {
         }
       />
       <CartActionButton onDeleteSelected={handleDeleteSelected} />
-      <CartSummary items={items} />
-      <div className="mt-6 flex justify-center space-x-4">
-        <button className="px-6 py-3 border border-hr-gray-90 hover:bg-hr-gray-10">
-          CONTINUE SHOPPING
-        </button>
-        <button
-          className="px-6 py-3 bg-black text-white hover:opacity-90"
-          onClick={handleCheckout}
-        >
-          CHECK OUT
-        </button>
+      <CartSummary
+        selectedItems={items.filter((item) => selectedIds.includes(item.id))}
+      />
+      <div className="mt-6 flex justify-center gap-4">
+        <div className="w-full">
+          <HrButton
+            text="CONTINUE SHOPPING"
+            type="line"
+            size="xxl"
+            onClick={() => router.push(ROUTES.HOME)}
+          />
+        </div>
+        <div className="w-full">
+          <HrButton
+            text="CHECK OUT"
+            type="default"
+            size="xxl"
+            onClick={handleCheckout}
+          />
+        </div>
       </div>
     </div>
   );

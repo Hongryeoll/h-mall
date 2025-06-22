@@ -116,13 +116,15 @@ export default function CartTable({
                 </div>
               </div>
               <div className="mt-3 space-y-1">
-                <div className="flex items-center space-x-2">
-                  <p className="text-hr-b4 line-through text-hr-gray-40">
-                    {originalPrice.toLocaleString()}원
-                  </p>
-                  <p className="text-hr-b4 text-hr-yellow-default font-hr-semi-bold">
-                    {discountRate}%
-                  </p>
+                <div className="flex justify-between items-center">
+                  <div className="flex space-x-2">
+                    <p className="text-hr-b4 line-through text-hr-gray-40">
+                      {originalPrice.toLocaleString()}원
+                    </p>
+                    <p className="text-hr-b4 text-hr-yellow-default font-hr-semi-bold">
+                      {discountRate}%
+                    </p>
+                  </div>
                   <p className="text-base font-hr-bold">
                     {totalPrice.toLocaleString()}원
                   </p>
