@@ -24,8 +24,8 @@ export interface CreateOrderInput {
   instant_discount: number;
   total_price: number;
   total_payable: number;
-  receipt_type?: '소득공제용' | '지출증빙용' | '미발행';
-  receipt_phone?: string;
+  receipt_type?: '소득공제용' | '지출증빙용' | '미발행' | null;
+  receipt_phone?: string | null;
 }
 
 export interface ShippingFormValues {
