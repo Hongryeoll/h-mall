@@ -91,8 +91,8 @@ export default function CheckoutInfo() {
       instant_discount: 0, // 즉시할인 로직 있을 때 치환
       total_price: data.totalProductPrice,
       total_payable: data.totalPayable,
-      receipt_type: data.receipt_type ?? undefined,
-      receipt_phone: data.receipt_phone ?? undefined,
+      receipt_type: data.receipt_type ?? null,
+      receipt_phone: data.receipt_phone ?? null,
     };
 
     createOrder.mutate(payload, {
