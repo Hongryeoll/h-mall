@@ -25,7 +25,6 @@ export default function CheckoutInfo() {
     agree2: false,
     agree3: false,
   });
-  const allAgreed = agreements.agree1 && agreements.agree2 && agreements.agree3;
 
   const itemsInput = selectedItems.map((item) => ({
     id: item.id,

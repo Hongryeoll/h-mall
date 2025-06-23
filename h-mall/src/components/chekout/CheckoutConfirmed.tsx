@@ -29,6 +29,13 @@ export default function CheckoutConfirmed() {
     return null;
   }
 
+  const paymentMethodLabels: Record<string, string> = {
+    naver: '네이버페이',
+    toss: '토스페이',
+    kakao: '카카오페이',
+    card: order.card_company ?? '신용카드',
+  };
+
   // 가격 요약 객체
   const priceSummary = {
     totalProductPrice: order.total_price,
@@ -54,9 +61,9 @@ export default function CheckoutConfirmed() {
   const items = order.order_items;
 
   return (
-    <div className="container mx-auto max-w-2xl p-6 text-sm">
+    <div className="container mx-auto max-w-2xl p-6 text-hr-b4">
       {/* Step Navigation */}
-      <nav className="flex items-center text-sm uppercase mb-6 space-x-2">
+      <nav className="flex items-center text-hr-b4 uppercase mb-6 space-x-2">
         <span className="text-gray-400">01 Shopping Bag</span>
         <span>&gt;</span>
         <span className="text-gray-400">02 Order</span>
@@ -84,9 +91,8 @@ export default function CheckoutConfirmed() {
           <div className="flex justify-between">
             <span className="text-hr-gray-50">결제수단</span>
             <span>
-              {order.payment_method === 'card'
-                ? order.card_company
-                : order.payment_method.toUpperCase()}
+              {paymentMethodLabels[order.payment_method] ||
+                order.payment_method}
             </span>
           </div>
           <div className="flex justify-between">
@@ -95,6 +101,29 @@ export default function CheckoutConfirmed() {
               {priceSummary.totalPayable.toLocaleString()}원
             </span>
           </div>
+          {/* 현금영수증 정보 */}
+          {['kakao', 'toss', 'naver'].includes(order.payment_method) &&
+            order.receipt_type &&
+            order.receipt_phone && (
+              <div className="pt-4 mt-2 border-t space-y-2">
+                <h3 className="font-medium text-sm text-hr-gray-70">
+                  현금영수증 정보
+                </h3>
+                <div className="flex justify-between">
+                  <span className="text-hr-gray-50">발급구분</span>
+                  <span>{order.receipt_type}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-hr-gray-50">휴대폰 번호</span>
+                  <span>
+                    {order.receipt_phone.replace(
+                      /(\d{3})(\d{3,4})(\d{4})/,
+                      '$1-$2-$3'
+                    )}
+                  </span>
+                </div>
+              </div>
+            )}
         </div>
       </section>
 
@@ -108,7 +137,12 @@ export default function CheckoutConfirmed() {
           </div>
           <div className="flex justify-between">
             <span className="text-hr-gray-50">연락처</span>
-            <span>{shippingInfo.phone}</span>
+            <span>
+              {shippingInfo.phone.replace(
+                /(\d{3})(\d{3,4})(\d{4})/,
+                '$1-$2-$3'
+              )}
+            </span>
           </div>
           <div className="flex flex-col">
             <span className="text-hr-gray-50 mb-1">주소</span>
@@ -175,23 +209,25 @@ export default function CheckoutConfirmed() {
         <div className="space-y-4">
           {items.map((item) => (
             <div key={item.id} className="flex gap-3">
-              <div className="w-20 h-20 object-cover rounded">
+              <div className="w-20 h-20 relative rounded overflow-hidden">
                 <Image
                   src={item.product.product_images[0]}
                   alt={item.product.name}
                   fill
-                  style={{ objectFit: 'cover' }}
+                  className="object-cover"
                 />
               </div>
               <div className="flex-1">
-                <div className="text-xs text-hr-gray-50">
+                <div className="text-hr-c1 text-hr-gray-50">
                   {item.product.brand}
                 </div>
-                <div className="text-sm font-medium">{item.product.name}</div>
-                <div className="text-sm text-hr-gray-60">
+                <div className="text-hr-b4 font-hr-regular">
+                  {item.product.name}
+                </div>
+                <div className="text-hr-b4 text-hr-gray-60">
                   사이즈: {item.size}
                 </div>
-                <div className="text-sm text-hr-gray-60">
+                <div className="text-hr-b4 text-hr-gray-60">
                   {item.price.toLocaleString()}원 × {item.quantity}
                 </div>
               </div>
@@ -200,7 +236,6 @@ export default function CheckoutConfirmed() {
         </div>
       </section>
 
-      {/* CTA Buttons */}
       <div className="flex gap-3 mt-8">
         <HrButton
           text="주문 내역 보기"
