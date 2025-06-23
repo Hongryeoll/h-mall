@@ -4,10 +4,13 @@ export const ROUTES = {
   LOGIN: '/login',
   SIGNUP: '/signup',
   MALL_MYPAGE: '/mall/mypage',
+  MALL_MYPAGE_ORDERS: '/mall/mypage/orders',
+  MALL_MYPAGE_REVIEWS: '/mall/mypage/reviews',
   MALL_CART: '/mall/order/cart',
   MALL_CATALOG: (id: string) => `/mall/catalog/${id}`,
   MALL_CHECKOUT: '/mall/order/checkout',
-  MALL_CHECKOUT_CONFIRMED: (id:string) => `/mall/order/checkout/confirmed/${id}`,
+  MALL_CHECKOUT_CONFIRMED: (id: string) =>
+    `/mall/order/checkout/confirmed/${id}`,
 } as const;
 // Auth-Helpers가 쿠키를 읽도록 돕는 옵션
 export const SUPABASE_COOKIE_OPTIONS = {
