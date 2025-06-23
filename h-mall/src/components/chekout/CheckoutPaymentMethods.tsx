@@ -14,6 +14,29 @@ export default function CheckoutPaymentMethods() {
   const paymentMethod = watch('paymentMethod');
   const cardCompany = watch('cardCompany');
 
+  const paymentOptions = [
+    {
+      id: 'toss',
+      label: '토스페이',
+      icon: <TossSVG width={20} height={20} />,
+    },
+    {
+      id: 'kakao',
+      label: '카카오페이',
+      icon: <KakaoSVG width={25} height={25} className="mr-1" />,
+    },
+    {
+      id: 'naver',
+      label: '네이버페이',
+      icon: <NaverSVG width={25} height={25} className="mr-1" />,
+    },
+    {
+      id: 'card',
+      label: '카드 결제',
+      icon: null,
+    },
+  ];
+
   useEffect(() => {
     if (paymentMethod !== 'card') {
       setValue('cardCompany', paymentMethod);
@@ -25,75 +48,27 @@ export default function CheckoutPaymentMethods() {
       <h2 className="text-lg font-semibold mb-4">결제 방법</h2>
       <form className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
-          {/* Toss Pay */}
-          <label
-            htmlFor="toss"
-            className="flex items-center p-3 border rounded-lg cursor-pointer transition hover:shadow peer-checked:ring-2 peer-checked:ring-yellow-400 peer-checked:bg-yellow-50"
-          >
-            <input
-              id="toss"
-              type="radio"
-              {...register('paymentMethod')}
-              value="toss"
-              className="sr-only peer"
-            />
-            <span className="w-4 h-4 mr-1 flex-shrink-0 border-2 border-gray-300 rounded-full peer-checked:border-yellow-400 peer-checked:bg-yellow-400 transition" />
-            <TossSVG width={20} height={20} />
-            <span className="font-medium">토스페이</span>
-          </label>
-
-          {/* Kakao Pay */}
-          <label
-            htmlFor="kakao"
-            className="flex items-center p-3 border rounded-lg cursor-pointer transition hover:shadow peer-checked:ring-2 peer-checked:ring-yellow-400 peer-checked:bg-yellow-50"
-          >
-            <input
-              id="kakao"
-              type="radio"
-              {...register('paymentMethod')}
-              value="kakao"
-              className="sr-only peer"
-            />
-            <span className="w-4 h-4 mr-1 flex-shrink-0 border-2 border-gray-300 rounded-full peer-checked:border-yellow-400 peer-checked:bg-yellow-400 transition" />
-            <KakaoSVG width={25} height={25} className="mr-1" />
-            <span className="font-medium">카카오페이</span>
-          </label>
-
-          {/* Naver Pay */}
-          <label
-            htmlFor="naver"
-            className="flex items-center p-3 border rounded-lg cursor-pointer transition hover:shadow peer-checked:ring-2 peer-checked:ring-yellow-400 peer-checked:bg-green-50"
-          >
-            <input
-              id="naver"
-              type="radio"
-              {...register('paymentMethod')}
-              value="naver"
-              className="sr-only peer"
-            />
-            <span className="w-4 h-4 mr-1 flex-shrink-0 border-2 border-gray-300 rounded-full peer-checked:border-yellow-400 peer-checked:bg-yellow-400 transition" />
-            <NaverSVG width={25} height={25} className="mr-1" />
-            <span className="font-medium">네이버페이</span>
-          </label>
-
-          {/* Card Payment */}
-          <label
-            htmlFor="card"
-            className="flex items-center p-3 border rounded-lg cursor-pointer transition hover:shadow peer-checked:ring-2 peer-checked:ring-yellow-400 peer-checked:bg-yellow-50"
-          >
-            <input
-              id="card"
-              type="radio"
-              {...register('paymentMethod')}
-              value="card"
-              checked={paymentMethod === 'card'}
-              className="sr-only peer"
-            />
-            <span className="w-4 h-4 mr-3 flex-shrink-0 border-2 border-gray-300 rounded-full peer-checked:border-yellow-400 peer-checked:bg-yellow-400 transition" />
-            <span className="font-medium">카드 결제</span>
-          </label>
+          {paymentOptions.map(({ id, label, icon }) => (
+            <label
+              key={id}
+              htmlFor={id}
+              className="flex items-center p-3 border rounded-lg cursor-pointer peer-checked:ring-2 peer-checked:ring-hr-purple-default peer-checked:bg-hr-purple-bg"
+            >
+              <input
+                id={id}
+                type="radio"
+                {...register('paymentMethod')}
+                value={id}
+                className="sr-only peer"
+                checked={id === 'card' ? paymentMethod === 'card' : undefined}
+                readOnly
+              />
+              <span className="w-4 h-4 mr-1 flex-shrink-0 border-2 border-hr-gray-30 rounded-full peer-checked:border-hr-purple-border peer-checked:bg-hr-purple-default transition" />
+              {icon}
+              <span className="font-medium ml-1">{label}</span>
+            </label>
+          ))}
         </div>
-
         {/* Card Company Select */}
         {paymentMethod === 'card' && (
           <HrSelectbox
@@ -115,7 +90,7 @@ export default function CheckoutPaymentMethods() {
           />
         )}
 
-        {/* Etc Info */}
+        {/* Card type Info */}
         {paymentMethod === 'card' && (
           <div className="bg-gray-50 p-4 rounded space-y-2 text-sm">
             <div>
@@ -136,39 +111,36 @@ export default function CheckoutPaymentMethods() {
         {/* 현금영수증 */}
         {['toss', 'kakao', 'naver'].includes(paymentMethod) && (
           <div className="mt-6 border-t pt-4">
-            <h3 className="font-semibold text-base mb-2">현금 영수증</h3>
-            <p className="text-sm text-gray-400 mb-2">
+            <h3 className="font-hr-semi-bold text-base mb-2">현금 영수증</h3>
+            <p className="text-hr-b4 text-hr-gray-40 mb-2">
               선택한 결제수단의 현금결제(머니, 계좌 등)시 현금영수증이
               발급됩니다.
             </p>
 
             {/* 발급 유형 선택 */}
             <div className="flex gap-4 mb-4">
-              <label className="flex items-center gap-2">
-                <input
-                  type="radio"
-                  {...register('receipt_phone')}
-                  value="소득공제용"
-                  defaultChecked
-                />
-                소득공제용
-              </label>
-              <label className="flex items-center gap-2">
-                <input
-                  type="radio"
-                  {...register('receipt_type')}
-                  value="지출증빙용"
-                />
-                지출증빙용
-              </label>
-              <label className="flex items-center gap-2">
-                <input
-                  type="radio"
-                  {...register('receipt_type')}
-                  value="미발행"
-                />
-                미발행
-              </label>
+              {[
+                { id: 'receipt1', value: '소득공제용', label: '소득공제용' },
+                { id: 'receipt2', value: '지출증빙용', label: '지출증빙용' },
+                { id: 'receipt3', value: '미발행', label: '미발행' },
+              ].map(({ id, value, label }) => (
+                <label
+                  key={value}
+                  htmlFor={id}
+                  className="flex items-center p-2 cursor-pointer peer-checked:ring-2 peer-checked:ring-hr-purple-default peer-checked:bg-hr-purple-bg"
+                >
+                  <input
+                    id={id}
+                    type="radio"
+                    {...register('receipt_type')}
+                    value={value}
+                    defaultChecked={value === '소득공제용'}
+                    className="sr-only peer"
+                  />
+                  <span className="w-4 h-4 mr-1 flex-shrink-0 border-2 border-hr-gray-30 rounded-full peer-checked:border-hr-purple-border peer-checked:bg-hr-purple-default transition" />
+                  <span className="text-sm font-medium">{label}</span>
+                </label>
+              ))}
             </div>
 
             {/* 휴대폰 번호 */}
@@ -183,7 +155,7 @@ export default function CheckoutPaymentMethods() {
               name="receipt_phone"
               type="tel"
               placeholder="숫자만 입력해 주세요."
-              size="s"
+              size="xs"
               maxLength={11}
               containerClassName="w-full"
               inputClassName="rounded"
