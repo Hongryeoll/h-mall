@@ -1,17 +1,7 @@
 'use client';
 
-import React from 'react';
-import type { CartItemProps } from '@/types/cart';
-
-interface CheckoutOrderSummaryProps {
-  items: CartItemProps[];
-  totalProductPrice: number;
-  adminDiscount: number;
-  shippingFee: number;
-  mileageUsed: number;
-  instantDiscount: number;
-  totalPayable: number;
-}
+import React, { useState } from 'react';
+import type { CheckoutOrderSummaryProps } from '@/types/checkout';
 
 export default function CheckoutOrderSummary({
   totalProductPrice,
@@ -20,7 +10,24 @@ export default function CheckoutOrderSummary({
   mileageUsed,
   instantDiscount,
   totalPayable,
+  agreements,
+  setAgreements,
 }: CheckoutOrderSummaryProps) {
+  const agreementItems: {
+    id: 'selectAll' | keyof typeof agreements;
+    label: string;
+    isSelectAll?: boolean;
+  }[] = [
+    {
+      id: 'selectAll',
+      label: '주문 내용을 확인했으며, 아래 내용에 모두 동의합니다.',
+      isSelectAll: true,
+    },
+    { id: 'agree1', label: '(필수) 개인정보 수집/이용 동의' },
+    { id: 'agree2', label: '(필수) 개인정보 제3자 제공 동의' },
+    { id: 'agree3', label: '(필수) 결제대행 서비스 이용약관' },
+  ];
+
   return (
     <section className="space-y-6">
       <div>
@@ -57,33 +64,46 @@ export default function CheckoutOrderSummary({
         </div>
       </div>
 
-      <div className="space-y-4">
-        <div className="flex items-center">
-          <input type="checkbox" id="selectAll" className="h-4 w-4" />
-          <label htmlFor="selectAll" className="ml-2">
-            주문 내용을 확인했으며, 아래 내용에 모두 동의합니다.
-          </label>
-        </div>
-        <div className="pl-6 space-y-1 text-sm text-gray-500">
-          <div className="flex items-center">
-            <input type="checkbox" id="agree1" className="h-4 w-4" />
-            <label htmlFor="agree1" className="ml-2">
-              (필수) 개인정보 수집/이용 동의
-            </label>
-          </div>
-          <div className="flex items-center">
-            <input type="checkbox" id="agree2" className="h-4 w-4" />
-            <label htmlFor="agree2" className="ml-2">
-              (필수) 개인정보 제3자 제공 동의
-            </label>
-          </div>
-          <div className="flex items-center">
-            <input type="checkbox" id="agree3" className="h-4 w-4" />
-            <label htmlFor="agree3" className="ml-2">
-              (필수) 결제대행 서비스 이용약관
-            </label>
-          </div>
-        </div>
+      <div className="space-y-4 text-sm text-gray-500">
+        {agreementItems.map(({ id, label, isSelectAll }) => {
+          const isChecked = isSelectAll
+            ? agreements.agree1 && agreements.agree2 && agreements.agree3
+            : agreements[id as keyof typeof agreements];
+
+          return (
+            <div
+              className={`flex items-center ${isSelectAll ? '' : 'pl-6'}`}
+              key={id}
+            >
+              <input
+                type="checkbox"
+                id={id}
+                className="h-4 w-4 rounded-sm border border-hr-gray-40 
+                    checked:bg-hr-purple-bg checked:border-transparent 
+                    accent-hr-purple-default"
+                checked={isChecked}
+                onChange={(e) => {
+                  const checked = e.target.checked;
+                  if (isSelectAll) {
+                    setAgreements({
+                      agree1: checked,
+                      agree2: checked,
+                      agree3: checked,
+                    });
+                  } else {
+                    setAgreements((prev) => ({
+                      ...prev,
+                      [id]: checked,
+                    }));
+                  }
+                }}
+              />
+              <label htmlFor={id} className="ml-2">
+                {label}
+              </label>
+            </div>
+          );
+        })}
       </div>
     </section>
   );

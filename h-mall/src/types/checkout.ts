@@ -1,3 +1,5 @@
+import type { CartItemProps } from '@/types/cart';
+
 export interface OrderItemInput {
   id: string;
   product_id: string;
@@ -104,4 +106,22 @@ export interface DaumPostcodeData {
   addressType: string;
   bname: string;
   buildingName: string;
+}
+
+export interface AgreementState {
+  agree1: boolean;
+  agree2: boolean;
+  agree3: boolean;
+}
+
+export interface CheckoutOrderSummaryProps {
+  items: CartItemProps[];
+  totalProductPrice: number;
+  adminDiscount: number;
+  shippingFee: number;
+  mileageUsed: number;
+  instantDiscount: number;
+  totalPayable: number;
+  agreements: AgreementState;
+  setAgreements: React.Dispatch<React.SetStateAction<AgreementState>>;
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useCart } from '@/hooks/useCart';
@@ -20,6 +20,12 @@ export default function CheckoutInfo() {
   const searchParams = useSearchParams();
   const selectedIds = searchParams.get('ids')?.split(',') ?? [];
   const selectedItems = items.filter((item) => selectedIds.includes(item.id));
+  const [agreements, setAgreements] = useState({
+    agree1: false,
+    agree2: false,
+    agree3: false,
+  });
+  const allAgreed = agreements.agree1 && agreements.agree2 && agreements.agree3;
 
   const itemsInput = selectedItems.map((item) => ({
     id: item.id,
@@ -139,6 +145,8 @@ export default function CheckoutInfo() {
               mileageUsed={0}
               instantDiscount={0}
               totalPayable={totalPayable}
+              agreements={agreements}
+              setAgreements={setAgreements}
             />
             <button
               className="w-full bg-black text-white py-3 rounded disabled:opacity-50"
