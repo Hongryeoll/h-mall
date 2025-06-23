@@ -1,26 +1,15 @@
 import { ProductFormProps } from '@/types/products';
-import {
-  FieldErrors,
-  UseFormRegister,
-  UseFormSetValue,
-  UseFormWatch,
-} from 'react-hook-form';
+import { FieldErrors, UseFormSetValue, UseFormWatch } from 'react-hook-form';
 import { HrInput } from '../common/HrInput';
 import { useEffect } from 'react';
 
 type Props = {
   errors: FieldErrors<ProductFormProps>;
-  register: UseFormRegister<ProductFormProps>;
   watch: UseFormWatch<ProductFormProps>;
   setValue: UseFormSetValue<ProductFormProps>;
 };
 
-export default function ProductPriceForm({
-  register,
-  watch,
-  setValue,
-  errors,
-}: Props) {
+export default function ProductPriceForm({ watch, setValue, errors }: Props) {
   const price = watch('price');
   const discountRate = watch('discount_rate');
 

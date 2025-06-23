@@ -1,4 +1,4 @@
-import { MegaLink, MegaSection, MegaItem } from '@/types/megaMenu';
+import { MegaItem } from '@/types/megaMenu';
 
 export const MEGA_MENU: Record<string, MegaItem> = {
   MEN: {

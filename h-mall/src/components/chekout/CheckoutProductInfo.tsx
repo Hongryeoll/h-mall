@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import type { CartItemProps } from '@/types/cart';
 
 interface CheckoutProductInfoProps {
@@ -21,9 +22,11 @@ export default function CheckoutProductInfo({
       </h2>
       {items.map((item) => (
         <div key={item.id} className="bg-gray-50 p-4 rounded mb-4 flex">
-          <img
+          <Image
             src={item.product.product_images[0]}
             alt={item.product.name}
+            width={96}
+            height={96}
             className="w-24 h-24 object-cover rounded mr-4"
           />
           <div className="flex-1">

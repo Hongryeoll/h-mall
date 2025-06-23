@@ -1,6 +1,6 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { ROUTES } from '@/types/constants';
 import SearchSVG from '@/assets/icons/search.svg';
@@ -24,7 +24,6 @@ export const HrHeader = ({
   isHiddenLeftIcon = false,
 }: Props) => {
   const router = useRouter();
-  const pathname = usePathname();
   const { user, role, loading } = useUserContext();
 
   if (loading) {

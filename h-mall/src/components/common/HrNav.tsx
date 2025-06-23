@@ -7,10 +7,10 @@ import { MEGA_MENU } from '@/data/megaMenu';
 
 export default function HrNav() {
   const pathname = usePathname();
+  const [openKey, setOpenKey] = useState<string | null>(null);
   if (typeof pathname === 'string' && pathname.startsWith('/admin')) {
     return null;
   }
-  const [openKey, setOpenKey] = useState<string | null>(null);
   const keys = Object.keys(MEGA_MENU) as (keyof typeof MEGA_MENU)[];
 
   const handleNavLeave = () => setOpenKey(null);

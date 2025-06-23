@@ -30,7 +30,9 @@ export const HrTabs = ({ tabs, activeIdx, onClick }: Props) => {
           key={i}
           onClick={(e) => {
             if (tab.link) router.push(tab.link);
-            onClick && onClick(e, i);
+            if (onClick) {
+              onClick(e, i);
+            }
           }}
           className={`flex-1 text-center text-hr-b4 px-2 whitespace-nowrap cursor-pointer ${getTabClasses(
             i,

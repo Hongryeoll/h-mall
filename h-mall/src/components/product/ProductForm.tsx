@@ -24,11 +24,10 @@ export default function ProductForm({
 }) {
   const supabase = createSupabaseBrowserClient();
   const queryClient = useQueryClient();
-  const { user, role, loading } = useUserContext();
+  const { role } = useUserContext();
   const methods = useForm<ProductFormProps>();
   const { showModal } = useModal();
   const {
-    register,
     handleSubmit,
     reset,
     setValue,
@@ -294,7 +293,6 @@ export default function ProductForm({
         {activeTab === 'price' && (
           <ProductPriceForm
             errors={errors}
-            register={register}
             watch={methods.watch}
             setValue={setValue}
           />

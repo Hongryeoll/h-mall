@@ -1,11 +1,12 @@
-import ChekoutInfo from '@/components/chekout/ChekoutInfo';
+import { Suspense } from 'react';
+import CheckoutInfo from '@/components/chekout/CheckoutInfo';
 
 export default function Checkout() {
   return (
     <>
-      <div>
-        <ChekoutInfo />
-      </div>
+      <Suspense fallback={<div className="p-6 text-center">로딩 중…</div>}>
+        <CheckoutInfo />
+      </Suspense>
     </>
   );
 }

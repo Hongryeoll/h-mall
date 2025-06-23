@@ -61,18 +61,16 @@ export function useCategoryCascade() {
     enabled: !!subsectionId,
   });
 
-  // useCategoryCascade 내부
   useEffect(() => {
     const checkCategories = async () => {
-      const supabase = createSupabaseBrowserClient();
-      const { data, error } = await supabase.from('categories').select('*');
-
-      // console.log('categories (manual fetch):', data);
-      // console.log('error:', error);
+      const { error } = await supabase.from('categories').select('*');
+      if (error) {
+        console.error('카테고리 로딩 실패:', error);
+      }
     };
 
     checkCategories();
-  }, []);
+  }, []); 
 
   return {
     selected: { categoryId, sectionId, subsectionId, subtabId },

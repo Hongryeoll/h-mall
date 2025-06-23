@@ -1,9 +1,14 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+} from 'react';
 import { createSupabaseBrowserClient } from '@/library/client/supabase';
 
-// 사용자 프로필 타입 정의
 export type UserProfile = {
   id: string;
   email: string;
@@ -27,11 +32,10 @@ export const useUserContext = () => {
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
   const [supabase] = useState(() => createSupabaseBrowserClient());
-
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchUser = async () => {
+  const fetchUser = useCallback(async () => {
     setLoading(true);
     const {
       data: { user: authUser },
@@ -57,25 +61,25 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
     setUser(profile as UserProfile);
     setLoading(false);
-  };
+  }, [supabase]);
 
   useEffect(() => {
     fetchUser();
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
+    } = supabase.auth.onAuthStateChange(() => {
       fetchUser();
     });
 
     return () => {
       subscription.unsubscribe();
     };
-  }, [supabase]);
+  }, [supabase, fetchUser]);
 
-  const refresh = () => {
+  const refresh = useCallback(() => {
     fetchUser();
-  };
+  }, [fetchUser]);
 
   return (
     <UserContext.Provider

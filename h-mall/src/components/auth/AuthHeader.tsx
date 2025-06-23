@@ -11,8 +11,6 @@ export default function AuthHeader({ user }: AuthHeaderProps) {
   const supabase = createSupabaseBrowserClient();
 
   const authCallbackBase = process.env.NEXT_PUBLIC_AUTH_REDIRECT_TO_AUTH!;
-  // 홈 URL
-  const homeUrl = process.env.NEXT_PUBLIC_AUTH_REDIRECT_TO_HOME!;
 
   /** ── 로그인 처리 ─────────────────── */
   const handleGoogleLogin = async () => {
