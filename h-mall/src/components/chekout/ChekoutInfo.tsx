@@ -77,6 +77,44 @@ export default function CheckoutInfo() {
   const { handleSubmit } = methods;
   const { createOrder } = useOrder();
 
+  const handleClickSubmit = () => {
+    const values = methods.getValues();
+    // 필수조건 체크
+    if (!values.address || !values.addressDetail || !values.postcode) {
+      return showModal({
+        title: '입력 확인',
+        description: '배송지를 모두 입력해주세요.',
+      });
+    }
+    if (!values.receiver) {
+      return showModal({
+        title: '입력 확인',
+        description: '수령인의 이름을 확인해주세요.',
+      });
+    }
+    if (!values.phone) {
+      return showModal({
+        title: '입력 확인',
+        description: '연락처를 확인해주세요.',
+      });
+    }
+    if (values.phone.length !== 11) {
+      return showModal({
+        title: '연락처 오류',
+        description: '연락처는 숫자 11자리로 입력해주세요.',
+      });
+    }
+    // 약관동의 체크
+    if (!agreements.agree1 || !agreements.agree2 || !agreements.agree3) {
+      return showModal({
+        title: '약관 동의 확인',
+        description: '아래 필수사항에 모두 동의해야 합니다.',
+      });
+    }
+
+    handleSubmit(onSubmit)();
+  };
+
   const onSubmit = (data: CheckoutFormValues) => {
     const payload = {
       items: itemsInput,
@@ -150,7 +188,8 @@ export default function CheckoutInfo() {
             />
             <button
               className="w-full bg-black text-white py-3 rounded disabled:opacity-50"
-              onClick={handleSubmit(onSubmit)}
+              // onClick={handleSubmit(onSubmit)}
+              onClick={handleClickSubmit}
               // disabled={isLoading}
             >
               {/* {isLoading

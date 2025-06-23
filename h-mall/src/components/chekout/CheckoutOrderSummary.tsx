@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import type { CheckoutOrderSummaryProps } from '@/types/checkout';
 
 export default function CheckoutOrderSummary({

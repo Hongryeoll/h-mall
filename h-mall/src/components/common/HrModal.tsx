@@ -32,26 +32,28 @@ export default function HrModal({
 
         <div className="fixed inset-0 flex items-center justify-center p-4">
           <TransitionChild as={Fragment}>
-            <DialogPanel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-8 text-left shadow-xl transition-all font-pretendard space-y-4">
-              <DialogTitle className="text-hr-h4 font-hr-bold text-hr-gray-90">
-                {title}
-              </DialogTitle>
-              <Description className="text-hr-b2 text-hr-gray-60 leading-hr-body">
-                {description}
-              </Description>
-              {children ? (
-                <div>{children}</div>
-              ) : (
-                <div className="pt-4 text-right">
-                  <button
-                    onClick={onClose}
-                    className="inline-flex items-center justify-center rounded-xl bg-hr-purple-default px-4 py-2 text-white text-hr-b3 font-hr-semi-bold hover:bg-hr-purple-hover transition-colors"
-                  >
-                    확인
-                  </button>
-                </div>
-              )}
-            </DialogPanel>
+            {(title || description || children) && (
+              <DialogPanel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-8 text-left shadow-xl transition-all font-pretendard space-y-4">
+                <DialogTitle className="text-hr-h4 font-hr-bold text-hr-gray-90">
+                  {title}
+                </DialogTitle>
+                <Description className="text-hr-b2 text-hr-gray-60 leading-hr-body">
+                  {description}
+                </Description>
+                {children ? (
+                  <div>{children}</div>
+                ) : (
+                  <div className="pt-4 text-right">
+                    <button
+                      onClick={onClose}
+                      className="inline-flex items-center justify-center rounded-xl bg-hr-purple-default px-4 py-2 text-white text-hr-b3 font-hr-semi-bold hover:bg-hr-purple-hover transition-colors"
+                    >
+                      확인
+                    </button>
+                  </div>
+                )}
+              </DialogPanel>
+            )}
           </TransitionChild>
         </div>
       </Dialog>
