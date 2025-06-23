@@ -48,7 +48,6 @@ export default function ProductInfo({
     label: sz,
   }));
 
-  // 1) 별도 handleBuyNow 함수로 분리
   const handleBuyNow = () => {
     if (selectedSizes.length === 0) {
       showModal({
