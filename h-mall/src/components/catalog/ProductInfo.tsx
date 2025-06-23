@@ -48,6 +48,18 @@ export default function ProductInfo({
     label: sz,
   }));
 
+  // 1) 별도 handleBuyNow 함수로 분리
+  const handleBuyNow = () => {
+    if (selectedSizes.length === 0) {
+      showModal({
+        title: '옵션을 선택해주세요',
+        description: '구매를 위해 사이즈와 수량을 먼저 선택해주세요.',
+      });
+      return;
+    }
+    router.push(`${ROUTES.MALL_CHECKOUT}?ids=${id}`);
+  };
+
   const handleSizeSelect = (selectedSize: string) => {
     if (!selectedSize) return;
     if (selectedSizes.some((opt) => opt.size === selectedSize)) return;
@@ -122,9 +134,9 @@ export default function ProductInfo({
 
   return (
     <>
-      <div className="w-full max-w-5xl mx-auto flex gap-8 mt-8">
-        <div className="flex-1 min-w-[340px] flex flex-col items-center justify-center">
-          <div className="relative w-[340px] h-[340px] rounded-xl overflow-hidden bg-gray-100">
+      <div className="w-full max-w-5xl mx-auto flex flex-col md:flex-row gap-8 mt-8 px-4 md:px-0">
+        <div className="flex-1 w-full md:min-w-[340px] flex flex-col items-center justify-center">
+          <div className="relative w-full aspect-square md:w-[340px] md:h-[340px] rounded-xl overflow-hidden bg-gray-100">
             <Swiper
               modules={[Navigation, Pagination, A11y]}
               navigation
@@ -149,7 +161,7 @@ export default function ProductInfo({
         </div>
 
         {/* 오른쪽: 상품 상세정보 */}
-        <div className="flex-1 min-w-[340px] flex flex-col gap-2">
+        <div className="flex-1 w-full md:min-w-[340px] flex flex-col gap-2">
           <h1 className="text-hr-h2 font-hr-bold leading-tight mb-1">
             {name} <br />
             <span className="font-hr-semi-bold text-hr-h5 text-hr-gray-50 ">
@@ -211,7 +223,7 @@ export default function ProductInfo({
               onChange={handleSizeSelect}
               options={ClothesSizeOptions}
               placeholder="사이즈 선택"
-              className="w-full"
+              className="w-full z-50"
             />
           </div>
 
@@ -269,9 +281,7 @@ export default function ProductInfo({
               text="바로 구매하기"
               type="default"
               size="xl"
-              onClick={() => {
-                // 바로 구매 로직
-              }}
+              onClick={handleBuyNow}
               className="flex-1"
             />
           </div>

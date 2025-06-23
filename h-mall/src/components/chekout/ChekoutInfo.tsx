@@ -18,8 +18,10 @@ export default function CheckoutInfo() {
   const { showModal } = useModal();
   const { items = [] } = useCart();
   const searchParams = useSearchParams();
-  const selectedIds = searchParams.get('ids')?.split(',') ?? [];
-  const selectedItems = items.filter((item) => selectedIds.includes(item.id));
+  const searchIds = searchParams.get('ids')?.split(',') ?? [];
+  const selectedItems = items.filter(
+    (item) => searchIds.includes(item.id) || searchIds.includes(item.product.id)
+  );
   const [agreements, setAgreements] = useState({
     agree1: false,
     agree2: false,
