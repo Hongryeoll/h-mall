@@ -79,6 +79,7 @@ export interface OrderItem {
 
 export interface OrderData {
   id: string;
+  user_id: string;
   payment_method: string;
   card_company: string | null;
   total_price: number;
@@ -97,6 +98,10 @@ export interface OrderData {
   order_items: OrderItem[];
   receipt_type: string;
   receipt_phone: string;
+  status: string;
+  created_at: string;
+  updated_at: string;
+  shipping_label: string;
 }
 
 export interface DaumPostcodeData {

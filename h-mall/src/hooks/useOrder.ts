@@ -34,7 +34,7 @@ export function useOrderDetail(orderId: string | null) {
       }
       return data as OrderData;
     },
-    enabled: !!orderId, // orderId가 있어야 쿼리 작동
+    enabled: !!orderId,
   });
 }
 
@@ -131,4 +131,35 @@ export function useOrder() {
   });
 
   return { createOrder };
+}
+
+export function useOrderList() {
+  const supabase = createSupabaseBrowserClient();
+
+  return useQuery<OrderData[], Error>({
+    queryKey: ['myOrders'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('orders')
+        .select(
+          `
+          *,
+          order_items (
+            *,
+            product:products (
+              id,
+              name,
+              brand,
+              product_images,
+              final_price
+            )
+          )
+        `
+        )
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      return data as unknown as OrderData[];
+    },
+  });
 }
