@@ -5,4 +5,5 @@ export interface ReviewItem {
   rating: number;
   content: string;
   created_at: string | null;
+  images: string[] | null;
 }

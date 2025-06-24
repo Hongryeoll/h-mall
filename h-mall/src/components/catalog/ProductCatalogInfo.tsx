@@ -6,6 +6,7 @@ import ProductDetailSection from '@/components/catalog/ProductDetailSection';
 import ProductGuideSection from '@/components/catalog/ProductGuideSection';
 import ProductQnASection from '@/components/catalog/ProductQnASection';
 import { ProductFormProps } from '@/types/products';
+import ProductReviewSection from '@/components/catalog/ProductReviewSection';
 
 type Props = {
   product: ProductFormProps;
@@ -24,11 +25,12 @@ export default function ProductCatalogInfo({ product }: Props) {
       {/* 상품 기본 정보 */}
       <ProductInfo product={product} />
 
-      {/* 탭, 상세·안내·Q&A 영역 */}
+      {/* 탭, 상세·안내·리뷰·Q&A 영역 */}
       <div className="relative">
         <ProductTabsHeader tabs={tabs} />
         <ProductDetailSection id="product-detail" product={product} />
         <ProductGuideSection id="usage-guide" product={product} />
+        <ProductReviewSection id="reviews" productId={product.id} />
         <ProductQnASection id="question-answer" />
       </div>
     </div>

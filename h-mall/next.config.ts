@@ -1,4 +1,6 @@
 import type { NextConfig } from 'next'
+const supabaseHost = process.env.NEXT_PUBLIC_SUPABASE_HOST;
+
 
 interface SVGExcludeRule {
   test?: RegExp
@@ -56,6 +58,11 @@ const nextConfig: NextConfig & { serverExternalPackages?: string[] } = {
         protocol: 'https',
         hostname: 'your.cdn.com',
         pathname: '**',
+      },
+      {
+        protocol: 'https',
+        hostname: supabaseHost!,
+        pathname: '/storage/v1/object/public/**',
       },
     ],
   },
