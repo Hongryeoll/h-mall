@@ -43,7 +43,7 @@ export default function MypageOrderList() {
               </tr>
             </thead>
             <tbody>
-              {orders.map((order, idx) => (
+              {orders.map((order) => (
                 <MypageOrderListItem key={order.id} order={order} />
               ))}
             </tbody>

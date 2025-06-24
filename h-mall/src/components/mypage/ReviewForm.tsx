@@ -7,16 +7,17 @@ import {
   DialogTitle,
   Portal,
 } from '@headlessui/react';
+import { useState, useMemo } from 'react';
 import ImageUploader from '@/components/uploader/ImageUploader';
 import { useRouter } from 'next/navigation';
 import { ROUTES } from '@/types/constants';
-import { useState, useMemo } from 'react';
 import { useReview } from '@/hooks/useReview';
 import { createSupabaseBrowserClient } from '@/library/client/supabase';
 import HrStarRating from '@/components/common/HrStartRating';
 import { HrTextarea } from '@/components/common/HrTextarea';
 import { useForm, FormProvider, useWatch } from 'react-hook-form';
 import { useModal } from '@/components/provider/ModalProvider';
+import Image from 'next/image';
 
 interface Props {
   isOpen: boolean;
@@ -76,7 +77,7 @@ export default function ReviewForm({
       return;
     }
 
-    let imageUrls: string[] = [];
+    const imageUrls: string[] = [];
     try {
       const safeBucket =
         process.env.NEXT_PUBLIC_REVIEW_BUCKET || 'review-images';
@@ -96,11 +97,12 @@ export default function ReviewForm({
         } = supabase.storage.from(safeBucket).getPublicUrl(path);
         imageUrls.push(publicUrl);
       }
-    } catch (err: any) {
-      console.error('이미지 업로드 실패', err);
+    } catch (err: unknown) {
+      const error = err as Error;
+      console.error('이미지 업로드 실패', error);
       showModal({
         title: '업로드 실패',
-        description: `이미지 업로드 중 오류가 발생했습니다.\n${err.message}`,
+        description: `이미지 업로드 중 오류가 발생했습니다.\n${error.message}`,
       });
       return;
     }
@@ -130,10 +132,11 @@ export default function ReviewForm({
           </div>
         ),
       });
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const error = err as Error;
       showModal({
         title: '리뷰 등록 실패',
-        description: err.message || '리뷰 등록 중 오류가 발생했습니다.',
+        description: error.message || '리뷰 등록 중 오류가 발생했습니다.',
       });
     }
   };
@@ -157,9 +160,11 @@ export default function ReviewForm({
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 {/* 상품 정보 */}
                 <div className="flex items-center gap-4">
-                  <img
+                  <Image
                     src={product.images[0]}
                     alt={product.name}
+                    width={64}
+                    height={64}
                     className="w-16 h-16 object-cover rounded"
                   />
                   <span className="font-hr-regular">{product.name}</span>
