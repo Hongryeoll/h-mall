@@ -26,7 +26,7 @@ export default function ProductForm({
   const queryClient = useQueryClient();
   const { role } = useUserContext();
   const methods = useForm<ProductFormProps>();
-  const { showModal } = useModal();
+  const { showModal, closeModal } = useModal();
   const {
     handleSubmit,
     reset,
@@ -152,8 +152,7 @@ export default function ProductForm({
               className="px-4 py-2 bg-hr-purple-default text-white rounded"
               onClick={() => {
                 onClose();
-                // 모달도 닫기
-                showModal({ title: '', description: '' });
+                closeModal();
               }}
             >
               확인

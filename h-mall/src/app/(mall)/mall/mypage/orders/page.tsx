@@ -6,8 +6,6 @@ export default function Orders() {
       <div>
         <MypageOrderList />
       </div>
-      <div>Orders</div>
-      <div>Orders</div>
     </>
   );
 }

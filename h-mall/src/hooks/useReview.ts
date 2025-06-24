@@ -10,7 +10,7 @@ export function useReview(productId: string) {
   const supabase = useMemo(() => createSupabaseBrowserClient(), []);
   const queryClient = useQueryClient();
 
-  // 1) 리뷰 조회: 객체 기반 호출
+  // 리뷰 조회 - 객체 기반 호출
   const {
     data: reviews,
     isLoading,
@@ -29,19 +29,20 @@ export function useReview(productId: string) {
     enabled: !!productId,
   });
 
-  // 2) 리뷰 작성
+  // 리뷰 작성
   const addReview = useMutation<
     Database['public']['Tables']['reviews']['Row'],
     Error,
-    { rating: number; content: string }
+    { rating: number; content: string; images: string[] }
   >({
-    // mutationFn 안에서 변수 타입을 명시해 주면 암시적 any 에러가 사라집니다
     mutationFn: async ({
       rating,
       content,
+      images,
     }: {
       rating: number;
       content: string;
+      images: string[];
     }) => {
       const {
         data: { user },
@@ -52,16 +53,18 @@ export function useReview(productId: string) {
 
       const { data, error } = await supabase
         .from('reviews')
-        .insert([{ product_id: productId, user_id: user.id, rating, content }]);
+        .insert([{ product_id: productId, user_id: user.id, rating, content, images }])
+        .select();
       if (error) throw error;
-      return data![0];
+      if (!data || data.length === 0) throw new Error('No review returned');
+      return data[0];
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['reviews', productId] });
     },
   });
 
-  // 3) 리뷰 수정
+  // 리뷰 수정
   const updateReview = useMutation<
     Database['public']['Tables']['reviews']['Row'],
     Error,
@@ -79,16 +82,18 @@ export function useReview(productId: string) {
       const { data, error } = await supabase
         .from('reviews')
         .update({ rating, content })
-        .eq('id', reviewId);
+        .eq('id', reviewId)
+        .select();
       if (error) throw error;
-      return data![0];
+      if (!data || data.length === 0) throw new Error('No review returned');
+      return data[0];
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['reviews', productId] });
     },
   });
 
-  // 4) 리뷰 삭제
+  // 리뷰 삭제
   const deleteReview = useMutation<void, Error, number>({
     mutationFn: async (reviewId: number) => {
       const { error } = await supabase
@@ -102,6 +107,21 @@ export function useReview(productId: string) {
     },
   });
 
+  // 리뷰 작성 체크
+  const updateReviewedCol = useMutation<void, Error, string>({
+    mutationFn: async (orderItemId: string) => {
+      const { error } = await supabase
+        .from('order_items')
+        .update({ reviewed: true })
+        .eq('id', orderItemId);
+  
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['myOrders'] });
+    },
+  });
+
   return {
     reviews,
     isLoading,
@@ -109,5 +129,6 @@ export function useReview(productId: string) {
     addReview,
     updateReview,
     deleteReview,
+    updateReviewedCol,
   };
 }

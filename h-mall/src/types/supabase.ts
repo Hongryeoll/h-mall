@@ -79,6 +79,7 @@ export type Database = {
           price: number
           product_id: string | null
           quantity: number
+          reviewed: boolean | null
           size: string | null
         }
         Insert: {
@@ -87,6 +88,7 @@ export type Database = {
           price: number
           product_id?: string | null
           quantity: number
+          reviewed?: boolean | null
           size?: string | null
         }
         Update: {
@@ -95,6 +97,7 @@ export type Database = {
           price?: number
           product_id?: string | null
           quantity?: number
+          reviewed?: boolean | null
           size?: string | null
         }
         Relationships: [
@@ -319,6 +322,7 @@ export type Database = {
           content: string
           created_at: string | null
           id: number
+          images: string[] | null
           product_id: string
           rating: number
           user_id: string | null
@@ -327,6 +331,7 @@ export type Database = {
           content: string
           created_at?: string | null
           id?: number
+          images?: string[] | null
           product_id: string
           rating: number
           user_id?: string | null
@@ -335,6 +340,7 @@ export type Database = {
           content?: string
           created_at?: string | null
           id?: number
+          images?: string[] | null
           product_id?: string
           rating?: number
           user_id?: string | null

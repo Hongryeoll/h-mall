@@ -68,6 +68,7 @@ export interface OrderItem {
   quantity: number;
   price: number;
   size: string;
+  reviewed: boolean;
   product: {
     id: string;
     name: string;
@@ -102,6 +103,7 @@ export interface OrderData {
   created_at: string;
   updated_at: string;
   shipping_label: string;
+  reviewed:boolean;
 }
 
 export interface DaumPostcodeData {
