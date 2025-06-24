@@ -19,32 +19,32 @@ export default function MypageOrderList() {
       {/* 데스크탑: 그림자·라운드 테이블 */}
       <div className="hidden sm:block">
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-white shadow rounded-lg overflow-hidden">
+          <table className="table-auto min-w-full bg-white shadow rounded-lg overflow-hidden">
             <thead className="bg-gray-50">
               <tr>
-                <th className="py-3 px-4 text-left text-gray-700">상품정보</th>
-                <th className="py-3 px-4 text-center text-gray-700">
-                  주문일자
+                <th className="py-3 px-2 text-left text-hr-gray-70 min-w-[200px] w-[30%]">
+                  상품정보
                 </th>
-                <th className="py-3 px-4 text-center text-gray-700">
-                  결제금액
-                </th>
-                <th className="py-3 px-4 text-center text-gray-700">배송비</th>
-                <th className="py-3 px-4 text-center text-gray-700">
+                <th className="py-3 px-2 text-center text-hr-gray-70 min-w-[100px] w-[15%]">
                   결제수단
                 </th>
-                <th className="py-3 px-4 text-center text-gray-700">
-                  최종결제
+                <th className="py-3 px-2 text-center text-hr-gray-70 min-w-[80px] w-[10%]">
+                  배송비
+                </th>
+                <th className="py-3 px-2 text-center text-hr-gray-70 min-w-[120px] w-[15%]">
+                  결제금액
+                </th>
+                <th className="py-3 px-2 text-center text-hr-gray-70 min-w-[150px] w-[20%]">
+                  주문일자
+                </th>
+                <th className="py-3 px-2 text-center text-hr-gray-70 min-w-[100px] w-[10%]">
+                  리뷰
                 </th>
               </tr>
             </thead>
             <tbody>
               {orders.map((order, idx) => (
-                <MypageOrderListItem
-                  key={order.id}
-                  order={order}
-                  isEven={idx % 2 === 0}
-                />
+                <MypageOrderListItem key={order.id} order={order} />
               ))}
             </tbody>
           </table>
