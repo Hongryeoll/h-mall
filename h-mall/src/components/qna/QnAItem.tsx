@@ -35,6 +35,24 @@ export default function QnAItem({
   const canView = !isPrivate || isOwner || isAdmin;
   const canViewAnswer = !isPrivate ? !!user : isOwner || isAdmin;
 
+  // ✅ 이메일 마스킹 함수
+  const getMaskedEmail = (email: string) => {
+    if (!email) return '';
+    const [localPart, domain] = email.split('@');
+    if (localPart.length <= 2) {
+      return `${localPart[0]}***@${domain}`;
+    }
+    return `${localPart.slice(0, 2)}***@${domain}`;
+  };
+
+  // ✅ 이메일 라벨 처리 (탈퇴자, 비회원 포함)
+  const emailLabel =
+    qna.user_id && qna.userinfo?.email
+      ? getMaskedEmail(qna.userinfo.email)
+      : qna.user_id && !qna.userinfo?.email
+        ? '탈퇴한 사용자'
+        : '비회원';
+
   return (
     <div className="border rounded p-4">
       {/* 질문 요약 영역 */}
@@ -43,9 +61,7 @@ export default function QnAItem({
         onClick={() => setAnswerOpen(!answerOpen)}
       >
         <div className="space-x-1">
-          <span className="font-semibold">
-            {qna.userinfo?.email ?? '비회원'}
-          </span>
+          <span className="font-semibold">{emailLabel}</span>
           <span className="text-hr-gray-60">[{qna.category ?? '문의'}]</span>
           <span className="text-hr-b4 text-black">
             {canView ? (
@@ -82,7 +98,6 @@ export default function QnAItem({
       {/* 펼쳐진 상세 영역 */}
       {answerOpen && (
         <div className="mt-4 space-y-3">
-          {/* 수정 모드 */}
           {editMode ? (
             <QnAForm
               initialQuestion={qna.question}
@@ -112,7 +127,6 @@ export default function QnAItem({
             </div>
           )}
 
-          {/* 버튼 (작성자만) */}
           {isOwner && (
             <div className="flex gap-2">
               <button
@@ -132,7 +146,6 @@ export default function QnAItem({
             </div>
           )}
 
-          {/* 답변 영역 */}
           {qna.answer ? (
             canViewAnswer ? (
               <div className="bg-neutral-50 border rounded p-3">
