@@ -8,6 +8,7 @@ import {
   QnaAnswerInput,
 } from '@/types/qna';
 import { UserProfile } from '@/components/provider/UserProvider';
+import { useModal } from '@/components/provider/ModalProvider';
 import LockSVG from '@/assets/icons/lock.svg';
 
 type Props = {
@@ -34,8 +35,20 @@ export default function QnAItem({
   const isPrivate = qna.is_private;
   const canView = !isPrivate || isOwner || isAdmin;
   const canViewAnswer = !isPrivate ? !!user : isOwner || isAdmin;
+  const { showModal } = useModal();
 
-  // ✅ 이메일 마스킹 함수
+  const handleClick = () => {
+    if (!canView) {
+      showModal({
+        title: '비밀글입니다',
+        description: '이 문의는 작성자와 관리자만 볼 수 있습니다.',
+      });
+      return;
+    }
+    setAnswerOpen(!answerOpen);
+  };
+
+  // 이메일 마스킹 함수
   const getMaskedEmail = (email: string) => {
     if (!email) return '';
     const [localPart, domain] = email.split('@');
@@ -45,7 +58,7 @@ export default function QnAItem({
     return `${localPart.slice(0, 2)}***@${domain}`;
   };
 
-  // ✅ 이메일 라벨 처리 (탈퇴자, 비회원 포함)
+  // 이메일 라벨 처리 (탈퇴자, 비회원 포함)
   const emailLabel =
     qna.user_id && qna.userinfo?.email
       ? getMaskedEmail(qna.userinfo.email)
@@ -58,7 +71,7 @@ export default function QnAItem({
       {/* 질문 요약 영역 */}
       <div
         className="flex justify-between cursor-pointer"
-        onClick={() => setAnswerOpen(!answerOpen)}
+        onClick={handleClick}
       >
         <div className="space-x-1">
           <span className="font-semibold">{emailLabel}</span>
@@ -147,19 +160,10 @@ export default function QnAItem({
           )}
 
           {qna.answer ? (
-            canViewAnswer ? (
-              <div className="bg-neutral-50 border rounded p-3">
-                <div className="text-hr-b4 text-hr-gray-50 mb-1">
-                  판매자 답변
-                </div>
-                <div>{qna.answer}</div>
-              </div>
-            ) : (
-              <div className="flex items-center text-hr-gray-40 text-hr-b4">
-                <LockSVG width={16} height={16} className="mr-1" />
-                작성자와 관리자만 확인할 수 있습니다.
-              </div>
-            )
+            <div className="bg-neutral-50 border rounded p-3">
+              <div className="text-hr-b4 text-hr-gray-50 mb-1">판매자 답변</div>
+              <div>{qna.answer}</div>
+            </div>
           ) : isAdmin && canView ? (
             answerMode ? (
               <QnAAnswerForm

@@ -485,6 +485,24 @@ export type Database = {
           },
         ]
       }
+      user_public_info: {
+        Row: {
+          email_masked: string
+          id: string
+          nickname: string | null
+        }
+        Insert: {
+          email_masked: string
+          id: string
+          nickname?: string | null
+        }
+        Update: {
+          email_masked?: string
+          id?: string
+          nickname?: string | null
+        }
+        Relationships: []
+      }
       userinfo: {
         Row: {
           created_at: string | null
