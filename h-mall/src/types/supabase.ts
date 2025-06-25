@@ -295,6 +295,7 @@ export type Database = {
       qnas: {
         Row: {
           answer: string | null
+          category: string | null
           created_at: string | null
           id: number
           is_private: boolean | null
@@ -305,6 +306,7 @@ export type Database = {
         }
         Insert: {
           answer?: string | null
+          category?: string | null
           created_at?: string | null
           id?: number
           is_private?: boolean | null
@@ -315,6 +317,7 @@ export type Database = {
         }
         Update: {
           answer?: string | null
+          category?: string | null
           created_at?: string | null
           id?: number
           is_private?: boolean | null

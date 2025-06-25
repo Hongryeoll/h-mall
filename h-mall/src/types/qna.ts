@@ -1,4 +1,4 @@
-export type QnaItem = {
+export interface QnaItem {
   id: number;
   product_id: string;
   user_id: string | null;
@@ -6,31 +6,33 @@ export type QnaItem = {
   answer?: string | null;
   is_private?: boolean | null;
   created_at: string | null;
+  category?: string | null;
   userinfo?: {
     email: string;
     nickname: string;
   } | null;
-};
+}
 
-export type QnaInput = {
+export interface QnaInput {
   product_id: string;
   user_id: string;
   question: string;
   is_private?: boolean;
-};
+  category?: string;
+}
 
-export type QnaUpdateInput = {
+export interface QnaUpdateInput {
   qnaId: number;
   question: string;
   is_private?: boolean;
-};
+}
 
-export type QnaAnswerInput = {
+export interface QnaAnswerInput {
   qnaId: number;
   answer: string;
-};
+}
 
-export type QnaDeleteInput = {
+export interface QnaDeleteInput {
   qnaId: number;
   product_id: string;
-};
+}

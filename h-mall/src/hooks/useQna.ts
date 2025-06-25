@@ -3,7 +3,13 @@
 import { useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { createSupabaseBrowserClient } from '@/library/client/supabase';
-import { QnaItem, QnaInput, QnaUpdateInput, QnaAnswerInput, QnaDeleteInput } from '@/types/qna';
+import {
+  QnaItem,
+  QnaInput,
+  QnaUpdateInput,
+  QnaAnswerInput,
+  QnaDeleteInput,
+} from '@/types/qna';
 
 export function useQna(productId: string) {
   const supabase = useMemo(() => createSupabaseBrowserClient(), []);
@@ -19,10 +25,12 @@ export function useQna(productId: string) {
     queryFn: async (): Promise<QnaItem[]> => {
       const { data, error } = await supabase
         .from('qnas')
-        .select(`
-          id, product_id, user_id, question, answer, created_at, is_private,
-          userinfo:user_id ( email, nickname )
-        `)
+        .select(
+          `
+          id, product_id, user_id, question, answer, created_at, is_private, category,
+          userinfo!qnas_user_id_fkey ( email, nickname )
+        `
+        )
         .eq('product_id', productId)
         .order('created_at', { ascending: false });
 
@@ -38,20 +46,25 @@ export function useQna(productId: string) {
       const { data, error } = await supabase
         .from('qnas')
         .insert([input])
-        .select(`
-          id, product_id, user_id, question, answer, created_at, is_private,
-          userinfo:user_id ( email, nickname )
-        `)
+        .select(
+          `
+          id, product_id, user_id, question, answer, created_at, is_private, category,
+          userinfo!qnas_user_id_fkey ( email, nickname )
+        `
+        )
         .single();
 
       if (error) throw error;
       return data as QnaItem;
     },
     onSuccess: (data, variables) => {
-      queryClient.setQueryData<QnaItem[]>(['qna', variables.product_id], (prev) =>
-        prev ? [data, ...prev] : [data]
+      queryClient.setQueryData<QnaItem[]>(
+        ['qna', variables.product_id],
+        (prev) => (prev ? [data, ...prev] : [data])
       );
-      queryClient.invalidateQueries({ queryKey: ['qna', variables.product_id] });
+      queryClient.invalidateQueries({
+        queryKey: ['qna', variables.product_id],
+      });
     },
   });
 
@@ -79,18 +92,18 @@ export function useQna(productId: string) {
   // ✅ QnA 삭제
   const deleteQna = useMutation<void, Error, QnaDeleteInput>({
     mutationFn: async ({ qnaId }) => {
-      const { error } = await supabase
-        .from('qnas')
-        .delete()
-        .eq('id', qnaId);
+      const { error } = await supabase.from('qnas').delete().eq('id', qnaId);
 
       if (error) throw error;
     },
     onSuccess: (_, variables) => {
-      queryClient.setQueryData<QnaItem[]>(['qna', variables.product_id], (prev) =>
-        prev?.filter((item) => item.id !== variables.qnaId)
+      queryClient.setQueryData<QnaItem[]>(
+        ['qna', variables.product_id],
+        (prev) => prev?.filter((item) => item.id !== variables.qnaId)
       );
-      queryClient.invalidateQueries({ queryKey: ['qna', variables.product_id] });
+      queryClient.invalidateQueries({
+        queryKey: ['qna', variables.product_id],
+      });
     },
   });
 
