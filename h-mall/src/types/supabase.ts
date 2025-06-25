@@ -297,24 +297,30 @@ export type Database = {
           answer: string | null
           created_at: string | null
           id: number
+          is_private: boolean | null
           product_id: string
           question: string
+          updated_at: string | null
           user_id: string | null
         }
         Insert: {
           answer?: string | null
           created_at?: string | null
           id?: number
+          is_private?: boolean | null
           product_id: string
           question: string
+          updated_at?: string | null
           user_id?: string | null
         }
         Update: {
           answer?: string | null
           created_at?: string | null
           id?: number
+          is_private?: boolean | null
           product_id?: string
           question?: string
+          updated_at?: string | null
           user_id?: string | null
         }
         Relationships: [
@@ -323,6 +329,13 @@ export type Database = {
             columns: ["product_id"]
             isOneToOne: false
             referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "qnas_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "userinfo"
             referencedColumns: ["id"]
           },
         ]

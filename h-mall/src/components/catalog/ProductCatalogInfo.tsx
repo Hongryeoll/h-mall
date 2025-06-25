@@ -31,7 +31,7 @@ export default function ProductCatalogInfo({ product }: Props) {
         <ProductDetailSection id="product-detail" product={product} />
         <ProductGuideSection id="usage-guide" product={product} />
         <ProductReviewSection id="reviews" productId={product.id} />
-        <ProductQnASection id="question-answer" />
+        <ProductQnASection id="question-answer" product={product} />
       </div>
     </div>
   );

@@ -15,7 +15,7 @@ type Props = {
 
 export default function MypageReviewItem({ review, isCard }: Props) {
   const [isModalOpen, setModalOpen] = useState(false);
-  const { deleteReview, updateReview } = useReview(review.product_id);
+  const { deleteReview } = useReview(review.product_id);
 
   const date = new Date(review.created_at ?? '').toLocaleDateString('ko-KR', {
     year: 'numeric',
