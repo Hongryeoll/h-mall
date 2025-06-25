@@ -48,7 +48,7 @@ export default function ReviewForm({
   const rating = useWatch({ control, name: 'rating' });
   const [files, setFiles] = useState<File[]>([]);
   const previewUrls = useMemo(
-    () => files.map((f) => URL.createObjectURL(f)),
+    () => files.map((file) => URL.createObjectURL(file)),
     [files]
   );
 
@@ -109,6 +109,9 @@ export default function ReviewForm({
 
     try {
       await addReview.mutateAsync({
+        product_id: product.id,
+        user_id: user.id,
+        order_item_id: orderItemId,
         rating: data.rating,
         content: data.content,
         images: imageUrls,
