@@ -333,6 +333,7 @@ export type Database = {
           created_at: string | null
           id: number
           images: string[] | null
+          order_item_id: string | null
           product_id: string
           rating: number
           user_id: string | null
@@ -342,6 +343,7 @@ export type Database = {
           created_at?: string | null
           id?: number
           images?: string[] | null
+          order_item_id?: string | null
           product_id: string
           rating: number
           user_id?: string | null
@@ -351,11 +353,19 @@ export type Database = {
           created_at?: string | null
           id?: number
           images?: string[] | null
+          order_item_id?: string | null
           product_id?: string
           rating?: number
           user_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "reviews_order_item_id_fkey"
+            columns: ["order_item_id"]
+            isOneToOne: false
+            referencedRelation: "order_items"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "reviews_product_id_fkey"
             columns: ["product_id"]

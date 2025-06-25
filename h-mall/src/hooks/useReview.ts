@@ -31,10 +31,17 @@ export function useReview(productId: string) {
           email,
           nickname
         ),
-        order_items!inner (
+        order_items:order_item_id (
           size,
           price
-        )`)
+        ),
+        products:product_id (
+          name,
+          final_price,
+          discount_rate,
+          product_images
+        )
+        `)
         .eq('product_id', productId)
         .order('created_at', { ascending: false });
       if (error) throw error;
