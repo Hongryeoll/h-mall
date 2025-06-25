@@ -103,7 +103,6 @@ export interface OrderData {
   created_at: string;
   updated_at: string;
   shipping_label: string;
-  reviewed:boolean;
 }
 
 export interface DaumPostcodeData {

@@ -93,7 +93,7 @@ export function useReview(productId: string) {
   Error,
   ReviewUpdateInput
   >({
-    mutationFn: async ({ reviewId, rating, content, product_id }) => {
+    mutationFn: async ({ reviewId, rating, content }) => {
       const { data, error } = await supabase
         .from('reviews')
         .update({ rating, content })
@@ -104,8 +104,8 @@ export function useReview(productId: string) {
       if (!data || data.length === 0) throw new Error('No review returned');
       return data[0];
     },
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ['reviews', variables.product_id] });
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['reviews', productId] });
     },
   });
 
