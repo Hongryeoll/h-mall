@@ -10,7 +10,7 @@ export function useReview(productId: string) {
   const supabase = useMemo(() => createSupabaseBrowserClient(), []);
   const queryClient = useQueryClient();
 
-  // 리뷰 조회 - 객체 기반 호출
+  // 리뷰 조회 - 객체 기반 단일 호출
   const {
     data: reviews,
     isLoading,
@@ -153,3 +153,49 @@ export function useReview(productId: string) {
     updateReviewedCol,
   };
 }
+
+export const useMyReviews = () => {
+  const supabase = createSupabaseBrowserClient();
+
+  const { data, isLoading, error } = useQuery<ReviewItem[]>({
+    queryKey: ['myReviews'],
+    queryFn: async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) throw new Error('로그인 필요');
+
+      const { data, error } = await supabase
+        .from('reviews')
+        .select(`id, 
+          product_id, 
+          user_id, 
+          rating, 
+          content, 
+          created_at, 
+          images,
+          userinfo:user_id (
+            email,
+            nickname
+          ),
+          order_items:order_item_id (
+            size,
+            price
+          ),
+          products:product_id (
+            name,
+            final_price,
+            discount_rate,
+            product_images
+          )
+        `)
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  return { data, isLoading, error };
+};

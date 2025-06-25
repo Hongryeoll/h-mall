@@ -1,9 +1,11 @@
+import MypageReviewList from '@/components/mypage/MypageReviewList';
+
 export default function Reviews() {
   return (
     <>
-      <div>Reviews</div>
-      <div>Reviews</div>
-      <div>Reviews</div>
+      <div>
+        <MypageReviewList />
+      </div>
     </>
   );
 }

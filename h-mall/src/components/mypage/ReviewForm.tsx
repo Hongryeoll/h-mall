@@ -24,6 +24,12 @@ interface Props {
   onClose: () => void;
   product: { id: string; name: string; images: string[] };
   orderItemId: string;
+  isEdit?: boolean;
+  reviewId?: number;
+  defaultValues?: {
+    rating: number;
+    content: string;
+  };
 }
 
 type FormValues = {
@@ -36,13 +42,19 @@ export default function ReviewForm({
   onClose,
   product,
   orderItemId,
+  isEdit,
+  reviewId,
+  defaultValues,
 }: Props) {
   const router = useRouter();
-  const { addReview, updateReviewedCol } = useReview(product.id);
+  const { addReview, updateReview, updateReviewedCol } = useReview(product.id);
   const supabase = createSupabaseBrowserClient();
   const { showModal, closeModal } = useModal();
   const methods = useForm<FormValues>({
-    defaultValues: { rating: 0, content: '' },
+    defaultValues: {
+      rating: defaultValues?.rating ?? 0,
+      content: defaultValues?.content ?? '',
+    },
   });
   const { control, setValue, handleSubmit } = methods;
   const rating = useWatch({ control, name: 'rating' });
@@ -52,6 +64,97 @@ export default function ReviewForm({
     [files]
   );
 
+  // const onSubmit = async (data: FormValues) => {
+  //   const {
+  //     data: { user },
+  //   } = await supabase.auth.getUser();
+  //   if (!user) {
+  //     showModal({
+  //       title: '로그인이 필요합니다',
+  //       description: '리뷰를 작성하려면 먼저 로그인을 해주세요.',
+  //       children: (
+  //         <div className="mt-6 flex justify-end">
+  //           <button
+  //             className="px-4 py-2 bg-hr-purple-default text-white rounded"
+  //             onClick={() => {
+  //               router.push(ROUTES.LOGIN);
+  //               closeModal();
+  //             }}
+  //           >
+  //             로그인 하러 가기
+  //           </button>
+  //         </div>
+  //       ),
+  //     });
+  //     return;
+  //   }
+
+  //   const imageUrls: string[] = [];
+  //   try {
+  //     const safeBucket =
+  //       process.env.NEXT_PUBLIC_REVIEW_BUCKET || 'review-images';
+
+  //     for (const file of files) {
+  //       const safeName = file.name
+  //         .replace(/\s+/g, '_')
+  //         .replace(/[^a-zA-Z0-9_\-\.]/g, '');
+  //       const path = `${product.id}/${Date.now()}-${safeName}`;
+  //       const { error: uploadError } = await supabase.storage
+  //         .from(safeBucket)
+  //         .upload(path, file, { upsert: false });
+  //       if (uploadError) throw uploadError;
+
+  //       const {
+  //         data: { publicUrl },
+  //       } = supabase.storage.from(safeBucket).getPublicUrl(path);
+  //       imageUrls.push(publicUrl);
+  //     }
+  //   } catch (err: unknown) {
+  //     const error = err as Error;
+  //     console.error('이미지 업로드 실패', error);
+  //     showModal({
+  //       title: '업로드 실패',
+  //       description: `이미지 업로드 중 오류가 발생했습니다.\n${error.message}`,
+  //     });
+  //     return;
+  //   }
+
+  //   try {
+  //     await addReview.mutateAsync({
+  //       product_id: product.id,
+  //       user_id: user.id,
+  //       order_item_id: orderItemId,
+  //       rating: data.rating,
+  //       content: data.content,
+  //       images: imageUrls,
+  //     });
+  //     await updateReviewedCol.mutateAsync(orderItemId);
+
+  //     showModal({
+  //       title: '리뷰 등록 완료!',
+  //       description: '소중한 리뷰가 성공적으로 등록되었습니다.',
+  //       children: (
+  //         <div className="mt-6 flex justify-end">
+  //           <button
+  //             className="px-4 py-2 bg-hr-purple-default text-white rounded"
+  //             onClick={() => {
+  //               closeModal();
+  //               onClose();
+  //             }}
+  //           >
+  //             확인
+  //           </button>
+  //         </div>
+  //       ),
+  //     });
+  //   } catch (err: unknown) {
+  //     const error = err as Error;
+  //     showModal({
+  //       title: '리뷰 등록 실패',
+  //       description: error.message || '리뷰 등록 중 오류가 발생했습니다.',
+  //     });
+  //   }
+  // };
   const onSubmit = async (data: FormValues) => {
     const {
       data: { user },
@@ -78,6 +181,7 @@ export default function ReviewForm({
     }
 
     const imageUrls: string[] = [];
+
     try {
       const safeBucket =
         process.env.NEXT_PUBLIC_REVIEW_BUCKET || 'review-images';
@@ -108,38 +212,68 @@ export default function ReviewForm({
     }
 
     try {
-      await addReview.mutateAsync({
-        product_id: product.id,
-        user_id: user.id,
-        order_item_id: orderItemId,
-        rating: data.rating,
-        content: data.content,
-        images: imageUrls,
-      });
-      await updateReviewedCol.mutateAsync(orderItemId);
+      if (isEdit && reviewId) {
+        // 리뷰 수정
+        await updateReview.mutateAsync({
+          reviewId,
+          rating: data.rating,
+          content: data.content,
+          product_id: product.id,
+        });
 
-      showModal({
-        title: '리뷰 등록 완료!',
-        description: '소중한 리뷰가 성공적으로 등록되었습니다.',
-        children: (
-          <div className="mt-6 flex justify-end">
-            <button
-              className="px-4 py-2 bg-hr-purple-default text-white rounded"
-              onClick={() => {
-                closeModal();
-                onClose();
-              }}
-            >
-              확인
-            </button>
-          </div>
-        ),
-      });
+        showModal({
+          title: '리뷰 수정 완료!',
+          description: '리뷰가 성공적으로 수정되었습니다.',
+          children: (
+            <div className="mt-6 flex justify-end">
+              <button
+                className="px-4 py-2 bg-hr-purple-default text-white rounded"
+                onClick={() => {
+                  closeModal();
+                  onClose();
+                }}
+              >
+                확인
+              </button>
+            </div>
+          ),
+        });
+      } else {
+        // 리뷰 작성
+        await addReview.mutateAsync({
+          product_id: product.id,
+          user_id: user.id,
+          order_item_id: orderItemId,
+          rating: data.rating,
+          content: data.content,
+          images: imageUrls,
+        });
+
+        await updateReviewedCol.mutateAsync(orderItemId);
+
+        showModal({
+          title: '리뷰 등록 완료!',
+          description: '소중한 리뷰가 성공적으로 등록되었습니다.',
+          children: (
+            <div className="mt-6 flex justify-end">
+              <button
+                className="px-4 py-2 bg-hr-purple-default text-white rounded"
+                onClick={() => {
+                  closeModal();
+                  onClose();
+                }}
+              >
+                확인
+              </button>
+            </div>
+          ),
+        });
+      }
     } catch (err: unknown) {
       const error = err as Error;
       showModal({
-        title: '리뷰 등록 실패',
-        description: error.message || '리뷰 등록 중 오류가 발생했습니다.',
+        title: isEdit ? '리뷰 수정 실패' : '리뷰 등록 실패',
+        description: error.message || '리뷰 처리 중 오류가 발생했습니다.',
       });
     }
   };
