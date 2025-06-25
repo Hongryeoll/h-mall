@@ -20,7 +20,21 @@ export function useReview(productId: string) {
     queryFn: async (): Promise<ReviewItem[]> => {
       const { data, error } = await supabase
         .from('reviews')
-        .select('id, product_id, user_id, rating, content, created_at, images')
+        .select(`id, 
+        product_id, 
+        user_id, 
+        rating, 
+        content, 
+        created_at, 
+        images,
+        userinfo: user_id (
+          email,
+          nickname
+        ),
+        order_items!inner (
+          size,
+          price
+        )`)
         .eq('product_id', productId)
         .order('created_at', { ascending: false });
       if (error) throw error;

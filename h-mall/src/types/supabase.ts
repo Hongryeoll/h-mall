@@ -81,6 +81,7 @@ export type Database = {
           quantity: number
           reviewed: boolean | null
           size: string | null
+          user_id: string | null
         }
         Insert: {
           id?: string
@@ -90,6 +91,7 @@ export type Database = {
           quantity: number
           reviewed?: boolean | null
           size?: string | null
+          user_id?: string | null
         }
         Update: {
           id?: string
@@ -99,6 +101,7 @@ export type Database = {
           quantity?: number
           reviewed?: boolean | null
           size?: string | null
+          user_id?: string | null
         }
         Relationships: [
           {
@@ -113,6 +116,13 @@ export type Database = {
             columns: ["product_id"]
             isOneToOne: false
             referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "userinfo"
             referencedColumns: ["id"]
           },
         ]
