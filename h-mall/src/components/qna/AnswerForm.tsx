@@ -42,14 +42,14 @@ export default function AnswerForm({
       <div className="flex gap-2">
         <button
           type="submit"
-          className="bg-black text-white rounded-md px-4 py-1"
+          className="bg-hr-purple-default text-hr-purple-bg rounded-md px-4 py-1"
         >
           등록
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="border rounded-md px-4 py-1"
+          className="text-hr-purple-default border border-hr-purple-border rounded-md px-4 py-1"
         >
           닫기
         </button>

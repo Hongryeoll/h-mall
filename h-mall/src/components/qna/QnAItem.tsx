@@ -36,6 +36,13 @@ export default function QnAItem({
   const canView = !isPrivate || isOwner || isAdmin;
   const { showModal } = useModal();
 
+  const previewLength = 30;
+  const preview = qna.question.slice(0, previewLength);
+  const restContent =
+    qna.question.length > previewLength
+      ? qna.question.slice(previewLength)
+      : '';
+
   const handleClick = () => {
     if (!canView) {
       showModal({
@@ -49,31 +56,39 @@ export default function QnAItem({
 
   return (
     <div className="border rounded p-4">
-      {/* 질문 요약 영역 */}
+      {/* 헤더 */}
       <div
         className="flex justify-between cursor-pointer"
         onClick={handleClick}
       >
-        <div className="space-x-1">
-          <span className="font-semibold">{qna.email_masked}</span>
-          <span className="text-hr-gray-60">[{qna.category ?? '문의'}]</span>
-          <span className="text-hr-b4 text-black">
+        <div className="flex flex-col gap-0.5">
+          <span className="text-hr-b5 font-hr-semi-bold">
+            {qna.email_masked}
+          </span>
+          <span className="text-hr-c1 text-hr-gray-60">
+            [{qna.category ?? '문의'}]
+          </span>
+
+          {/* 질문 내용 */}
+          <div className="text-hr-b3 text-black whitespace-pre-line">
             {canView ? (
-              qna.question.length > 50 ? (
-                qna.question.slice(0, 50) + '...'
-              ) : (
-                qna.question
-              )
+              <>
+                {preview}
+                {restContent && !answerOpen && (
+                  <span className="text-hr-gray-40">...</span>
+                )}
+                {answerOpen && restContent}
+              </>
             ) : (
-              <span className="text-hr-gray-40 flex items-center">
+              <div className="text-hr-gray-40 flex items-center">
                 <LockSVG className="w-4 h-4 mr-1" />
                 비밀글입니다.
-              </span>
+              </div>
             )}
-          </span>
+          </div>
         </div>
 
-        <div className="flex flex-col items-end">
+        <div className="flex flex-col items-end min-w-[80px]">
           <span className="text-hr-gray-50 text-hr-c1">
             {new Date(qna.created_at ?? '').toLocaleDateString()}
           </span>
@@ -89,7 +104,7 @@ export default function QnAItem({
         </div>
       </div>
 
-      {/* 펼쳐진 상세 영역 */}
+      {/* 수정/삭제 및 답변 영역 */}
       {answerOpen && (
         <div className="mt-4 space-y-3">
           {editMode ? (
@@ -109,41 +124,31 @@ export default function QnAItem({
               onCancel={() => setEditMode(false)}
             />
           ) : (
-            <div className="font-medium">
-              {canView ? (
-                qna.question
-              ) : (
-                <div className="text-hr-gray-40 flex items-center">
-                  <LockSVG className="w-4 h-4 mr-1" />
-                  비밀글입니다.
-                </div>
-              )}
-            </div>
+            isOwner && (
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setEditMode(!editMode)}
+                  className="text-hr-purple-default"
+                >
+                  수정
+                </button>
+                <button
+                  onClick={() =>
+                    onDelete({ qnaId: qna.id, product_id: qna.product_id })
+                  }
+                  className="text-hr-danger-default"
+                >
+                  삭제
+                </button>
+              </div>
+            )
           )}
 
-          {isOwner && (
-            <div className="flex gap-2">
-              <button
-                onClick={() => setEditMode(!editMode)}
-                className="text-blue-500"
-              >
-                수정
-              </button>
-              <button
-                onClick={() =>
-                  onDelete({ qnaId: qna.id, product_id: qna.product_id })
-                }
-                className="text-red-500"
-              >
-                삭제
-              </button>
-            </div>
-          )}
-
+          {/* 답변 */}
           {qna.answer ? (
             <div className="bg-neutral-50 border rounded p-3">
               <div className="text-hr-b4 text-hr-gray-50 mb-1">판매자 답변</div>
-              <div>{qna.answer}</div>
+              <div className="whitespace-pre-line">{qna.answer}</div>
             </div>
           ) : isAdmin && canView ? (
             answerMode ? (
@@ -157,7 +162,7 @@ export default function QnAItem({
             ) : (
               <button
                 onClick={() => setAnswerMode(true)}
-                className="text-blue-500"
+                className="text-hr-purple-default"
               >
                 답변달기
               </button>
