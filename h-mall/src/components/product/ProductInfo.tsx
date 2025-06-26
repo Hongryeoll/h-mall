@@ -5,36 +5,63 @@ import {
   ArrowPathIcon,
 } from '@heroicons/react/24/outline';
 import { XCircleIcon } from '@heroicons/react/16/solid';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import ProductForm from './ProductForm';
 import { useCategoryCascade } from '@/hooks/useCategoryCascade';
 import HrSelectbox from '@/components/common/HrSelectbox';
+import HrPagination from '@/components/common/HrPagination';
 import { useProducts } from '@/hooks/useProducts';
 
 export default function ProductInfo() {
   const [isModalOpen, setModalOpen] = useState(false);
   const [editingProductId, setEditingProductId] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 1;
+
   const { selected, set, options } = useCategoryCascade();
   const { data: products, isLoading } = useProducts();
-  if (isLoading) return <div>로딩 중...</div>;
-  if (!products) return <div>데이터가 없습니다</div>;
-  const filtered = products.filter((p) => {
-    const categoryMatch =
-      !selected.categoryId ||
-      p.subtabs?.subsections?.sections?.category_id === selected.categoryId;
 
-    const sectionMatch =
-      !selected.sectionId ||
-      p.subtabs?.subsections?.section_id === selected.sectionId;
+  const filtered = useMemo(() => {
+    return (
+      products?.filter((p) => {
+        const categoryMatch =
+          !selected.categoryId ||
+          p.subtabs?.subsections?.sections?.category_id === selected.categoryId;
 
-    const subsectionMatch =
-      !selected.subsectionId ||
-      p.subtabs?.subsection_id === selected.subsectionId;
+        const sectionMatch =
+          !selected.sectionId ||
+          p.subtabs?.subsections?.section_id === selected.sectionId;
 
-    const subtabMatch = !selected.subtabId || p.subtab_id === selected.subtabId;
+        const subsectionMatch =
+          !selected.subsectionId ||
+          p.subtabs?.subsection_id === selected.subsectionId;
 
-    return categoryMatch && sectionMatch && subsectionMatch && subtabMatch;
-  });
+        const subtabMatch =
+          !selected.subtabId || p.subtab_id === selected.subtabId;
+
+        const searchMatch = !searchTerm
+          ? true
+          : p.name.toLowerCase().includes(searchTerm.toLowerCase());
+
+        return (
+          categoryMatch &&
+          sectionMatch &&
+          subsectionMatch &&
+          subtabMatch &&
+          searchMatch
+        );
+      }) || []
+    );
+  }, [products, selected, searchTerm]);
+
+  const totalItems = filtered.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  const paginatedProducts = filtered.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   const openNewProductForm = () => {
     setEditingProductId(null);
@@ -50,6 +77,9 @@ export default function ProductInfo() {
     setModalOpen(false);
     setEditingProductId(null);
   };
+
+  if (isLoading) return <div>로딩 중...</div>;
+  if (!products) return <div>데이터가 없습니다</div>;
 
   return (
     <div className="flex flex-col h-full px-4 py-4">
@@ -71,30 +101,50 @@ export default function ProductInfo() {
             <MagnifyingGlassIcon className="w-4 h-4 sm:w-5 sm:h-5 text-hr-gray-40 stroke-2" />
             <input
               type="text"
-              placeholder="상품명 혹은 코드를 입력하세요"
+              placeholder="상품명 검색"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               className="flex-1 bg-transparent outline-none border-none px-2 sm:px-3 text-xs sm:text-sm text-hr-gray-60 placeholder-hr-gray-40"
             />
-            <button className="p-1 text-hr-gray-40 hover:text-hr-gray-60">
-              <XCircleIcon className="w-4 h-4 sm:w-5 sm:h-5" />
-            </button>
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm('')}
+                className="p-1 text-hr-gray-40 hover:text-hr-gray-60"
+              >
+                <XCircleIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+              </button>
+            )}
           </div>
 
-          <button className="flex items-center gap-1.5 bg-hr-purple-default hover:bg-hr-purple-dark text-white text-xs font-hr-semi-bold rounded-md px-3 py-2 transition">
+          <button
+            onClick={() => setCurrentPage(1)}
+            className="flex items-center gap-1.5 bg-hr-purple-default hover:bg-hr-purple-dark text-white text-xs font-hr-semi-bold rounded-md px-3 py-2 transition"
+          >
             <MagnifyingGlassIcon className="w-5 h-5 stroke-2" />
             검색
           </button>
 
-          <button className="flex items-center gap-1.5 bg-hr-gray-20 hover:bg-hr-gray-30 text-hr-gray-60 text-xs font-hr-semi-bold rounded-md px-3 py-2 transition">
+          <button
+            onClick={() => {
+              setSearchTerm('');
+              set.category('');
+              set.section('');
+              set.subsection('');
+              set.subtab('');
+              setCurrentPage(1);
+            }}
+            className="flex items-center gap-1.5 bg-hr-gray-20 hover:bg-hr-gray-30 text-hr-gray-60 text-xs font-hr-semi-bold rounded-md px-3 py-2 transition"
+          >
             <ArrowPathIcon className="w-5 h-5 stroke-2" />
             초기화
           </button>
         </div>
 
-        {/* 2-2) 필터 셀렉트 박스 */}
+        {/* 필터 셀렉트 박스 */}
         <div className="bg-hr-white rounded-lg pt-2">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
             <HrSelectbox
-              value={selected.categoryId}
+              value={selected.categoryId ?? ''}
               onChange={(v) => set.category(v)}
               placeholder="카테고리 선택"
               options={options.categories.map((cat) => ({
@@ -102,9 +152,8 @@ export default function ProductInfo() {
                 label: cat.name,
               }))}
             />
-
             <HrSelectbox
-              value={selected.sectionId}
+              value={selected.sectionId ?? ''}
               onChange={(v) => set.section(v)}
               placeholder="섹션 선택"
               options={options.sections.map((sec) => ({
@@ -112,9 +161,8 @@ export default function ProductInfo() {
                 label: sec.title,
               }))}
             />
-
             <HrSelectbox
-              value={selected.subsectionId}
+              value={selected.subsectionId ?? ''}
               onChange={(v) => set.subsection(v)}
               placeholder="서브섹션 선택"
               options={options.subsections.map((ss) => ({
@@ -122,9 +170,8 @@ export default function ProductInfo() {
                 label: ss.title,
               }))}
             />
-
             <HrSelectbox
-              value={selected.subtabId}
+              value={selected.subtabId ?? ''}
               onChange={(v) => set.subtab(v)}
               placeholder="서브탭 선택"
               options={options.subtabs.map((st) => ({
@@ -143,7 +190,10 @@ export default function ProductInfo() {
           >
             신규 등록
           </button>
-          <button className="flex items-center gap-2 bg-hr-gray-20 hover:bg-hr-gray-30 text-hr-gray-60 text-sm font-hr-semi-bold rounded-md px-3 py-2 transition">
+          <button
+            onClick={() => window.location.reload()}
+            className="flex items-center gap-2 bg-hr-gray-20 hover:bg-hr-gray-30 text-hr-gray-60 text-sm font-hr-semi-bold rounded-md px-3 py-2 transition"
+          >
             <ArrowPathIcon className="w-5 h-5 stroke-2" />
             새로고침
           </button>
@@ -178,17 +228,18 @@ export default function ProductInfo() {
                 </tr>
               </thead>
             </table>
+
             {/* 바디 */}
             <div className="flex-1 overflow-y-auto">
               <table className="table-fixed w-full divide-y divide-hr-gray-20">
                 <tbody className="divide-y divide-hr-gray-20">
-                  {filtered.map((product) => (
+                  {paginatedProducts.map((product) => (
                     <tr
                       key={product.id}
                       className="hover:bg-hr-gray-5 h-12"
                       onClick={() => openEditProductForm(product.id)}
                     >
-                      <td className="w-16 px-2 text-xs sm:text-sm md:text-base text-hr-gray-50 whitespace-nowrap">
+                      <td className="w-16 px-2">
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
@@ -199,20 +250,18 @@ export default function ProductInfo() {
                           수정
                         </button>
                       </td>
-                      <td className="w-24 px-2 text-xs sm:text-sm md:text-base text-hr-gray-50 whitespace-nowrap">
+                      <td className="w-24 px-2">
                         {product.subtabs?.subsections?.sections?.categories
                           ?.name || '-'}
                       </td>
-                      <td className="w-24 px-2 text-xs sm:text-sm md:text-base text-hr-gray-50 whitespace-nowrap">
+                      <td className="w-24 px-2">
                         {product.subtabs?.subsections?.sections?.title || '-'}
                       </td>
-                      <td className="w-24 px-2 text-xs sm:text-sm md:text-base text-hr-gray-50 whitespace-nowrap">
+                      <td className="w-24 px-2">
                         {product.subtabs?.subsections?.title || '-'}
                       </td>
-                      <td className="w-48 px-2 text-xs sm:text-sm md:text-base font-semibold text-hr-gray-80 whitespace-nowrap">
-                        {product.name}
-                      </td>
-                      <td className="w-24 px-2 text-xs sm:text-sm md:text-base text-hr-gray-50 whitespace-nowrap">
+                      <td className="w-48 px-2">{product.name}</td>
+                      <td className="w-24 px-2">
                         {product.created_date?.slice(0, 10) || '-'}
                       </td>
                     </tr>
@@ -226,9 +275,15 @@ export default function ProductInfo() {
 
       {/* 페이지네이션 */}
       <div className="pt-3 shrink-0">
-        <div className="bg-hr-white rounded-lg border py-3 px-4 text-center text-hr-gray-50">
-          페이지네이션 영역
-        </div>
+        {totalPages > 1 && (
+          <div className="bg-hr-white rounded-lg border py-3 px-4 flex justify-center">
+            <HrPagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={(page) => setCurrentPage(page)}
+            />
+          </div>
+        )}
       </div>
 
       {/* 모달 - ProductForm */}

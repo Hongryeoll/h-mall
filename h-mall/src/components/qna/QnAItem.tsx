@@ -34,7 +34,6 @@ export default function QnAItem({
 
   const isPrivate = qna.is_private;
   const canView = !isPrivate || isOwner || isAdmin;
-  const canViewAnswer = !isPrivate ? !!user : isOwner || isAdmin;
   const { showModal } = useModal();
 
   const handleClick = () => {
@@ -46,16 +45,6 @@ export default function QnAItem({
       return;
     }
     setAnswerOpen(!answerOpen);
-  };
-
-  // 이메일 마스킹 함수
-  const getMaskedEmail = (email: string) => {
-    if (!email) return '';
-    const [localPart, domain] = email.split('@');
-    if (localPart.length <= 2) {
-      return `${localPart[0]}***@${domain}`;
-    }
-    return `${localPart.slice(0, 2)}***@${domain}`;
   };
 
   return (
