@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import { useReview } from '@/hooks/useReview';
 import { ReviewItemType } from '@/types/review';
 import HrPagination from '@/components/common/HrPagination';
+import HrSelectbox from '@/components/common/HrSelectbox';
 import Image from 'next/image';
 import StartSvg from '@/assets/icons/star.svg';
 import FilterSvg from '@/assets/icons/filter.svg';
@@ -94,17 +95,17 @@ export default function ReviewSection({ id, productId }: Props) {
 
         {/* 필터/정렬 */}
         <div className="flex gap-2">
-          <select
-            className="border border-hr-gray-30 rounded px-2 py-1 text-hr-b4"
+          <HrSelectbox
             value={sortBy}
-            onChange={(e) => {
-              setSortBy(e.target.value as 'latest' | 'rating');
+            onChange={(value) => {
+              setSortBy(value as 'latest' | 'rating');
               setPage(1);
             }}
-          >
-            <option value="latest">최신순</option>
-            <option value="rating">평점 높은순</option>
-          </select>
+            options={[
+              { value: 'latest', label: '최신순' },
+              { value: 'rating', label: '평점 높은순' },
+            ]}
+          />
 
           <button
             onClick={() => {
