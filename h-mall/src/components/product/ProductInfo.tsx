@@ -17,7 +17,7 @@ export default function ProductInfo() {
   const [editingProductId, setEditingProductId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 1;
+  const itemsPerPage = 10;
 
   const { selected, set, options } = useCategoryCascade();
   const { data: products, isLoading } = useProducts();
