@@ -48,9 +48,9 @@ export default function MypageSidebar() {
     href === ROUTES.MALL_MYPAGE_ORDERS || href === ROUTES.MALL_MYPAGE_REVIEWS;
 
   return (
-    <aside className="bg-white border-b md:border-b-0 md:border-r w-full md:w-64">
+    <aside className="bg-white border-b md:border-b-0 md:border-r min-w-[190px] w-full md:w-64">
       {/* 모바일 */}
-      <div className="block md:hidden p-4 relative">
+      <div className="block md:hidden px-4 py-2 relative">
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}

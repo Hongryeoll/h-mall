@@ -77,7 +77,7 @@ export default function OrderListItem({ order, isCard }: Props) {
         <div className="flex justify-end">
           <div className="w-full">
             <HrButton
-              text={alreadyReviewed ? '리뷰 작성 완료' : '리뷰 작성'}
+              text={alreadyReviewed ? '작성 완료' : '리뷰 작성'}
               size="s"
               type="default"
               disabled={!isReviewWritable}
@@ -137,7 +137,7 @@ export default function OrderListItem({ order, isCard }: Props) {
         <td className="py-4 px-4 text-center">
           <div className="w-24 mx-auto">
             <HrButton
-              text="리뷰 작성"
+              text={alreadyReviewed ? '작성 완료' : '리뷰 작성'}
               size="s"
               type="default"
               disabled={!isReviewWritable}
