@@ -5,6 +5,7 @@ import { useQna } from '@/hooks/useQna';
 import { useUserContext } from '@/components/provider/UserProvider';
 import QnAForm from '@/components/qna/QnAForm';
 import QnAItem from '@/components/qna/QnAItem';
+import HrPagination from '@/components/common/HrPagination';
 import { ProductFormProps } from '@/types/products';
 
 type Props = {
@@ -19,6 +20,10 @@ export default function ProductQnASection({ id, product }: Props) {
   );
 
   const [showForm, setShowForm] = useState(false);
+
+  // 페이지네이션 상태 추가
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   const isPageLoading = isLoading || userLoading;
 
@@ -37,6 +42,15 @@ export default function ProductQnASection({ id, product }: Props) {
     });
     setShowForm(false);
   };
+
+  // 페이지별 데이터 슬라이싱
+  const totalQnas = qnas?.length ?? 0;
+  const totalPages = Math.ceil(totalQnas / itemsPerPage);
+
+  const paginatedQnas = qnas?.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   return (
     <section id={id} className="w-full px-6 py-10 bg-white">
@@ -68,13 +82,13 @@ export default function ProductQnASection({ id, product }: Props) {
 
       {isPageLoading ? (
         <div className="text-center py-10 text-hr-gray-40">로딩 중...</div>
-      ) : qnas?.length === 0 ? (
+      ) : totalQnas === 0 ? (
         <div className="text-center py-10 text-hr-gray-40">
           등록된 Q&A가 없습니다.
         </div>
       ) : (
         <div className="space-y-4">
-          {qnas?.map((qna) => (
+          {paginatedQnas?.map((qna) => (
             <QnAItem
               key={qna.id}
               qna={qna}
@@ -84,6 +98,17 @@ export default function ProductQnASection({ id, product }: Props) {
               onAnswer={answerQna.mutate}
             />
           ))}
+
+          {/* 페이지네이션 */}
+          {totalPages > 1 && (
+            <div className="pt-6">
+              <HrPagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={(page) => setCurrentPage(page)}
+              />
+            </div>
+          )}
         </div>
       )}
     </section>

@@ -58,14 +58,6 @@ export default function QnAItem({
     return `${localPart.slice(0, 2)}***@${domain}`;
   };
 
-  // 이메일 라벨 처리 (탈퇴자, 비회원 포함)
-  // const emailLabel =
-  //   qna.user_id && qna.userinfo?.email
-  //     ? getMaskedEmail(qna.userinfo.email)
-  //     : qna.user_id && !qna.userinfo?.email
-  //       ? '탈퇴한 사용자'
-  //       : '비회원';
-
   return (
     <div className="border rounded p-4">
       {/* 질문 요약 영역 */}
