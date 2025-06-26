@@ -53,9 +53,9 @@ export default function QnASection({ id, product }: Props) {
   );
 
   return (
-    <section id={id} className="w-full px-6 py-10 bg-white">
+    <section id={id} className="w-full p-6 bg-white">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-hr-h4 font-hr-bold">상품 Q&A</h2>
+        <h2 className="text-hr-h4 font-hr-bold text-hr-gray-90">상품 Q&A</h2>
 
         {user ? (
           <button

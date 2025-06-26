@@ -23,13 +23,6 @@ export default function ReviewSection({ id, productId }: Props) {
   const [page, setPage] = useState(1);
   const [expandedReviewId, setExpandedReviewId] = useState<number | null>(null);
 
-  const photoReviews = useMemo(
-    () =>
-      reviews?.filter((r) => Array.isArray(r.images) && r.images.length > 0) ||
-      [],
-    [reviews]
-  );
-
   const filteredReviews = useMemo(() => {
     if (!reviews) return [];
 
@@ -76,39 +69,11 @@ export default function ReviewSection({ id, productId }: Props) {
     );
 
   return (
-    <div
-      id={id}
-      className="bg-white px-6 py-10 border-t border-gray-200 max-w-4xl mx-auto"
-    >
-      {/* 포토 리뷰 썸네일 */}
-      {photoReviews.length > 0 && (
-        <div className="mb-8">
-          <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
-            {photoReviews.slice(0, 5).map((r, idx) => (
-              <Image
-                key={idx}
-                src={r.images?.[0] || '/no-image.png'}
-                alt="review"
-                width={160}
-                height={160}
-                className="rounded-md object-cover aspect-square"
-              />
-            ))}
-            {photoReviews.length > 5 && (
-              <div className="relative rounded-md bg-black/30 flex items-center justify-center aspect-square">
-                <div className="text-white text-hr-b4 font-hr-semi-bold">
-                  더보기 +{photoReviews.length - 5}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
+    <div id={id} className="bg-white p-6 border-t border-hr-gray-20 w-full ">
       {/* 헤더 */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
         <div>
-          <h2 className="text-2xl font-bold">
+          <h2 className="text-hr-h4 font-hr-bold text-hr-gray-90">
             리뷰{' '}
             <span className="text-hr-purple-default">
               ({filteredReviews.length})
@@ -159,7 +124,7 @@ export default function ReviewSection({ id, productId }: Props) {
       </div>
 
       {/* 리뷰 목록 */}
-      <ul className="space-y-8">
+      <ul className="space-y-4">
         {currentPageReviews.map((review: ReviewItemType) => {
           const isExpanded = expandedReviewId === review.id;
           const hasImages =
@@ -168,7 +133,7 @@ export default function ReviewSection({ id, productId }: Props) {
           return (
             <li
               key={review.id}
-              className={`border border-gray-100 rounded-xl shadow-sm p-6 cursor-pointer ${
+              className={`border border-hr-gray-10 rounded-md cursor-pointer p-4 ${
                 isExpanded ? 'bg-gray-50' : ''
               }`}
               onClick={() => setExpandedReviewId(isExpanded ? null : review.id)}

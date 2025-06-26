@@ -14,8 +14,15 @@ export default function GuideSection({ id, product: { description } }: Props) {
     : '<p>등록된 안내가 없습니다.</p>';
 
   return (
-    <section id={id} className="prose prose-lg prose-blue max-w-none px-6 py-8">
-      <div dangerouslySetInnerHTML={{ __html: cleanHtml }} />
-    </section>
+    <>
+      <div className="p-6">
+        <h2 className="mb-4 text-hr-h4 font-hr-bold text-hr-gray-90">
+          상품안내
+        </h2>
+        <section id={id} className="prose prose-lg prose-blue max-w-none">
+          <div dangerouslySetInnerHTML={{ __html: cleanHtml }} />
+        </section>
+      </div>
+    </>
   );
 }

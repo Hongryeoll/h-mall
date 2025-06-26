@@ -18,18 +18,15 @@ export default function DetailSection({
   const [collapsedScroll, setCollapsedScroll] = useState<number | null>(null);
 
   return (
-    <div
-      id={id}
-      className="relative bg-white border-b border-hr-gray-20 px-6 py-6"
-    >
+    <div id={id} className="relative bg-white border-b border-hr-gray-20 p-6">
       <div
         className={`transition-all duration-300 ${
           isShowDetail ? 'max-h-none' : 'max-h-[320px] overflow-hidden'
         }`}
       >
-        <div className="mb-4 text-lg font-semibold text-hr-gray-70">
+        <h2 className="mb-4 text-hr-h4 font-hr-bold text-hr-gray-90">
           상품상세 설명
-        </div>
+        </h2>
         <div className="space-y-4">
           {detail_images.map((src, idx) => (
             <div
