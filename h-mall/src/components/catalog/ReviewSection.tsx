@@ -21,6 +21,7 @@ export default function ReviewSection({ id, productId }: Props) {
   const [sortBy, setSortBy] = useState<'latest' | 'rating'>('latest');
   const [photoOnly, setPhotoOnly] = useState(false);
   const [page, setPage] = useState(1);
+  const [expandedReviewId, setExpandedReviewId] = useState<number | null>(null);
 
   const photoReviews = useMemo(
     () =>
@@ -79,7 +80,7 @@ export default function ReviewSection({ id, productId }: Props) {
       id={id}
       className="bg-white px-6 py-10 border-t border-gray-200 max-w-4xl mx-auto"
     >
-      {/* 포토 리뷰 섹션 */}
+      {/* 포토 리뷰 썸네일 */}
       {photoReviews.length > 0 && (
         <div className="mb-8">
           <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
@@ -159,71 +160,98 @@ export default function ReviewSection({ id, productId }: Props) {
 
       {/* 리뷰 목록 */}
       <ul className="space-y-8">
-        {currentPageReviews.map((review: ReviewItemType) => (
-          <li
-            key={review.id}
-            className="border border-gray-100 rounded-xl shadow-sm p-6"
-          >
-            {/* 작성자 및 별점 */}
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <span className="font-hr-semi-bold text-hr-gray-80">
-                  {review.email_mark}
-                </span>
+        {currentPageReviews.map((review: ReviewItemType) => {
+          const isExpanded = expandedReviewId === review.id;
+          const hasImages =
+            Array.isArray(review.images) && review.images.length > 0;
+
+          return (
+            <li
+              key={review.id}
+              className={`border border-gray-100 rounded-xl shadow-sm p-6 cursor-pointer ${
+                isExpanded ? 'bg-gray-50' : ''
+              }`}
+              onClick={() => setExpandedReviewId(isExpanded ? null : review.id)}
+            >
+              <div
+                className={`flex ${isExpanded ? 'flex-col' : 'flex-row'} gap-4`}
+              >
+                <div className="flex-1">
+                  {/* 상단 별점, 날짜 */}
+                  <div className="flex justify-between">
+                    <div className="flex flex-1 mb-2">
+                      <div className="flex gap-1 mr-2">
+                        {[...Array(5)].map((_, idx) => (
+                          <StartSvg
+                            key={idx}
+                            size={16}
+                            className={`${
+                              idx < review.rating
+                                ? 'text-hr-yellow-default'
+                                : 'text-hr-gray-30'
+                            }`}
+                            fill={idx < review.rating ? '#FFD700' : 'none'}
+                          />
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="flex gap-2 items-start">
+                      <div className="text-xs text-hr-gray-40">
+                        {review.created_at
+                          ? new Date(review.created_at).toLocaleDateString()
+                          : '작성일자 없음'}
+                      </div>
+                    </div>
+                  </div>
+                  {/* (옵션, 이메일) 오른쪽 썸네일 */}
+                  <div className="flex justify-between">
+                    <div className="flex flex-col">
+                      <span className="font-hr-semi-bold text-hr-gray-80">
+                        {review.email_mark}
+                      </span>
+                      <div className="mb-2 text-hr-b4 text-hr-gray-50">
+                        옵션: {review.order_item_size || '옵션 없음'}
+                      </div>
+                    </div>
+                    {!isExpanded && hasImages && (
+                      <div className="w-[80px] h-[80px] flex-shrink-0">
+                        <Image
+                          src={review.images![0]}
+                          alt="thumbnail"
+                          width={80}
+                          height={80}
+                          className="rounded-md object-cover border border-gray-200"
+                        />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* 리뷰 텍스트 */}
+                  <p className="text-hr-gray-70 whitespace-pre-line mb-4">
+                    {review.content}
+                  </p>
+
+                  {/* 이미지 (확대일 때는 본문 하단) */}
+                  {isExpanded && hasImages && (
+                    <div className="flex gap-3 flex-wrap mt-4">
+                      {review.images!.map((img, idx) => (
+                        <Image
+                          key={idx}
+                          src={img}
+                          alt={`review image ${idx}`}
+                          width={240}
+                          height={240}
+                          className="rounded-md object-cover border border-gray-200"
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
-              <div className="flex items-center gap-1">
-                {[...Array(5)].map((_, idx) => (
-                  <StartSvg
-                    key={idx}
-                    size={16}
-                    className={`${
-                      idx < review.rating
-                        ? 'text-hr-yellow-default'
-                        : 'text-hr-gray-30'
-                    }`}
-                    fill={idx < review.rating ? '#FFD700' : 'none'}
-                  />
-                ))}
-              </div>
-            </div>
-
-            {/* 옵션 정보 */}
-            <div className="mb-3 text-hr-b4 text-hr-gray-50">
-              <span>
-                옵션:{' '}
-                {review.order_item_size ? review.order_item_size : '옵션 없음'}
-              </span>
-            </div>
-
-            {/* 리뷰 이미지 */}
-            {Array.isArray(review.images) && review.images.length > 0 && (
-              <div className="flex gap-3 overflow-x-auto">
-                {review.images.map((img, idx) => (
-                  <Image
-                    key={idx}
-                    src={img}
-                    alt={`review image ${idx}`}
-                    width={100}
-                    height={100}
-                    className="rounded-md object-cover flex-shrink-0 border border-gray-200"
-                  />
-                ))}
-              </div>
-            )}
-
-            {/* 리뷰 텍스트 */}
-            <p className="text-hr-gray-70 whitespace-pre-line mt-4 mb-4">
-              {review.content}
-            </p>
-
-            {/* 작성 날짜 */}
-            <div className="mt-4 text-xs text-hr-gray-40 text-right">
-              {review.created_at
-                ? new Date(review.created_at).toLocaleDateString()
-                : '작성일자 없음'}
-            </div>
-          </li>
-        ))}
+            </li>
+          );
+        })}
       </ul>
 
       {/* 페이지네이션 */}
