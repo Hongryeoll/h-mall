@@ -341,6 +341,13 @@ export type Database = {
             referencedRelation: "userinfo"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "qnas_user_id_fkey_user_public_info"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_public_info"
+            referencedColumns: ["id"]
+          },
         ]
       }
       reviews: {
@@ -501,7 +508,15 @@ export type Database = {
           id?: string
           nickname?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "user_public_info_userinfo_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "userinfo"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       userinfo: {
         Row: {
@@ -529,6 +544,85 @@ export type Database = {
       }
     }
     Views: {
+      qna_with_user_info: {
+        Row: {
+          answer: string | null
+          category: string | null
+          created_at: string | null
+          email_masked: string | null
+          id: number | null
+          is_private: boolean | null
+          product_id: string | null
+          public_nickname: string | null
+          question: string | null
+          user_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "qnas_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "qnas_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "userinfo"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "qnas_user_id_fkey_user_public_info"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_public_info"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reviews_with_userinfo: {
+        Row: {
+          content: string | null
+          created_at: string | null
+          id: number | null
+          images: string[] | null
+          order_item_id: string | null
+          order_item_price: number | null
+          order_item_size: string | null
+          product_discount_rate: number | null
+          product_final_price: number | null
+          product_id: string | null
+          product_images: string[] | null
+          product_name: string | null
+          rating: number | null
+          user_email_masked: string | null
+          user_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_order_item_id_fkey"
+            columns: ["order_item_id"]
+            isOneToOne: false
+            referencedRelation: "order_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "userinfo"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_cart: {
         Row: {
           id: string | null

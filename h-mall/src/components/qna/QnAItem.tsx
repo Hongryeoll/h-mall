@@ -59,12 +59,12 @@ export default function QnAItem({
   };
 
   // 이메일 라벨 처리 (탈퇴자, 비회원 포함)
-  const emailLabel =
-    qna.user_id && qna.userinfo?.email
-      ? getMaskedEmail(qna.userinfo.email)
-      : qna.user_id && !qna.userinfo?.email
-        ? '탈퇴한 사용자'
-        : '비회원';
+  // const emailLabel =
+  //   qna.user_id && qna.userinfo?.email
+  //     ? getMaskedEmail(qna.userinfo.email)
+  //     : qna.user_id && !qna.userinfo?.email
+  //       ? '탈퇴한 사용자'
+  //       : '비회원';
 
   return (
     <div className="border rounded p-4">
@@ -74,7 +74,7 @@ export default function QnAItem({
         onClick={handleClick}
       >
         <div className="space-x-1">
-          <span className="font-semibold">{emailLabel}</span>
+          <span className="font-semibold">{qna.email_masked}</span>
           <span className="text-hr-gray-60">[{qna.category ?? '문의'}]</span>
           <span className="text-hr-b4 text-black">
             {canView ? (

@@ -7,10 +7,8 @@ export interface QnaItem {
   is_private?: boolean | null;
   created_at: string | null;
   category?: string | null;
-  userinfo?: {
-    email: string;
-    nickname: string;
-  } | null;
+  email_masked?: string | null;
+  public_nickname?: string | null;
 }
 
 export interface QnaInput {

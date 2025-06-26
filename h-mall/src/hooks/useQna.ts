@@ -24,13 +24,8 @@ export function useQna(productId: string) {
     queryKey: ['qna', productId],
     queryFn: async (): Promise<QnaItem[]> => {
       const { data, error } = await supabase
-        .from('qnas')
-        .select(
-          `
-          id, product_id, user_id, question, answer, created_at, is_private, category,
-          userinfo!qnas_user_id_fkey ( email, nickname )
-        `
-        )
+        .from('qna_with_user_info')
+        .select('*')
         .eq('product_id', productId)
         .order('created_at', { ascending: false });
 
@@ -46,12 +41,7 @@ export function useQna(productId: string) {
       const { data, error } = await supabase
         .from('qnas')
         .insert([input])
-        .select(
-          `
-          id, product_id, user_id, question, answer, created_at, is_private, category,
-          userinfo!qnas_user_id_fkey ( email, nickname )
-        `
-        )
+        .select('*')
         .single();
 
       if (error) throw error;
@@ -62,9 +52,7 @@ export function useQna(productId: string) {
         ['qna', variables.product_id],
         (prev) => (prev ? [data, ...prev] : [data])
       );
-      queryClient.invalidateQueries({
-        queryKey: ['qna', variables.product_id],
-      });
+      queryClient.invalidateQueries({ queryKey: ['qna', variables.product_id] });
     },
   });
 
@@ -75,7 +63,7 @@ export function useQna(productId: string) {
         .from('qnas')
         .update({ question, is_private })
         .eq('id', qnaId)
-        .select()
+        .select('*')
         .single();
 
       if (error) throw error;
@@ -101,9 +89,7 @@ export function useQna(productId: string) {
         ['qna', variables.product_id],
         (prev) => prev?.filter((item) => item.id !== variables.qnaId)
       );
-      queryClient.invalidateQueries({
-        queryKey: ['qna', variables.product_id],
-      });
+      queryClient.invalidateQueries({ queryKey: ['qna', variables.product_id] });
     },
   });
 
@@ -114,7 +100,7 @@ export function useQna(productId: string) {
         .from('qnas')
         .update({ answer })
         .eq('id', qnaId)
-        .select()
+        .select('*')
         .single();
 
       if (error) throw error;
