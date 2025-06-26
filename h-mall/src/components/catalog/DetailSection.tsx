@@ -10,7 +10,7 @@ type Props = {
   product: ProductFormProps;
 };
 
-export default function ProductDetailSection({
+export default function DetailSection({
   id,
   product: { detail_images },
 }: Props) {

@@ -11,7 +11,7 @@ type Props = {
   isCard?: boolean;
 };
 
-export default function MypageOrderListItem({ order, isCard }: Props) {
+export default function OrderListItem({ order, isCard }: Props) {
   const [isModalOpen, setModalOpen] = useState(false);
   const openReview = () => {
     if (isReviewWritable) setModalOpen(true);

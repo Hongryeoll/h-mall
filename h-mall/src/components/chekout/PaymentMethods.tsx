@@ -9,7 +9,7 @@ import NaverSVG from '@/assets/icons/naverpay.svg';
 import { CheckoutFormValues } from '@/types/checkout';
 import { HrInput } from '@/components/common/HrInput';
 
-export default function CheckoutPaymentMethods() {
+export default function PaymentMethods() {
   const { register, watch, setValue } = useFormContext<CheckoutFormValues>();
   const paymentMethod = watch('paymentMethod');
   const cardCompany = watch('cardCompany');

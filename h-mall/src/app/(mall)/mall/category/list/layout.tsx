@@ -1,4 +1,3 @@
-// app/(mall)/mall/category/list/layout.tsx
 import React, { ReactNode, Suspense } from 'react';
 import CategorySidebar from '@/components/category/CategorySidebar';
 import CategorySubTabs from '@/components/category/CategorySubTabs';

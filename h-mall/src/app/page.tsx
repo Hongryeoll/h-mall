@@ -1,5 +1,5 @@
 import '@/app/globals.css';
-import OverlayLogo from '@/components/Loader/OverlayLogo';
+import OverlayLogo from '@/components/loader/OverlayLogo';
 
 export default async function Home() {
   return (

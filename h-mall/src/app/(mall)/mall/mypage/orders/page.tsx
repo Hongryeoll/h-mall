@@ -1,10 +1,10 @@
-import MypageOrderList from '@/components/mypage/MypageOrderList';
+import OrderList from '@/components/mypage/OrderList';
 
-export default function Orders() {
+export default function OrdersPage() {
   return (
     <>
       <div>
-        <MypageOrderList />
+        <OrderList />
       </div>
     </>
   );

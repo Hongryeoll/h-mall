@@ -9,7 +9,7 @@ type Props = {
   setValue: UseFormSetValue<ProductFormProps>;
 };
 
-export default function ProductPriceForm({ watch, setValue, errors }: Props) {
+export default function PriceForm({ watch, setValue, errors }: Props) {
   const price = watch('price');
   const discountRate = watch('discount_rate');
 

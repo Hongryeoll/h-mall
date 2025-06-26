@@ -25,7 +25,7 @@ type SelectedOption = {
   price: number;
 };
 
-export default function ProductInfo({
+export default function InfoSection({
   product: {
     id,
     name,

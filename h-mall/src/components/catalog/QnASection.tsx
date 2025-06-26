@@ -13,7 +13,7 @@ type Props = {
   product: ProductFormProps;
 };
 
-export default function ProductQnASection({ id, product }: Props) {
+export default function QnASection({ id, product }: Props) {
   const { user, loading: userLoading } = useUserContext();
   const { qnas, isLoading, addQna, updateQna, deleteQna, answerQna } = useQna(
     product.id

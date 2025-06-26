@@ -1,10 +1,10 @@
-import MypageReviewList from '@/components/mypage/MypageReviewList';
+import ReviewList from '@/components/mypage/ReviewList';
 
-export default function Reviews() {
+export default function ReviewsPage() {
   return (
     <>
       <div>
-        <MypageReviewList />
+        <ReviewList />
       </div>
     </>
   );

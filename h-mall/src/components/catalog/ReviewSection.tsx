@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { useReview } from '@/hooks/useReview';
-import { ReviewItem } from '@/types/review';
+import { ReviewItemType } from '@/types/review';
 import HrPagination from '@/components/common/HrPagination';
 import Image from 'next/image';
 import StartSvg from '@/assets/icons/star.svg';
@@ -15,7 +15,7 @@ interface Props {
 
 const REVIEWS_PER_PAGE = 5;
 
-export default function ProductReviewSection({ id, productId }: Props) {
+export default function ReviewSection({ id, productId }: Props) {
   const { reviews, isLoading, fetchError } = useReview(productId);
 
   const [sortBy, setSortBy] = useState<'latest' | 'rating'>('latest');
@@ -74,7 +74,7 @@ export default function ProductReviewSection({ id, productId }: Props) {
     return <div className="p-8 text-center text-red-500">리뷰 로딩 실패</div>;
   if (!reviews || reviews.length === 0)
     return (
-      <div className="p-8 text-center text-gray-500">
+      <div className="p-8 text-center text-hr-gray-50">
         작성된 리뷰가 없습니다.
       </div>
     );
@@ -100,7 +100,7 @@ export default function ProductReviewSection({ id, productId }: Props) {
             ))}
             {photoReviews.length > 5 && (
               <div className="relative rounded-md bg-black/30 flex items-center justify-center aspect-square">
-                <div className="text-white text-sm font-semibold">
+                <div className="text-white text-hr-b4 font-hr-semi-bold">
                   더보기 +{photoReviews.length - 5}
                 </div>
               </div>
@@ -118,14 +118,14 @@ export default function ProductReviewSection({ id, productId }: Props) {
               ({filteredReviews.length})
             </span>
           </h2>
-          <div className="flex items-center gap-2 mt-1 text-gray-700">
+          <div className="flex items-center gap-2 mt-1 text-hr-gray-70">
             <StartSvg
               className="text-hr-yellow-default"
               size={18}
               fill="#FFD700"
             />
-            <span className="text-lg font-semibold">{averageRating}</span>
-            <span className="text-sm text-gray-400">
+            <span className="text-lg font-hr-semi-bold">{averageRating}</span>
+            <span className="text-hr-b4 text-hr-gray-40">
               ({reviews.length}명 참여)
             </span>
           </div>
@@ -134,7 +134,7 @@ export default function ProductReviewSection({ id, productId }: Props) {
         {/* 필터/정렬 */}
         <div className="flex gap-2">
           <select
-            className="border border-gray-300 rounded px-2 py-1 text-sm"
+            className="border border-hr-gray-30 rounded px-2 py-1 text-hr-b4"
             value={sortBy}
             onChange={(e) => {
               setSortBy(e.target.value as 'latest' | 'rating');
@@ -150,10 +150,10 @@ export default function ProductReviewSection({ id, productId }: Props) {
               setPhotoOnly(!photoOnly);
               setPage(1); // 포토 필터 변경 시 페이지 초기화
             }}
-            className={`border rounded px-3 py-1 text-sm flex items-center gap-1 ${
+            className={`border rounded px-3 py-1 text-hr-b4 flex items-center gap-1 ${
               photoOnly
                 ? 'border-hr-purple-default text-hr-purple-default'
-                : 'border-gray-300 text-gray-600'
+                : 'border-hr-gray-30 text-hr-gray-60'
             }`}
           >
             <FilterSvg size={16} />
@@ -164,7 +164,7 @@ export default function ProductReviewSection({ id, productId }: Props) {
 
       {/* 리뷰 목록 */}
       <ul className="space-y-8">
-        {currentPageReviews.map((review: ReviewItem) => (
+        {currentPageReviews.map((review: ReviewItemType) => (
           <li
             key={review.id}
             className="border border-gray-100 rounded-xl shadow-sm p-6"
@@ -172,7 +172,7 @@ export default function ProductReviewSection({ id, productId }: Props) {
             {/* 작성자 및 별점 */}
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
-                <span className="font-semibold text-gray-800">
+                <span className="font-hr-semi-bold text-hr-gray-80">
                   {maskUser(review.userinfo?.email, review.userinfo?.nickname)}
                 </span>
               </div>
@@ -184,7 +184,7 @@ export default function ProductReviewSection({ id, productId }: Props) {
                     className={`${
                       idx < review.rating
                         ? 'text-hr-yellow-default'
-                        : 'text-gray-300'
+                        : 'text-hr-gray-30'
                     }`}
                     fill={idx < review.rating ? '#FFD700' : 'none'}
                   />
@@ -193,7 +193,7 @@ export default function ProductReviewSection({ id, productId }: Props) {
             </div>
 
             {/* 옵션 정보 */}
-            <div className="mb-3 text-sm text-gray-500">
+            <div className="mb-3 text-hr-b4 text-hr-gray-50">
               <span>옵션: {review.order_items?.size || '옵션 없음'}</span>
             </div>
 
@@ -214,12 +214,12 @@ export default function ProductReviewSection({ id, productId }: Props) {
             )}
 
             {/* 리뷰 텍스트 */}
-            <p className="text-gray-700 whitespace-pre-line mt-4 mb-4">
+            <p className="text-hr-gray-70 whitespace-pre-line mt-4 mb-4">
               {review.content}
             </p>
 
             {/* 작성 날짜 */}
-            <div className="mt-4 text-xs text-gray-400 text-right">
+            <div className="mt-4 text-xs text-hr-gray-40 text-right">
               {review.created_at
                 ? new Date(review.created_at).toLocaleDateString()
                 : '작성일자 없음'}

@@ -7,7 +7,7 @@ import { ROUTES } from '@/types/constants';
 import { ProductGridSkeleton } from '@/components/skeleton/ProductSkeletonComponents';
 import type { ProductFormProps } from '@/types/products';
 
-export default function CategoryListContent() {
+export default function ListContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 

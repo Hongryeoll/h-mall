@@ -4,9 +4,7 @@ export type ActionButtonProps = {
   onDeleteSelected: () => void;
 };
 
-export default function CartActionButton({
-  onDeleteSelected,
-}: ActionButtonProps) {
+export default function ActionButton({ onDeleteSelected }: ActionButtonProps) {
   return (
     <div className="flex space-x-4 mt-6">
       <button

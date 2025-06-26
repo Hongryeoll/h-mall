@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
-import CartQuantityControl from '@/components/cart/CartQuantityControl';
+import QuantityControl from '@/components/cart/QuantityControl';
 import CartItem from '@/components/cart/CartItem';
 import { HrButton } from '@/components/common/HrButton';
 import type { CartItemProps } from '@/types/cart';
@@ -130,7 +130,7 @@ export default function CartTable({
                   </p>
                 </div>
                 <div className="flex justify-between items-center">
-                  <CartQuantityControl
+                  <QuantityControl
                     quantity={item.quantity}
                     onDecrease={() =>
                       updateItem(item.product.id, item.size, item.quantity - 1)

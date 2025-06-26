@@ -1,9 +1,9 @@
 'use client';
 
 import { useOrderList } from '@/hooks/useOrder';
-import MypageOrderListItem from './MypageOrderListItem';
+import OrderListItem from '@/components/mypage/OrderListItem';
 
-export default function MypageOrderList() {
+export default function OrderList() {
   const { data: orders, isLoading, error } = useOrderList();
 
   if (isLoading) return <p className="p-8 text-center">로딩 중…</p>;
@@ -44,7 +44,7 @@ export default function MypageOrderList() {
             </thead>
             <tbody>
               {orders.map((order) => (
-                <MypageOrderListItem key={order.id} order={order} />
+                <OrderListItem key={order.id} order={order} />
               ))}
             </tbody>
           </table>
@@ -58,7 +58,7 @@ export default function MypageOrderList() {
             key={order.id}
             className="bg-white shadow rounded-lg overflow-hidden"
           >
-            <MypageOrderListItem order={order} isCard />
+            <OrderListItem order={order} isCard />
           </div>
         ))}
       </div>

@@ -6,7 +6,7 @@ type Props = {
   errors: FieldErrors<ProductFormProps>;
 };
 
-export default function ProductShipForm({ errors }: Props) {
+export default function ShippingForm({ errors }: Props) {
   return (
     <>
       <HrInput name="name" placeholder="상품명" required size="md" />

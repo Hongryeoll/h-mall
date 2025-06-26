@@ -3,17 +3,17 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { HrButton } from '@/components/common/HrButton';
-import { ReviewItem } from '@/types/review';
+import { ReviewItemType } from '@/types/review';
 import HrStarRating from '@/components/common/HrStartRating';
 import ReviewForm from '@/components/mypage/ReviewForm';
 import { useReview } from '@/hooks/useReview';
 
 type Props = {
-  review: ReviewItem;
+  review: ReviewItemType;
   isCard?: boolean;
 };
 
-export default function MypageReviewItem({ review, isCard }: Props) {
+export default function ReviewItem({ review, isCard }: Props) {
   const [isModalOpen, setModalOpen] = useState(false);
   const { deleteReview } = useReview(review.product_id);
 

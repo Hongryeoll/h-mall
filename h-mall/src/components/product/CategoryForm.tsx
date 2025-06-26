@@ -28,7 +28,7 @@ type Props = {
   errors: FieldErrors<ProductFormProps>;
 };
 
-export default function ProductCategoryForm({
+export default function CategoryForm({
   selected,
   set,
   options,

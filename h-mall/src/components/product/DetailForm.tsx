@@ -15,7 +15,7 @@ type Props = {
   setDescription: (value: string) => void;
 };
 
-export default function ProductDetailForm({
+export default function DetailForm({
   errors,
   productImage,
   detailImage,

@@ -9,7 +9,7 @@ type Props = {
   onCancel: () => void;
 };
 
-export default function QnAAnswerForm({
+export default function AnswerForm({
   initialValue = '',
   onSubmit,
   onCancel,

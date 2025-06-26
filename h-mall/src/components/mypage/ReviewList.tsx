@@ -1,9 +1,9 @@
 'use client';
 
 import { useMyReviews } from '@/hooks/useReview';
-import MypageReviewItem from './MypageReviewItem';
+import ReviewItem from '@/components/mypage/ReviewItem';
 
-export default function MypageReviewList() {
+export default function ReviewList() {
   const { data: reviews, isLoading, error } = useMyReviews();
 
   if (isLoading) return <p className="p-8 text-center">로딩 중…</p>;
@@ -31,7 +31,7 @@ export default function MypageReviewList() {
             </thead>
             <tbody>
               {reviews.map((review) => (
-                <MypageReviewItem key={review.id} review={review} />
+                <ReviewItem key={review.id} review={review} />
               ))}
             </tbody>
           </table>
@@ -45,7 +45,7 @@ export default function MypageReviewList() {
             key={review.id}
             className="bg-white shadow rounded-lg overflow-hidden"
           >
-            <MypageReviewItem review={review} isCard />
+            <ReviewItem review={review} isCard />
           </div>
         ))}
       </div>

@@ -6,7 +6,7 @@ export type QuantityControlProps = {
   onIncrease: (newQty: number) => void;
 };
 
-export default function CartQuantityControl({
+export default function QuantityControl({
   quantity,
   onDecrease,
   onIncrease,

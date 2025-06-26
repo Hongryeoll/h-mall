@@ -15,7 +15,7 @@ export interface ReviewProduct {
   product_images: string[];
 }
 
-export interface ReviewItem {
+export interface ReviewItemType {
   id: number;
   product_id: string;
   user_id: string | null;

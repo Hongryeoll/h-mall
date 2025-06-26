@@ -1,4 +1,3 @@
-// components/product/ProductTabsHeaderClient.tsx
 'use client';
 
 import { useScrollTabs } from '@/hooks/useScrollTabs';
@@ -8,7 +7,7 @@ interface Props {
   tabs: { title: string; id: string }[];
 }
 
-export default function ProductTabsHeaderClient({ tabs }: Props) {
+export default function TabsHeader({ tabs }: Props) {
   const { activeIdx, handleTabClick } = useScrollTabs({ tabs, offset: 50 });
 
   return (

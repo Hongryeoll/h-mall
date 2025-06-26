@@ -5,7 +5,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { createSupabaseBrowserClient } from '@/library/client/supabase';
 import type { Database } from '@/types/supabase';
 import {
-  ReviewItem,
+  ReviewItemType,
   ReviewInput,
   ReviewUpdateInput,
   ReviewDeleteInput,
@@ -20,9 +20,9 @@ export function useReview(productId: string) {
     data: reviews,
     isLoading,
     error: fetchError,
-  } = useQuery<ReviewItem[], Error>({
+  } = useQuery<ReviewItemType[], Error>({
     queryKey: ['reviews', productId],
-    queryFn: async (): Promise<ReviewItem[]> => {
+    queryFn: async (): Promise<ReviewItemType[]> => {
       const { data, error } = await supabase
         .from('reviews')
         .select(`
@@ -41,7 +41,7 @@ export function useReview(productId: string) {
   });
 
   // 리뷰 등록
-  const addReview = useMutation<ReviewItem, Error, ReviewInput>({
+  const addReview = useMutation<ReviewItemType, Error, ReviewInput>({
     mutationFn: async (input) => {
       const { data, error } = await supabase
         .from('reviews')
@@ -58,10 +58,10 @@ export function useReview(productId: string) {
       return data;
     },
     onSuccess: (data, variables) => {
-      queryClient.setQueryData<ReviewItem[]>(['reviews', variables.product_id], (prev) =>
+      queryClient.setQueryData<ReviewItemType[]>(['reviews', variables.product_id], (prev) =>
         prev ? [data, ...prev] : [data]
       );
-      queryClient.setQueryData<ReviewItem[]>(['myReviews'], (prev) =>
+      queryClient.setQueryData<ReviewItemType[]>(['myReviews'], (prev) =>
         prev ? [data, ...prev] : [data]
       );
   
@@ -88,10 +88,10 @@ export function useReview(productId: string) {
       return data;
     },
     onSuccess: (data) => {
-      queryClient.setQueryData<ReviewItem[]>(['reviews', data.product_id], (prev) =>
+      queryClient.setQueryData<ReviewItemType[]>(['reviews', data.product_id], (prev) =>
         prev?.map((item) => (item.id === data.id ? { ...item, ...data } : item))
       );
-      queryClient.setQueryData<ReviewItem[]>(['myReviews'], (prev) =>
+      queryClient.setQueryData<ReviewItemType[]>(['myReviews'], (prev) =>
         prev?.map((item) => (item.id === data.id ? { ...item, ...data } : item))
       );
 
@@ -115,10 +115,10 @@ export function useReview(productId: string) {
       if (error) throw error;
     },
     onSuccess: (_, variables) => {
-      queryClient.setQueryData<ReviewItem[]>(['reviews', variables.product_id], (prev) =>
+      queryClient.setQueryData<ReviewItemType[]>(['reviews', variables.product_id], (prev) =>
         prev?.filter((item) => item.id !== variables.reviewId)
       );
-      queryClient.setQueryData<ReviewItem[]>(['myReviews'], (prev) =>
+      queryClient.setQueryData<ReviewItemType[]>(['myReviews'], (prev) =>
         prev?.filter((item) => item.id !== variables.reviewId)
       );
 
@@ -157,7 +157,7 @@ export function useReview(productId: string) {
 export const useMyReviews = () => {
   const supabase = createSupabaseBrowserClient();
 
-  const { data, isLoading, error } = useQuery<ReviewItem[]>({
+  const { data, isLoading, error } = useQuery<ReviewItemType[]>({
     queryKey: ['myReviews'],
     queryFn: async () => {
       const {

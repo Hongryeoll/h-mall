@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import QnAForm from '@/components/qna/QnAForm';
-import QnAAnswerForm from '@/components/qna/QnAAnswerForm';
+import AnswerForm from '@/components/qna/AnswerForm';
 import {
   QnaItem,
   QnaUpdateInput,
@@ -147,7 +147,7 @@ export default function QnAItem({
             </div>
           ) : isAdmin && canView ? (
             answerMode ? (
-              <QnAAnswerForm
+              <AnswerForm
                 onSubmit={(value) => {
                   onAnswer({ qnaId: qna.id, answer: value });
                   setAnswerMode(false);

@@ -2,10 +2,10 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import CartStepIndicator from '@/components/cart/CartStepIndicator';
-import CartTable from './CartTable';
-import CartActionButton from '@/components/cart/CartActionButton';
-import CartSummary from '@/components/cart/CartSummary';
+import StepIndicator from '@/components/cart/StepIndicator';
+import CartTable from '@/components/cart/CartTable';
+import ActionButton from '@/components/cart/ActionButton';
+import Summary from '@/components/cart/Summary';
 import { useCart } from '@/hooks/useCart';
 import { useModal } from '@/components/provider/ModalProvider';
 import { ROUTES } from '@/types/constants';
@@ -66,7 +66,7 @@ export default function CartInfo() {
   if (!isLoading && items.length === 0) {
     return (
       <div className="container mx-auto p-6 text-center">
-        <CartStepIndicator />
+        <StepIndicator />
         <hr className="border-t border-black my-10" />
         <p className="text-hr-h5 font-hr-bold mb-6">
           장바구니에 담은 상품이 없습니다.
@@ -83,7 +83,7 @@ export default function CartInfo() {
 
   return (
     <div className="container mx-auto p-6">
-      <CartStepIndicator />
+      <StepIndicator />
       <CartTable
         items={items}
         selectedIds={selectedIds}
@@ -97,8 +97,8 @@ export default function CartInfo() {
           updateItem.mutate({ product_id, size, quantity: qty })
         }
       />
-      <CartActionButton onDeleteSelected={handleDeleteSelected} />
-      <CartSummary
+      <ActionButton onDeleteSelected={handleDeleteSelected} />
+      <Summary
         selectedItems={items.filter((item) => selectedIds.includes(item.id))}
       />
       <div className="mt-6 flex justify-center gap-4">

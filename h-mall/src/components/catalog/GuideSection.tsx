@@ -8,10 +8,7 @@ interface Props {
   product: ProductFormProps;
 }
 
-export default function ProductGuideSection({
-  id,
-  product: { description },
-}: Props) {
+export default function GuideSection({ id, product: { description } }: Props) {
   const cleanHtml = description
     ? DOMPurify.sanitize(description)
     : '<p>등록된 안내가 없습니다.</p>';

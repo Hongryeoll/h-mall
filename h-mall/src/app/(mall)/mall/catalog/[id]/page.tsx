@@ -1,4 +1,4 @@
-import ProductCatalogInfo from '@/components/catalog/ProductCatalogInfo';
+import CatalogInfo from '@/components/catalog/CatalogInfo';
 import { getProductById } from '@/actions/product/product.action';
 import { ProductFormProps } from '@/types/products';
 
@@ -10,5 +10,5 @@ export default async function CatalogPage({ params }: Params) {
   const { id } = await params;
   const product: ProductFormProps = await getProductById(id);
 
-  return <ProductCatalogInfo product={product} />;
+  return <CatalogInfo product={product} />;
 }

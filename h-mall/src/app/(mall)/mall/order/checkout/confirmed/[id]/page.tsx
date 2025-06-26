@@ -1,10 +1,10 @@
-import CheckoutConfirmed from '@/components/chekout/CheckoutConfirmed';
+import Confirmed from '@/components/chekout/Confirmed';
 
-export default function Confirmed() {
+export default function ConfirmedPage() {
   return (
     <>
       <div>
-        <CheckoutConfirmed />
+        <Confirmed />
       </div>
     </>
   );

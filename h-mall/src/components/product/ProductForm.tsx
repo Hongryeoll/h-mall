@@ -6,10 +6,10 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createSupabaseBrowserClient } from '@/library/client/supabase';
 import { ProductFormProps } from '@/types/products';
 import { useCategoryCascade } from '@/hooks/useCategoryCascade';
-import ProductBasicForm from '@/components/product/ProductBasicForm';
-import ProductPriceForm from '@/components/product/ProductPriceForm';
-import ProductDetailForm from '@/components/product/ProductDetailForm';
-import ProductCategoryForm from '@/components/product/ProductCategoryForm';
+import BasicForm from '@/components/product/BasicForm';
+import PriceForm from '@/components/product/PriceForm';
+import DetailForm from '@/components/product/DetailForm';
+import CategoryForm from '@/components/product/CategoryForm';
 import { useUserContext } from '@/components/provider/UserProvider';
 import { useModal } from '@/components/provider/ModalProvider';
 
@@ -279,7 +279,7 @@ export default function ProductForm({
         </div>
 
         {activeTab === 'category' && (
-          <ProductCategoryForm
+          <CategoryForm
             selected={selected}
             set={set}
             options={options}
@@ -287,17 +287,17 @@ export default function ProductForm({
           />
         )}
         {activeTab === 'basic' && (
-          <ProductBasicForm errors={errors} isEditMode={!!productId} />
+          <BasicForm errors={errors} isEditMode={!!productId} />
         )}
         {activeTab === 'price' && (
-          <ProductPriceForm
+          <PriceForm
             errors={errors}
             watch={methods.watch}
             setValue={setValue}
           />
         )}
         {activeTab === 'detail' && (
-          <ProductDetailForm
+          <DetailForm
             errors={errors}
             previewProduct={productPreview}
             previewDetail={detailPreview}

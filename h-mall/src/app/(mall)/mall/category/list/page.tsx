@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 import { ProductGridSkeleton } from '@/components/skeleton/ProductSkeletonComponents';
-import CategoryListContent from '@/components/category/CategoryListContent';
+import ListContent from '@/components/category/ListContent';
 
 export default function CategoryListPage() {
   return (
@@ -11,7 +11,7 @@ export default function CategoryListPage() {
         </div>
       }
     >
-      <CategoryListContent />
+      <ListContent />
     </Suspense>
   );
 }

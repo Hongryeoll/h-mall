@@ -7,7 +7,7 @@ import { HrButton } from '@/components/common/HrButton';
 import { useOrderDetail } from '@/hooks/useOrder';
 import Image from 'next/image';
 
-export default function CheckoutConfirmed() {
+export default function Confirmed() {
   const params = useParams();
   const rawId = params.id;
   const router = useRouter();

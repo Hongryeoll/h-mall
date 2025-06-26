@@ -4,10 +4,10 @@ import React, { useState } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useCart } from '@/hooks/useCart';
-import CheckoutShippingForm from '@/components/chekout/CheckoutShippingForm';
-import CheckoutPaymentMethods from '@/components/chekout/CheckoutPaymentMethods';
-import CheckoutProductInfo from '@/components/chekout/CheckoutProductInfo';
-import CheckoutOrderSummary from '@/components/chekout/CheckoutOrderSummary';
+import ShippingForm from '@/components/chekout/ShippingForm';
+import PaymentMethods from '@/components/chekout/PaymentMethods';
+import ProductInfo from '@/components/chekout/ProductInfo';
+import OrderSummary from '@/components/chekout/OrderSummary';
 import { useOrder } from '@/hooks/useOrder';
 import { CheckoutFormValues } from '@/types/checkout';
 import { ROUTES } from '@/types/constants';
@@ -171,12 +171,12 @@ export default function CheckoutInfo() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 bg-white p-6 border rounded space-y-8">
-            <CheckoutShippingForm />
-            <CheckoutPaymentMethods />
+            <ShippingForm />
+            <PaymentMethods />
           </div>
           <div className="bg-white p-6 border rounded space-y-6">
-            <CheckoutProductInfo items={selectedItems} />
-            <CheckoutOrderSummary
+            <ProductInfo items={selectedItems} />
+            <OrderSummary
               items={selectedItems}
               totalProductPrice={totalProductPrice}
               adminDiscount={adminDiscount}

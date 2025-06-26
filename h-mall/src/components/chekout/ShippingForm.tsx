@@ -8,7 +8,7 @@ import { HrButton } from '@/components/common/HrButton';
 import HrSelectbox from '@/components/common/HrSelectbox';
 import { ShippingFormValues, DaumPostcodeData } from '@/types/checkout';
 
-export default function CheckoutShippingForm() {
+export default function ShippingForm() {
   const { setValue, watch } = useFormContext<ShippingFormValues>();
   const [openPostcode, setOpenPostcode] = useState(false);
 

@@ -1,6 +1,6 @@
 import CartInfo from '@/components/cart/CartInfo';
 
-export default function OrderCart() {
+export default function OrderCartPage() {
   return (
     <>
       <span />

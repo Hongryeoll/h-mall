@@ -7,7 +7,7 @@ type Props = {
   errors: FieldErrors<ProductFormProps>;
 };
 
-export default function ProductBasicForm({ isEditMode, errors }: Props) {
+export default function BasicForm({ isEditMode, errors }: Props) {
   return (
     <>
       <div className="flex flex-col gap-4">

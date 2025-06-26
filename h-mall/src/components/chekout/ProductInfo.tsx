@@ -8,9 +8,7 @@ interface CheckoutProductInfoProps {
   items: CartItemProps[];
 }
 
-export default function CheckoutProductInfo({
-  items,
-}: CheckoutProductInfoProps) {
+export default function ProductInfo({ items }: CheckoutProductInfoProps) {
   if (!items?.length) return <p>선택된 상품이 없습니다.</p>;
 
   const totalCount = items.reduce((sum, item) => sum + item.quantity, 0);

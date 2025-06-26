@@ -2,7 +2,7 @@
 
 import React, { useMemo } from 'react';
 import Image from 'next/image';
-import CartQuantityControl from '@/components/cart/CartQuantityControl';
+import QuantityControl from '@/components/cart/QuantityControl';
 import { HrButton } from '@/components/common/HrButton';
 import type { CartItemProps } from '@/types/cart';
 
@@ -85,7 +85,7 @@ export default function CartItem({
         </button>
       </td>
       <td className="py-4 text-center">
-        <CartQuantityControl
+        <QuantityControl
           quantity={quantity}
           onDecrease={() => onUpdate(product.id, size, quantity - 1)}
           onIncrease={() => onUpdate(product.id, size, quantity + 1)}
