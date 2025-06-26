@@ -63,11 +63,6 @@ export default function ReviewSection({ id, productId }: Props) {
     return (total / reviews.length).toFixed(1);
   }, [reviews]);
 
-  const maskUser = (email?: string | null, nickname?: string | null) => {
-    const base = nickname || email?.split('@')[0] || 'user';
-    return base.length <= 2 ? base + '*****' : base.slice(0, 3) + '*****';
-  };
-
   if (isLoading)
     return <div className="p-8 text-center">리뷰를 불러오는 중...</div>;
   if (fetchError)
@@ -138,7 +133,7 @@ export default function ReviewSection({ id, productId }: Props) {
             value={sortBy}
             onChange={(e) => {
               setSortBy(e.target.value as 'latest' | 'rating');
-              setPage(1); // 정렬 변경 시 페이지 초기화
+              setPage(1);
             }}
           >
             <option value="latest">최신순</option>
@@ -148,7 +143,7 @@ export default function ReviewSection({ id, productId }: Props) {
           <button
             onClick={() => {
               setPhotoOnly(!photoOnly);
-              setPage(1); // 포토 필터 변경 시 페이지 초기화
+              setPage(1);
             }}
             className={`border rounded px-3 py-1 text-hr-b4 flex items-center gap-1 ${
               photoOnly
@@ -173,7 +168,7 @@ export default function ReviewSection({ id, productId }: Props) {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <span className="font-hr-semi-bold text-hr-gray-80">
-                  {maskUser(review.userinfo?.email, review.userinfo?.nickname)}
+                  {review.email_mark}
                 </span>
               </div>
               <div className="flex items-center gap-1">
@@ -194,7 +189,10 @@ export default function ReviewSection({ id, productId }: Props) {
 
             {/* 옵션 정보 */}
             <div className="mb-3 text-hr-b4 text-hr-gray-50">
-              <span>옵션: {review.order_items?.size || '옵션 없음'}</span>
+              <span>
+                옵션:{' '}
+                {review.order_item_size ? review.order_item_size : '옵션 없음'}
+              </span>
             </div>
 
             {/* 리뷰 이미지 */}

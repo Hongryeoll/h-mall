@@ -356,7 +356,7 @@ export type Database = {
           created_at: string | null
           id: number
           images: string[] | null
-          order_item_id: string | null
+          order_item_id: string
           product_id: string
           rating: number
           user_id: string | null
@@ -366,7 +366,7 @@ export type Database = {
           created_at?: string | null
           id?: number
           images?: string[] | null
-          order_item_id?: string | null
+          order_item_id: string
           product_id: string
           rating: number
           user_id?: string | null
@@ -376,7 +376,7 @@ export type Database = {
           created_at?: string | null
           id?: number
           images?: string[] | null
-          order_item_id?: string | null
+          order_item_id?: string
           product_id?: string
           rating?: number
           user_id?: string | null
@@ -585,18 +585,19 @@ export type Database = {
         Row: {
           content: string | null
           created_at: string | null
+          discount_rate: number | null
+          email_mark: string | null
+          final_price: number | null
           id: number | null
           images: string[] | null
+          nickname: string | null
           order_item_id: string | null
           order_item_price: number | null
           order_item_size: string | null
-          product_discount_rate: number | null
-          product_final_price: number | null
           product_id: string | null
           product_images: string[] | null
           product_name: string | null
           rating: number | null
-          user_email_masked: string | null
           user_id: string | null
         }
         Relationships: [

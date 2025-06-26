@@ -35,17 +35,19 @@ export default function ReviewItem({ review, isCard }: Props) {
 
   const product = {
     id: review.product_id,
-    name: review.products?.name ?? '',
-    images: review.products?.product_images ?? [],
+    name: review.product_name,
+    images: review.product_images ?? [],
   };
+
+  const option = review.order_item_size ?? '옵션 없음';
 
   if (isCard) {
     return (
-      <div className="p-4 flex flex-col gap-4">
+      <div className="p-4 flex flex-col gap-4 border border-gray-200 rounded-md">
         {/* 상품 정보 */}
         <div className="flex items-center">
           <Image
-            src={product.images[0]}
+            src={product.images[0] ?? '/no-image.png'}
             alt={product.name}
             width={64}
             height={64}
@@ -53,6 +55,7 @@ export default function ReviewItem({ review, isCard }: Props) {
           />
           <div>
             <p className="font-hr-regular">{product.name}</p>
+            <p className="text-xs text-hr-gray-50">{option}</p>
             <HrStarRating rating={review.rating} readOnly />
           </div>
           <span className="ml-auto text-xs text-gray-400">{date}</span>
@@ -92,7 +95,7 @@ export default function ReviewItem({ review, isCard }: Props) {
         <ReviewForm
           isOpen={isModalOpen}
           onClose={() => setModalOpen(false)}
-          orderItemId={review.order_items?.size ?? ''}
+          orderItemId={review.order_item_id}
           product={product}
           defaultValues={{
             rating: review.rating,
@@ -111,7 +114,7 @@ export default function ReviewItem({ review, isCard }: Props) {
       <tr className="hover:bg-hr-gray-10 transition border-b border-hr-gray-20">
         <td className="flex items-center py-4 px-4">
           <Image
-            src={product.images[0]}
+            src={product.images[0] ?? '/no-image.png'}
             alt={product.name}
             width={64}
             height={64}
@@ -119,6 +122,7 @@ export default function ReviewItem({ review, isCard }: Props) {
           />
           <div>
             <p className="font-hr-regular">{product.name}</p>
+            <p className="text-xs text-hr-gray-50">{option}</p>
           </div>
         </td>
 
@@ -152,7 +156,7 @@ export default function ReviewItem({ review, isCard }: Props) {
       <ReviewForm
         isOpen={isModalOpen}
         onClose={() => setModalOpen(false)}
-        orderItemId={review.order_items?.size ?? ''}
+        orderItemId={review.order_item_id}
         product={product}
         defaultValues={{
           rating: review.rating,
