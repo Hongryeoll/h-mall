@@ -43,11 +43,15 @@ export default function ReviewItem({ review, isCard }: Props) {
                   product_id: review.product_id,
                 });
                 closeModal();
-              } catch (err) {
+              } catch (error) {
+                console.error(error);
                 closeModal();
                 showModal({
                   title: '삭제 실패',
-                  description: '리뷰 삭제 중 오류가 발생했습니다.',
+                  description:
+                    error instanceof Error
+                      ? `리뷰 삭제 중 오류가 발생했습니다.\n${error.message}`
+                      : '리뷰 삭제 중 오류가 발생했습니다.',
                 });
               }
             }}
