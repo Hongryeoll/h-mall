@@ -100,6 +100,7 @@ export default function ReviewItem({ review, isCard }: Props) {
           defaultValues={{
             rating: review.rating,
             content: review.content,
+            images: review.images ?? [],
           }}
           isEdit
           reviewId={review.id}
@@ -161,6 +162,7 @@ export default function ReviewItem({ review, isCard }: Props) {
         defaultValues={{
           rating: review.rating,
           content: review.content,
+          images: review.images ?? [],
         }}
         isEdit
         reviewId={review.id}

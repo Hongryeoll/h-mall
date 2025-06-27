@@ -7,7 +7,7 @@ import {
   DialogTitle,
   Portal,
 } from '@headlessui/react';
-import { useState, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import ImageUploader from '@/components/uploader/ImageUploader';
 import { useRouter } from 'next/navigation';
 import { ROUTES } from '@/types/constants';
@@ -29,6 +29,7 @@ interface Props {
   defaultValues?: {
     rating: number;
     content: string;
+    images: string[] | null;
   };
 }
 
@@ -47,27 +48,98 @@ export default function ReviewForm({
   defaultValues,
 }: Props) {
   const router = useRouter();
-  const { addReview, updateReview, updateReviewedCol } = useReview(product.id);
   const supabase = createSupabaseBrowserClient();
   const { showModal, closeModal } = useModal();
-  const methods = useForm<FormValues>({
-    defaultValues: {
-      rating: defaultValues?.rating ?? 0,
-      content: defaultValues?.content ?? '',
-    },
-  });
-  const { control, setValue, handleSubmit } = methods;
-  const rating = useWatch({ control, name: 'rating' });
-  const [files, setFiles] = useState<File[]>([]);
-  const previewUrls = useMemo(
-    () => files.map((file) => URL.createObjectURL(file)),
-    [files]
+
+  const { reviews, addReview, updateReview, updateReviewedCol } = useReview(
+    product.id
   );
 
-  const onSubmit = async (data: FormValues) => {
+  const currentReview = useMemo(() => {
+    return isEdit ? reviews?.find((r) => r.id === reviewId) : null;
+  }, [isEdit, reviewId, reviews]);
+
+  const methods = useForm<FormValues>({
+    defaultValues: {
+      rating: currentReview?.rating ?? 0,
+      content: currentReview?.content ?? '',
+    },
+  });
+
+  const { control, setValue, handleSubmit, reset } = methods;
+  const rating = useWatch({ control, name: 'rating' });
+
+  const [reviewImages, setReviewImages] = useState<(File | string)[]>(
+    defaultValues?.images ?? currentReview?.images ?? []
+  );
+
+  // 미리보기 URL
+  const previewUrls = useMemo(
+    () =>
+      reviewImages.map((item) =>
+        typeof item === 'string' ? item : URL.createObjectURL(item)
+      ),
+    [reviewImages]
+  );
+
+  // 수정 시 기존 리뷰 데이터 세팅
+  useEffect(() => {
+    if (isEdit && currentReview) {
+      reset({
+        rating: currentReview.rating,
+        content: currentReview.content,
+      });
+      setReviewImages(currentReview.images ?? []);
+    }
+  }, [isEdit, currentReview, reset]);
+
+  // 이미지 선택 처리
+  const handleFileSelect = (files: (File | string)[]) => {
+    if (files.length <= 3) {
+      setReviewImages(files);
+    } else {
+      showModal({
+        title: '이미지 제한',
+        description: '리뷰 이미지는 최대 3장까지 등록 가능합니다.',
+      });
+    }
+  };
+
+  // 이미지 업로드 처리
+  const uploadImages = async (): Promise<string[]> => {
+    const urls: string[] = [];
+    const bucket = process.env.NEXT_PUBLIC_REVIEW_BUCKET || 'review-images';
+
+    for (const item of reviewImages) {
+      if (typeof item === 'string') {
+        urls.push(item);
+        continue;
+      }
+
+      const safeName = item.name
+        .replace(/\s+/g, '_')
+        .replace(/[^a-zA-Z0-9_\-\.]/g, '');
+      const path = `${product.id}/${Date.now()}-${safeName}`;
+
+      const { error } = await supabase.storage
+        .from(bucket)
+        .upload(path, item, { upsert: false });
+
+      if (error) throw error;
+
+      const { data } = supabase.storage.from(bucket).getPublicUrl(path);
+      urls.push(data.publicUrl);
+    }
+
+    return urls;
+  };
+
+  // 제출 처리
+  const onSubmit = async (formData: FormValues) => {
     const {
       data: { user },
     } = await supabase.auth.getUser();
+
     if (!user) {
       showModal({
         title: '로그인이 필요합니다',
@@ -89,45 +161,26 @@ export default function ReviewForm({
       return;
     }
 
-    const imageUrls: string[] = [];
-
+    let imageUrls: string[] = [];
     try {
-      const safeBucket =
-        process.env.NEXT_PUBLIC_REVIEW_BUCKET || 'review-images';
-
-      for (const file of files) {
-        const safeName = file.name
-          .replace(/\s+/g, '_')
-          .replace(/[^a-zA-Z0-9_\-\.]/g, '');
-        const path = `${product.id}/${Date.now()}-${safeName}`;
-        const { error: uploadError } = await supabase.storage
-          .from(safeBucket)
-          .upload(path, file, { upsert: false });
-        if (uploadError) throw uploadError;
-
-        const {
-          data: { publicUrl },
-        } = supabase.storage.from(safeBucket).getPublicUrl(path);
-        imageUrls.push(publicUrl);
-      }
-    } catch (err: unknown) {
-      const error = err as Error;
-      console.error('이미지 업로드 실패', error);
+      imageUrls = await uploadImages();
+    } catch (error) {
+      const err = error as Error;
       showModal({
         title: '업로드 실패',
-        description: `이미지 업로드 중 오류가 발생했습니다.\n${error.message}`,
+        description: `이미지 업로드 중 오류가 발생했습니다.\n${err.message}`,
       });
       return;
     }
 
     try {
       if (isEdit && reviewId) {
-        // 리뷰 수정
         await updateReview.mutateAsync({
           reviewId,
-          rating: data.rating,
-          content: data.content,
           product_id: product.id,
+          rating: formData.rating,
+          content: formData.content,
+          images: imageUrls,
         });
 
         showModal({
@@ -148,13 +201,12 @@ export default function ReviewForm({
           ),
         });
       } else {
-        // 리뷰 작성
         await addReview.mutateAsync({
           product_id: product.id,
           user_id: user.id,
           order_item_id: orderItemId,
-          rating: data.rating,
-          content: data.content,
+          rating: formData.rating,
+          content: formData.content,
           images: imageUrls,
         });
 
@@ -178,7 +230,7 @@ export default function ReviewForm({
           ),
         });
       }
-    } catch (err: unknown) {
+    } catch (err) {
       const error = err as Error;
       showModal({
         title: isEdit ? '리뷰 수정 실패' : '리뷰 등록 실패',
@@ -200,7 +252,7 @@ export default function ReviewForm({
           <div className="flex items-center justify-center min-h-full px-4">
             <DialogPanel className="bg-hr-white rounded-lg p-6 w-full max-w-xl z-10">
               <DialogTitle className="text-hr-h5 font-hr-semi-bold mb-4">
-                리뷰 작성
+                리뷰 {isEdit ? '수정' : '작성'}
               </DialogTitle>
 
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -233,13 +285,11 @@ export default function ReviewForm({
                   rows={4}
                 />
 
-                {/* 이미지 업로더 (최대 3장) */}
+                {/* 이미지 업로더 */}
                 <ImageUploader
-                  files={files}
+                  files={reviewImages}
                   previewUrls={previewUrls}
-                  onFileSelect={(newFiles) => {
-                    if (newFiles.length <= 3) setFiles(newFiles as File[]);
-                  }}
+                  onFileSelect={handleFileSelect}
                   multiple
                 />
                 <p className="text-right text-hr-gray-50 text-sm">
@@ -250,6 +300,7 @@ export default function ReviewForm({
                 <div className="flex justify-between gap-2">
                   <button
                     onClick={onClose}
+                    type="button"
                     className="px-4 py-2 border border-hr-purple-border text-hr-purple-default rounded"
                   >
                     취소

@@ -119,10 +119,10 @@ export function useReview(productId: string) {
     Error,
     ReviewUpdateInput
   >({
-    mutationFn: async ({ reviewId, rating, content }) => {
+    mutationFn: async ({ reviewId, rating, content, images }) => {
       const { data, error } = await supabase
         .from('reviews')
-        .update({ rating, content })
+        .update({ rating, content, images })
         .eq('id', reviewId)
         .select()
         .single();

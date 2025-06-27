@@ -43,7 +43,7 @@ export default function HrStarRating({ rating, onChange, readOnly }: Props) {
             disabled={readOnly}
           >
             {filled ? (
-              <StarSVG className="w-6 h-6 fill-current text-hr-purple-default stroke-current" />
+              <StarSVG className="w-6 h-6 fill-current text-hr-yellow-default stroke-current" />
             ) : (
               <StarSVG className="w-6 h-6 text-hr-gray-30" />
             )}

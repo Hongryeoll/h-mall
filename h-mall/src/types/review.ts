@@ -39,6 +39,7 @@ export interface ReviewUpdateInput {
   rating: number;
   content: string;
   product_id: string;
+  images: string[];
 }
 
 // 리뷰 삭제
