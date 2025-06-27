@@ -5,6 +5,7 @@ import { useReview } from '@/hooks/useReview';
 import { ReviewItemType } from '@/types/review';
 import HrPagination from '@/components/common/HrPagination';
 import HrSelectbox from '@/components/common/HrSelectbox';
+import { ReviewSectionSkeleton } from '@/components/skeleton/ReviewSectionSkeleton';
 import Image from 'next/image';
 import StartSvg from '@/assets/icons/star.svg';
 import FilterSvg from '@/assets/icons/filter.svg';
@@ -58,10 +59,13 @@ export default function ReviewSection({ id, productId }: Props) {
     return (total / reviews.length).toFixed(1);
   }, [reviews]);
 
-  if (isLoading)
-    return <div className="p-8 text-center">리뷰를 불러오는 중...</div>;
+  if (isLoading) return <ReviewSectionSkeleton count={5} />;
   if (fetchError)
-    return <div className="p-8 text-center text-red-500">리뷰 로딩 실패</div>;
+    return (
+      <div className="p-8 text-center text-hr-danger-default">
+        리뷰 로딩 실패
+      </div>
+    );
   if (!reviews || reviews.length === 0)
     return (
       <div className="p-8 text-center text-hr-gray-50">
