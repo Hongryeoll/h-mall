@@ -2,11 +2,10 @@
 
 import { useMemo, useState } from 'react';
 import { useReview } from '@/hooks/useReview';
-import { ReviewItemType } from '@/types/review';
 import HrPagination from '@/components/common/HrPagination';
 import HrSelectbox from '@/components/common/HrSelectbox';
-import { ReviewSectionSkeleton } from '@/components/skeleton/ReviewSectionSkeleton';
-import Image from 'next/image';
+import { ReviewSectionItemSkeleton } from '@/components/skeleton/ReviewSectionItemSkeleton';
+import ReviewSectionItem from '@/components/catalog/ReviewSectionItem';
 import StartSvg from '@/assets/icons/star.svg';
 import FilterSvg from '@/assets/icons/filter.svg';
 
@@ -19,11 +18,9 @@ const REVIEWS_PER_PAGE = 5;
 
 export default function ReviewSection({ id, productId }: Props) {
   const { reviews, isLoading, fetchError } = useReview(productId);
-
   const [sortBy, setSortBy] = useState<'latest' | 'rating'>('latest');
   const [photoOnly, setPhotoOnly] = useState(false);
   const [page, setPage] = useState(1);
-  const [expandedReviewId, setExpandedReviewId] = useState<number | null>(null);
 
   const filteredReviews = useMemo(() => {
     if (!reviews) return [];
@@ -59,7 +56,7 @@ export default function ReviewSection({ id, productId }: Props) {
     return (total / reviews.length).toFixed(1);
   }, [reviews]);
 
-  if (isLoading) return <ReviewSectionSkeleton count={5} />;
+  if (isLoading) return <ReviewSectionItemSkeleton count={5} />;
   if (fetchError)
     return (
       <div className="p-8 text-center text-hr-danger-default">
@@ -130,98 +127,9 @@ export default function ReviewSection({ id, productId }: Props) {
 
       {/* 리뷰 목록 */}
       <ul className="space-y-4">
-        {currentPageReviews.map((review: ReviewItemType) => {
-          const isExpanded = expandedReviewId === review.id;
-          const hasImages =
-            Array.isArray(review.images) && review.images.length > 0;
-
-          return (
-            <li
-              key={review.id}
-              className={`border border-hr-gray-10 rounded-md cursor-pointer p-4 ${
-                isExpanded ? 'bg-gray-50' : ''
-              }`}
-              onClick={() => setExpandedReviewId(isExpanded ? null : review.id)}
-            >
-              <div
-                className={`flex ${isExpanded ? 'flex-col' : 'flex-row'} gap-4`}
-              >
-                <div className="flex-1">
-                  {/* 상단 별점, 날짜 */}
-                  <div className="flex justify-between">
-                    <div className="flex flex-1 mb-2">
-                      <div className="flex gap-1 mr-2">
-                        {[...Array(5)].map((_, idx) => (
-                          <StartSvg
-                            key={idx}
-                            size={16}
-                            className={`${
-                              idx < review.rating
-                                ? 'text-hr-yellow-default'
-                                : 'text-hr-gray-30'
-                            }`}
-                            fill={idx < review.rating ? '#FFD700' : 'none'}
-                          />
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="flex gap-2 items-start">
-                      <div className="text-xs text-hr-gray-40">
-                        {review.created_at
-                          ? new Date(review.created_at).toLocaleDateString()
-                          : '작성일자 없음'}
-                      </div>
-                    </div>
-                  </div>
-                  {/* (옵션, 이메일) 오른쪽 썸네일 */}
-                  <div className="flex justify-between">
-                    <div className="flex flex-col">
-                      <span className="font-hr-semi-bold text-hr-gray-80">
-                        {review.email_mark}
-                      </span>
-                      <div className="mb-2 text-hr-b4 text-hr-gray-50">
-                        옵션: {review.order_item_size || '옵션 없음'}
-                      </div>
-                    </div>
-                    {!isExpanded && hasImages && (
-                      <div className="w-[80px] h-[80px] flex-shrink-0">
-                        <Image
-                          src={review.images![0]}
-                          alt="thumbnail"
-                          width={80}
-                          height={80}
-                          className="rounded-md object-cover border border-gray-200"
-                        />
-                      </div>
-                    )}
-                  </div>
-
-                  {/* 리뷰 텍스트 */}
-                  <p className="text-hr-gray-70 whitespace-pre-line mb-4">
-                    {review.content}
-                  </p>
-
-                  {/* 이미지 (확대일 때는 본문 하단) */}
-                  {isExpanded && hasImages && (
-                    <div className="flex gap-3 flex-wrap mt-4">
-                      {review.images!.map((img, idx) => (
-                        <Image
-                          key={idx}
-                          src={img}
-                          alt={`review image ${idx}`}
-                          width={240}
-                          height={240}
-                          className="rounded-md object-cover border border-gray-200"
-                        />
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-            </li>
-          );
-        })}
+        {currentPageReviews.map((review) => (
+          <ReviewSectionItem key={review.id} review={review} />
+        ))}
       </ul>
 
       {/* 페이지네이션 */}

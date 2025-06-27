@@ -7,7 +7,7 @@ type Props = {
   count?: number;
 };
 
-export const ReviewSectionSkeleton = ({ count = 5 }: Props) => {
+export const ReviewSectionItemSkeleton = ({ count = 5 }: Props) => {
   return (
     <ul className="space-y-4">
       {Array.from({ length: count }).map((_, idx) => (
