@@ -65,7 +65,7 @@ export default function ReviewSection({ id, productId }: Props) {
     );
   if (!reviews || reviews.length === 0)
     return (
-      <div className="p-8 text-center text-hr-gray-50">
+      <div className="p-8 text-center text-hr-gray-40">
         작성된 리뷰가 없습니다.
       </div>
     );

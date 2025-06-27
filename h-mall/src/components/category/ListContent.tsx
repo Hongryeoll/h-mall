@@ -25,7 +25,7 @@ export default function ListContent() {
 
   if (isLoading) {
     return (
-      <div className="max-w-screen-xl mx-auto p-6">
+      <div className="max-w-screen-xl mx-auto">
         <ProductGridSkeleton count={products.length || 8} />
       </div>
     );
@@ -36,7 +36,7 @@ export default function ListContent() {
   }
 
   return (
-    <div className="max-w-screen-xl mx-auto p-6">
+    <div className="max-w-screen-xl mx-auto">
       <ProductGrid
         products={products}
         onClick={(p: ProductFormProps) => {
