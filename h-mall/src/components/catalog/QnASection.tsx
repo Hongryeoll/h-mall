@@ -5,6 +5,7 @@ import { useQna } from '@/hooks/useQna';
 import { useUserContext } from '@/components/provider/UserProvider';
 import QnAForm from '@/components/qna/QnAForm';
 import QnAItem from '@/components/qna/QnAItem';
+import { QnASectionItemSkeleton } from '@/components/skeleton/QnASectionItemSkeleton';
 import HrPagination from '@/components/common/HrPagination';
 import { ProductFormProps } from '@/types/products';
 
@@ -81,7 +82,11 @@ export default function QnASection({ id, product }: Props) {
       )}
 
       {isPageLoading ? (
-        <div className="text-center py-10 text-hr-gray-40">로딩 중...</div>
+        <div className="space-y-4">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <QnASectionItemSkeleton key={i} />
+          ))}
+        </div>
       ) : totalQnas === 0 ? (
         <div className="text-center py-10 text-hr-gray-40">
           등록된 Q&A가 없습니다.
