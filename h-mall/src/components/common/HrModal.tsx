@@ -14,7 +14,7 @@ export type HrModalProps = {
   isOpen: boolean;
   onClose: () => void;
   title: string;
-  description: string;
+  description: string | ReactNode;
   children?: ReactNode;
 };
 
@@ -37,7 +37,10 @@ export default function HrModal({
                 <DialogTitle className="text-hr-h4 font-hr-bold text-hr-gray-90">
                   {title}
                 </DialogTitle>
-                <Description className="text-hr-b2 text-hr-gray-60 leading-hr-body">
+                <Description
+                  as="div"
+                  className="text-hr-b2 text-hr-gray-60 leading-hr-body whitespace-pre-line"
+                >
                   {description}
                 </Description>
                 {children ? (

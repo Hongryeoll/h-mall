@@ -7,6 +7,7 @@ import { ReviewItemType } from '@/types/review';
 import HrStarRating from '@/components/common/HrStartRating';
 import ReviewForm from '@/components/mypage/ReviewForm';
 import { useReview } from '@/hooks/useReview';
+import { useModal } from '@/components/provider/ModalProvider';
 
 type Props = {
   review: ReviewItemType;
@@ -14,6 +15,7 @@ type Props = {
 };
 
 export default function ReviewItem({ review, isCard }: Props) {
+  const { showModal, closeModal } = useModal();
   const [isModalOpen, setModalOpen] = useState(false);
   const { deleteReview } = useReview(review.product_id);
 
@@ -23,14 +25,36 @@ export default function ReviewItem({ review, isCard }: Props) {
     day: '2-digit',
   });
 
-  const handleDelete = async () => {
-    const confirm = window.confirm('리뷰를 삭제하시겠습니까?');
-    if (confirm) {
-      await deleteReview.mutateAsync({
-        reviewId: review.id,
-        product_id: review.product_id,
-      });
-    }
+  const handleDelete = () => {
+    showModal({
+      title: '리뷰 삭제',
+      description: `리뷰를 삭제하시겠습니까?\n삭제된 리뷰는 복구할 수 없습니다.`,
+      children: (
+        <div className="mt-6 flex justify-end gap-2">
+          <HrButton text="취소" type="line" size="m" onClick={closeModal} />
+          <HrButton
+            text="삭제"
+            type="danger"
+            size="m"
+            onClick={async () => {
+              try {
+                await deleteReview.mutateAsync({
+                  reviewId: review.id,
+                  product_id: review.product_id,
+                });
+                closeModal();
+              } catch (err) {
+                closeModal();
+                showModal({
+                  title: '삭제 실패',
+                  description: '리뷰 삭제 중 오류가 발생했습니다.',
+                });
+              }
+            }}
+          />
+        </div>
+      ),
+    });
   };
 
   const product = {
