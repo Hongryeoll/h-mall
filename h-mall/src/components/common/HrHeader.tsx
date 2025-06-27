@@ -11,6 +11,7 @@ import LogoutSVG from '@/assets/icons/logout.svg';
 import CogwheelSVG from '@/assets/icons/cogwhell.svg';
 import { createSupabaseBrowserClient } from '@/library/client/supabase';
 import { useUserContext } from '@/components/provider/UserProvider';
+import { HrHeaderSkeleton } from '@/components/skeleton/HrHeaderSkeleton';
 
 type Props = {
   className?: string;
@@ -28,9 +29,7 @@ export const HrHeader = ({
 
   if (loading) {
     return (
-      <div className="h-[56px] flex items-center justify-center bg-hr-white border-b">
-        <span>로딩중...</span>
-      </div>
+      <HrHeaderSkeleton showAdmin={role === 'admin' || role === 'readAdmin'} />
     );
   }
 
