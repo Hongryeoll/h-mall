@@ -4,6 +4,7 @@ import { useFilteredProducts } from '@/hooks/useFilteredProducts';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { ROUTES } from '@/types/constants';
+import RightSvg from '@/assets/icons/chevron-right.svg';
 
 type Props = {
   title: string;
@@ -25,9 +26,9 @@ export default function ProductRecommendation({ title, categorySlug }: Props) {
           onClick={() =>
             router.push(ROUTES.MALL_CATALOG_CATEGORY(categorySlug))
           }
-          className="text-sm text-gray-500 hover:underline cursor-pointer"
+          className="flex items-center text-sm text-gray-500 hover:underline cursor-pointer"
         >
-          더보기 →
+          더보기 <RightSvg width={16} height={16} />
         </div>
       </div>
 

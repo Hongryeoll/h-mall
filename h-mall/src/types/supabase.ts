@@ -544,6 +544,42 @@ export type Database = {
       }
     }
     Views: {
+      qna_with_product_info: {
+        Row: {
+          answer: string | null
+          created_at: string | null
+          id: number | null
+          is_private: boolean | null
+          product_id: string | null
+          product_name: string | null
+          question: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "qnas_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "qnas_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "userinfo"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "qnas_user_id_fkey_user_public_info"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_public_info"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       qna_with_user_info: {
         Row: {
           answer: string | null

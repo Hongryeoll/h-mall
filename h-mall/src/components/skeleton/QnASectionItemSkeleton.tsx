@@ -7,7 +7,7 @@ type Props = {
   isExpanded?: boolean; // 펼침 상태 여부 (선택)
 };
 
-export const QnASectionItemSkeleton = ({ isExpanded = false }: Props) => {
+export const QnaSectionItemSkeleton = ({ isExpanded = false }: Props) => {
   return (
     <div className="border rounded p-4">
       {/* 헤더 */}

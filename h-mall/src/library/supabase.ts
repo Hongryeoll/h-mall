@@ -14,9 +14,7 @@ type UserInfo = {
  * 서버 전용 클라이언트
  * — Server Components, Server Actions, Route Handlers 에서 사용
  */
-export async function createServerSupabaseClient(
-  isServerComponent = false,
-) {
+export async function createServerSupabaseClient(isServerComponent = false) {
   const cookieStore = await cookies();
 
   return createServerClient<Database>(
@@ -85,42 +83,47 @@ export async function supabaseMiddleware(
   } = await supabase.auth.getUser();
 
   const isProtectedPath = [
-    "/mall/mypage",
-    "/mall/order/cart",
-    "/settings",
-    "/api",
-    "/admin",
+    '/mall/mypage',
+    '/mall/order/cart',
+    '/settings',
+    '/api',
+    '/admin',
   ].some((protectedPath) => pathname.startsWith(protectedPath));
 
-  // ✅ 로그인 안 된 사용자 보호 경로 접근 시 /login 으로
+  // 로그인 안 된 사용자 보호 경로 접근 시 /login 으로
   if (!user && isProtectedPath) {
     const loginUrl = url.clone();
-    loginUrl.pathname = "/login";
+    loginUrl.pathname = '/login';
     return NextResponse.redirect(loginUrl);
   }
 
-  // ✅ 로그인한 사용자가 /login 또는 /signup 에 접근 시 /mall 으로 리다이렉트
+  // 로그인한 사용자가 /login 또는 /signup 에 접근 시 /mall 으로 리다이렉트
   const isAuthPage =
-    pathname === "/login" || pathname === "/signup" ||
-    pathname.startsWith("/login/") || pathname.startsWith("/signup/");
+    pathname === '/login' ||
+    pathname === '/signup' ||
+    pathname.startsWith('/login/') ||
+    pathname.startsWith('/signup/');
   if (user && isAuthPage) {
     const mallUrl = url.clone();
-    mallUrl.pathname = "/";
+    mallUrl.pathname = '/';
     return NextResponse.redirect(mallUrl);
   }
 
-  // ✅ 관리자 경로 접근 시 권한 확인
-  if (user && pathname.startsWith("/admin")) {
+  // 관리자 경로 접근 시 권한 확인
+  if (user && pathname.startsWith('/admin')) {
     const { data: profile, error } = await supabase
-      .from("userinfo")
-      .select("role")
-      .eq("id", user.id)
+      .from('userinfo')
+      .select('role')
+      .eq('id', user.id)
       .single<UserInfo>();
 
-    if (error || !profile || (profile.role !== "admin" && profile.role !== "readAdmin")
+    if (
+      error ||
+      !profile ||
+      (profile.role !== 'admin' && profile.role !== 'readAdmin')
     ) {
       const unauthorizedUrl = url.clone();
-      unauthorizedUrl.pathname = "/not-authorized";
+      unauthorizedUrl.pathname = '/not-authorized';
       return NextResponse.redirect(unauthorizedUrl);
     }
   }

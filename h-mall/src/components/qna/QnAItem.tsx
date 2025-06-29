@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import QnAForm from '@/components/qna/QnAForm';
+import QnAForm from '@/components/qna/QnaForm';
 import AnswerForm from '@/components/qna/AnswerForm';
 import {
-  QnaItem,
+  QnaItemType,
   QnaUpdateInput,
   QnaDeleteInput,
   QnaAnswerInput,
@@ -12,28 +12,28 @@ import { useModal } from '@/components/provider/ModalProvider';
 import LockSVG from '@/assets/icons/lock.svg';
 
 type Props = {
-  qna: QnaItem;
+  qna: QnaItemType;
   user: UserProfile | null;
   onUpdate: (input: QnaUpdateInput) => void;
   onDelete: (input: QnaDeleteInput) => void;
   onAnswer: (input: QnaAnswerInput) => void;
 };
 
-export default function QnAItem({
+export default function QnaItem({
   qna,
   user,
   onUpdate,
   onDelete,
   onAnswer,
 }: Props) {
-  const isOwner = user?.id === qna.user_id;
+  const isMyQna = user?.id === qna.user_id;
   const isAdmin = user?.role === 'admin' || user?.role === 'readAdmin';
   const [editMode, setEditMode] = useState(false);
   const [answerMode, setAnswerMode] = useState(false);
   const [answerOpen, setAnswerOpen] = useState(false);
 
   const isPrivate = qna.is_private;
-  const canView = !isPrivate || isOwner || isAdmin;
+  const canView = !isPrivate || isMyQna || isAdmin;
   const { showModal } = useModal();
 
   const previewLength = 30;
@@ -62,6 +62,11 @@ export default function QnAItem({
         onClick={handleClick}
       >
         <div className="flex flex-col gap-0.5">
+          {isMyQna && (
+            <div className="w-fit px-2 py-0.5 mb-1 rounded bg-hr-gray-10 text-hr-gray-50 text-hr-c1 border border-hr-gray-30">
+              내가 남긴 QnA
+            </div>
+          )}
           <span className="text-hr-b5 font-hr-semi-bold">
             {qna.email_masked}
           </span>
@@ -124,7 +129,7 @@ export default function QnAItem({
               onCancel={() => setEditMode(false)}
             />
           ) : (
-            isOwner && (
+            isMyQna && (
               <div className="flex gap-2">
                 <button
                   onClick={() => setEditMode(!editMode)}

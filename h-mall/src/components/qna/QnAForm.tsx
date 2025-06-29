@@ -23,7 +23,7 @@ type Props = {
   onCancel?: () => void;
 };
 
-export default function QnAForm({
+export default function QnaForm({
   initialQuestion = '',
   isPrivate = false,
   onSubmit,

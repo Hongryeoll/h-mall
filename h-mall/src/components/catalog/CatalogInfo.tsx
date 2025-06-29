@@ -4,7 +4,7 @@ import InfoSection from '@/components/catalog/InfoSection';
 import TabsHeader from '@/components/catalog/TabsHeader';
 import DetailSection from '@/components/catalog/DetailSection';
 import GuideSection from '@/components/catalog/GuideSection';
-import QnASection from '@/components/catalog/QnASection';
+import QnaSection from '@/components/catalog/QnaSection';
 import ReviewSection from '@/components/catalog/ReviewSection';
 import { ProductFormProps } from '@/types/products';
 
@@ -31,7 +31,7 @@ export default function ProductCatalogInfo({ product }: Props) {
         <DetailSection id="product-detail" product={product} />
         <GuideSection id="usage-guide" product={product} />
         <ReviewSection id="reviews" productId={product.id} />
-        <QnASection id="question-answer" product={product} />
+        <QnaSection id="question-answer" product={product} />
       </div>
     </div>
   );

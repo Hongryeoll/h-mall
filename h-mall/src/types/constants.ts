@@ -6,6 +6,7 @@ export const ROUTES = {
   MALL_MYPAGE: '/mall/mypage',
   MALL_MYPAGE_ORDERS: '/mall/mypage/orders',
   MALL_MYPAGE_REVIEWS: '/mall/mypage/reviews',
+  MALL_MYPAGE_QNA: '/mall/mypage/qna',
   MALL_CART: '/mall/order/cart',
   MALL_CATALOG: (id: string) => `/mall/catalog/${id}`,
   MALL_CATALOG_CATEGORY: (id: string) => `/mall/category/list?category=${id}`,

@@ -8,12 +8,14 @@ export default function MypageLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col md:flex-row min-h-screen">
+    <div className="flex flex-col h-full md:flex-row w-full min-h-0">
       {/* 사이드바 영역 */}
       <MypageSidebar />
 
       {/* 컨텐츠 영역 */}
-      <main className="flex-1 p-4 md:p-8 bg-hr-white">{children}</main>
+      <main className="flex-1 flex flex-col h-full min-h-0 bg-hr-white">
+        {children}
+      </main>
     </div>
   );
 }

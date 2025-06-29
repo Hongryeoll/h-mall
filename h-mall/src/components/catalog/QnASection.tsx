@@ -3,9 +3,9 @@
 import { useState } from 'react';
 import { useQna } from '@/hooks/useQna';
 import { useUserContext } from '@/components/provider/UserProvider';
-import QnAForm from '@/components/qna/QnAForm';
-import QnAItem from '@/components/qna/QnAItem';
-import { QnASectionItemSkeleton } from '@/components/skeleton/QnASectionItemSkeleton';
+import QnaForm from '@/components/qna/QnaForm';
+import QnaItem from '@/components/qna/QnaItem';
+import { QnaSectionItemSkeleton } from '@/components/skeleton/QnaSectionItemSkeleton';
 import HrPagination from '@/components/common/HrPagination';
 import { ProductFormProps } from '@/types/products';
 
@@ -14,7 +14,7 @@ type Props = {
   product: ProductFormProps;
 };
 
-export default function QnASection({ id, product }: Props) {
+export default function QnaSection({ id, product }: Props) {
   const { user, loading: userLoading } = useUserContext();
   const { qnas, isLoading, addQna, updateQna, deleteQna, answerQna } = useQna(
     product.id
@@ -73,7 +73,7 @@ export default function QnASection({ id, product }: Props) {
       </div>
 
       {showForm && user && (
-        <QnAForm
+        <QnaForm
           productId={product.id}
           userId={user.id}
           onSubmit={handleQnaSubmit}
@@ -84,7 +84,7 @@ export default function QnASection({ id, product }: Props) {
       {isPageLoading ? (
         <div className="space-y-4">
           {Array.from({ length: 5 }).map((_, i) => (
-            <QnASectionItemSkeleton key={i} />
+            <QnaSectionItemSkeleton key={i} />
           ))}
         </div>
       ) : totalQnas === 0 ? (
@@ -94,7 +94,7 @@ export default function QnASection({ id, product }: Props) {
       ) : (
         <div className="space-y-4">
           {paginatedQnas?.map((qna) => (
-            <QnAItem
+            <QnaItem
               key={qna.id}
               qna={qna}
               user={user}
