@@ -25,6 +25,14 @@ export default function ReviewSectionItem({ review }: Props) {
     >
       <div className={`flex ${isExpanded ? 'flex-col' : 'flex-row'} gap-4`}>
         <div className="flex-1">
+          {/* 내가 남긴 리뷰 배지 */}
+          {isMyReview && (
+            <div className="mb-1">
+              <div className="inline-block px-2 py-0.5 bg-hr-gray-10 border border-hr-gray-20 rounded text-hr-c1 text-hr-gray-50">
+                내가 남긴 리뷰
+              </div>
+            </div>
+          )}
           {/* 상단 별점, 날짜 */}
           <div className="flex justify-between mb-2">
             <div className="flex gap-1">
@@ -47,15 +55,6 @@ export default function ReviewSectionItem({ review }: Props) {
                 : '작성일자 없음'}
             </div>
           </div>
-
-          {/* 내가 남긴 리뷰 배지 */}
-          {isMyReview && (
-            <div className="mb-1">
-              <div className="inline-block px-2 py-0.5 bg-hr-gray-10 border border-hr-gray-20 rounded text-hr-c1 text-hr-gray-50">
-                내가 남긴 리뷰
-              </div>
-            </div>
-          )}
 
           {/* 이메일, 옵션, 썸네일 */}
           <div className="flex justify-between">
