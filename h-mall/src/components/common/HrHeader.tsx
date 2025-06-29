@@ -12,6 +12,8 @@ import CogwheelSVG from '@/assets/icons/cogwhell.svg';
 import { createSupabaseBrowserClient } from '@/library/client/supabase';
 import { useUserContext } from '@/components/provider/UserProvider';
 import { HrHeaderSkeleton } from '@/components/skeleton/HrHeaderSkeleton';
+import SearchModal from '@/components/search/Modal';
+import { useState } from 'react';
 
 type Props = {
   className?: string;
@@ -26,6 +28,7 @@ export const HrHeader = ({
 }: Props) => {
   const router = useRouter();
   const { user, role, loading } = useUserContext();
+  const [openSearch, setOpenSearch] = useState(false);
 
   if (loading) {
     return (
@@ -57,13 +60,15 @@ export const HrHeader = ({
       <div className="flex items-center gap-2 ml-auto">
         <span
           className="inline-flex items-center gap-1 p-2 cursor-pointer"
-          onClick={() => router.push(ROUTES.HOME)}
+          // onClick={() => router.push(ROUTES.HOME)}
+          onClick={() => setOpenSearch(true)}
         >
           <SearchSVG width={18} height={18} className="text-hr-gray-80" />
           <span className="text-hr-c3 text-hr-gray-50 leading-none hidden lg:inline">
             SEARCH
           </span>
         </span>
+        {openSearch && <SearchModal onClose={() => setOpenSearch(false)} />}
 
         <span
           className="inline-flex items-center gap-1 p-2 cursor-pointer"
