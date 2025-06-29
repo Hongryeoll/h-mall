@@ -71,7 +71,7 @@ export default function ReviewItem({ review, isCard }: Props) {
 
   if (isCard) {
     return (
-      <div className="p-4 flex flex-col gap-4 border border-gray-200 rounded-md">
+      <div className="p-4 flex flex-col gap-4 border border-hr-gray-20 rounded-md">
         {/* 상품 정보 */}
         <div className="flex items-center">
           <Image
@@ -83,10 +83,12 @@ export default function ReviewItem({ review, isCard }: Props) {
           />
           <div>
             <p className="font-hr-regular">{product.name}</p>
-            <p className="text-xs text-hr-gray-50">{option}</p>
+            <p className="text-hr-c1 text-hr-gray-50">{option}</p>
             <HrStarRating rating={review.rating} readOnly />
           </div>
-          <span className="ml-auto text-xs text-gray-400">{date}</span>
+          <span className="ml-auto text-hr-c1 text-hr-gray-40 min-w-[75px]">
+            {date}
+          </span>
         </div>
 
         {/* 리뷰 내용 */}
@@ -141,7 +143,7 @@ export default function ReviewItem({ review, isCard }: Props) {
   return (
     <>
       <tr className="hover:bg-hr-gray-10 transition border-b border-hr-gray-20">
-        <td className="flex items-center py-4 px-4">
+        <td className="flex items-center py-4 px-4 min-w-[250px]">
           <Image
             src={product.images[0] ?? '/no-image.png'}
             alt={product.name}
@@ -161,7 +163,7 @@ export default function ReviewItem({ review, isCard }: Props) {
 
         <td className="py-4 px-4">{review.content}</td>
 
-        <td className="py-4 px-4 text-center">{date}</td>
+        <td className="py-4 px-4 text-center min-w-[130px]">{date}</td>
 
         <td className="py-4 px-4 text-center">
           <div className="flex gap-2 justify-center">

@@ -107,7 +107,7 @@ export default function MypageSidebar() {
       </div>
 
       {/* 데스크탑 */}
-      <nav className="hidden md:block p-6 space-y-8">
+      <nav className="hidden md:block p-6 space-y-8 min-w-[190px]">
         {sections.map((sec) => (
           <div key={sec.title}>
             <h3 className="text-hr-h5 font-hr-bold border-b pb-2 mb-4">
