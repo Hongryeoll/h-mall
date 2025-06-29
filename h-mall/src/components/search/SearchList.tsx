@@ -3,7 +3,9 @@
 import { useSearch } from '@/hooks/useSearch';
 import Image from 'next/image';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import HrSelectbox from '@/components/common/HrSelectbox';
+import { ROUTES } from '@/types/constants';
 
 type Props = {
   keyword: string;
@@ -22,6 +24,7 @@ const sortOptions = [
 export default function SearchList({ keyword }: Props) {
   const [sort, setSort] = useState('RECOMMEND');
   const { products, isLoading, fetchError } = useSearch(keyword, sort);
+  const router = useRouter();
 
   if (isLoading) return <div className="p-4">검색 중...</div>;
   if (fetchError) return <div className="p-4">에러가 발생했습니다.</div>;
@@ -44,9 +47,13 @@ export default function SearchList({ keyword }: Props) {
       </div>
 
       {/* 상품 목록 */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 ">
         {products.map((product) => (
-          <div key={product.id} className="space-y-2">
+          <div
+            key={product.id}
+            className="space-y-2 cursor-pointer"
+            onClick={() => router.push(ROUTES.MALL_CATALOG(product.id))}
+          >
             <div className="relative w-full aspect-[3/4] bg-gray-100 rounded-lg overflow-hidden">
               {product.product_images?.[0] && (
                 <Image
