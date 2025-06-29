@@ -19,7 +19,7 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
       </button>
 
       {/* Header */}
-      <div className="px-6 pt-10 pb-4 mt-16 border-b border-black">
+      <div className="px-6 pt-10 pb-4 mt-16 border-b border-black border">
         <Input keyword={keyword} setKeyword={setKeyword} />
       </div>
 

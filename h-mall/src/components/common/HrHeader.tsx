@@ -12,7 +12,7 @@ import CogwheelSVG from '@/assets/icons/cogwhell.svg';
 import { createSupabaseBrowserClient } from '@/library/client/supabase';
 import { useUserContext } from '@/components/provider/UserProvider';
 import { HrHeaderSkeleton } from '@/components/skeleton/HrHeaderSkeleton';
-import SearchModal from '@/components/search/Modal';
+import SearchModal from '@/components/search/SearchModal';
 import { useState } from 'react';
 
 type Props = {
