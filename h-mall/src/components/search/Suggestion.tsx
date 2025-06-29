@@ -1,28 +1,22 @@
-const popularKeywords = [
-  '하네 [Summer.]시어 울 엔케이스 가디건',
-  '맥세이프',
-  '마틸라',
-  '더플백',
-  '안경',
-  '여성 버뮤다팬츠',
-  '나일론 가방',
-  '잔스포츠',
-  '크롭티',
-  '녹섭',
-];
-
-const autoSuggestions = [
-  '아날로그 손목시계',
-  '아날개',
-  '아날로그 시계',
-  '아날개 수영복',
-];
-
 type Props = {
   keyword: string;
+  onClickSuggestion: (suggestion: string) => void;
 };
 
-export default function Suggestion({ keyword }: Props) {
+const popularKeywords = [
+  '반팔',
+  '슬랙스',
+  '셔츠',
+  '나이키',
+  '뉴발란스',
+  '가디건',
+  '여성 가방',
+  '후드집업',
+];
+
+const autoSuggestions = ['반팔 셔츠', '반팔 티셔츠', '여성 반팔', '남성 반팔'];
+
+export default function Suggestion({ keyword, onClickSuggestion }: Props) {
   const suggestions = keyword
     ? autoSuggestions.filter((s) => s.includes(keyword))
     : popularKeywords;
@@ -34,7 +28,11 @@ export default function Suggestion({ keyword }: Props) {
       </div>
       <ul className="space-y-3">
         {suggestions.map((item) => (
-          <li key={item} className="text-hr-b2 cursor-pointer hover:underline">
+          <li
+            key={item}
+            className="text-hr-b2 cursor-pointer hover:underline"
+            onClick={() => onClickSuggestion(item)}
+          >
             {item}
           </li>
         ))}

@@ -46,6 +46,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "cart_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products_with_review"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "cart_items_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
@@ -116,6 +123,13 @@ export type Database = {
             columns: ["product_id"]
             isOneToOne: false
             referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products_with_review"
             referencedColumns: ["id"]
           },
           {
@@ -335,6 +349,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "qnas_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products_with_review"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "qnas_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
@@ -394,6 +415,13 @@ export type Database = {
             columns: ["product_id"]
             isOneToOne: false
             referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products_with_review"
             referencedColumns: ["id"]
           },
           {
@@ -544,13 +572,58 @@ export type Database = {
       }
     }
     Views: {
+      products_with_review: {
+        Row: {
+          avg_rating: number | null
+          brand: string | null
+          category_id: string | null
+          created_date: string | null
+          description: string | null
+          detail_images: string[] | null
+          discount_rate: number | null
+          final_price: number | null
+          id: string | null
+          name: string | null
+          price: number | null
+          product_images: string[] | null
+          review_count: number | null
+          section_id: string | null
+          subsection_id: string | null
+          subtab_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "products_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "products_section_id_fkey"
+            columns: ["section_id"]
+            isOneToOne: false
+            referencedRelation: "sections"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "products_subtab_id_fkey"
+            columns: ["subtab_id"]
+            isOneToOne: false
+            referencedRelation: "subtabs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       qna_with_product_info: {
         Row: {
           answer: string | null
+          brand: string | null
           created_at: string | null
           id: number | null
           is_private: boolean | null
           product_id: string | null
+          product_images: string[] | null
           product_name: string | null
           question: string | null
           updated_at: string | null
@@ -562,6 +635,13 @@ export type Database = {
             columns: ["product_id"]
             isOneToOne: false
             referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "qnas_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products_with_review"
             referencedColumns: ["id"]
           },
           {
@@ -599,6 +679,13 @@ export type Database = {
             columns: ["product_id"]
             isOneToOne: false
             referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "qnas_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products_with_review"
             referencedColumns: ["id"]
           },
           {
@@ -652,6 +739,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "reviews_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products_with_review"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "reviews_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
@@ -680,6 +774,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "cart_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products_with_review"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "cart_items_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
@@ -690,7 +791,27 @@ export type Database = {
       }
     }
     Functions: {
-      [_ in never]: never
+      search_products: {
+        Args: { keyword: string } | { keyword: string; sort?: string }
+        Returns: {
+          avg_rating: number | null
+          brand: string | null
+          category_id: string | null
+          created_date: string | null
+          description: string | null
+          detail_images: string[] | null
+          discount_rate: number | null
+          final_price: number | null
+          id: string | null
+          name: string | null
+          price: number | null
+          product_images: string[] | null
+          review_count: number | null
+          section_id: string | null
+          subsection_id: string | null
+          subtab_id: string | null
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
