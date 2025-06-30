@@ -13,6 +13,7 @@ export const ROUTES = {
   MALL_CHECKOUT: '/mall/order/checkout',
   MALL_CHECKOUT_CONFIRMED: (id: string) =>
     `/mall/order/checkout/confirmed/${id}`,
+  ADMIN_PRODUCT: '/admin/product'
 } as const;
 // Auth-Helpers가 쿠키를 읽도록 돕는 옵션
 export const SUPABASE_COOKIE_OPTIONS = {

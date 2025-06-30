@@ -3,16 +3,12 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { XMarkIcon } from '@heroicons/react/24/outline';
+import { ROUTES } from '@/types/constants';
 
 export default function AdminSidebar({ onClose }: { onClose?: () => void }) {
   const pathname = usePathname();
 
-  const menus = [
-    { href: '/admin/dashboard', label: '대시보드' },
-    { href: '/admin/users', label: '유저' },
-    { href: '/admin/product', label: '상품관리' },
-    { href: '/admin/banner', label: '배너관리' },
-  ];
+  const menus = [{ href: ROUTES.ADMIN_PRODUCT, label: '상품관리' }];
 
   return (
     <aside className="w-64 h-full flex flex-col bg-white border-r border-hr-gray-20">
