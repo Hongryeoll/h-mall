@@ -5,7 +5,11 @@ import { useInView } from 'react-intersection-observer';
 import { useInfiniteFilteredProducts } from '@/hooks/useInfiniteFilteredProducts';
 import ProductGrid from '@/components/category/ProductGrid';
 import { ROUTES } from '@/types/constants';
-import { ProductGridSkeleton } from '@/components/skeleton/ProductSkeletonComponents';
+import {
+  ProductGridSkeleton,
+  ProductCardSkeleton,
+} from '@/components/skeleton/ProductSkeletonComponents';
+import { productGridClass } from '@/assets/style/ProductGridStyle';
 
 export default function ListContent() {
   const searchParams = useSearchParams();
@@ -32,6 +36,7 @@ export default function ListContent() {
     fetchNextPage();
   }
 
+  // 초기 로딩 상태
   if (isLoading) {
     return (
       <div className="max-w-screen-xl mx-auto">
@@ -52,10 +57,21 @@ export default function ListContent() {
           router.push(ROUTES.MALL_CATALOG(p.id));
         }}
       />
+
       {/* 무한스크롤 감지 영역 */}
       {hasNextPage && (
-        <div ref={ref} className="py-6 text-center">
-          {isFetchingNextPage ? '불러오는 중...' : '스크롤하여 더 보기'}
+        <div ref={ref} className="py-6">
+          {isFetchingNextPage ? (
+            <div className={productGridClass}>
+              {Array.from({ length: 4 }).map((_, i) => (
+                <ProductCardSkeleton key={i} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center text-sm text-hr-gray-50">
+              스크롤하여 더 보기
+            </div>
+          )}
         </div>
       )}
     </div>

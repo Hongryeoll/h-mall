@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import type { Tables } from '@/types/supabase';
+import { productGridClass } from '@/assets/style/ProductGridStyle';
 import StarSvg from '@/assets/icons/star.svg';
 
 type Props = {
@@ -9,15 +10,7 @@ type Props = {
 
 export default function ProductGrid({ products, onClick }: Props) {
   return (
-    <div
-      className={`
-        grid
-        grid-cols-[repeat(auto-fill,minmax(170px,1fr))]
-        gap-4 sm:gap-6 md:gap-8
-        px-4 sm:px-6 md:px-8
-        w-full mx-auto
-      `}
-    >
+    <div className={productGridClass}>
       {products.map((product) => {
         const {
           id,

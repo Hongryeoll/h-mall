@@ -1,6 +1,7 @@
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import React from 'react';
+import { productGridClass } from '@/assets/style/ProductGridStyle';
 
 // 1. 상품 카드 Skeleton
 export function ProductCardSkeleton() {
@@ -72,7 +73,7 @@ export function SubTabsSkeleton({ count = 4 }: { count?: number }) {
 // 4. 상품 그리드 Skeleton
 export function ProductGridSkeleton({ count = 24 }: { count?: number }) {
   return (
-    <div className="grid grid-cols-[repeat(auto-fit,minmax(170px,1fr))] gap-4 px-4">
+    <div className={productGridClass}>
       {Array.from({ length: count }).map((_, i) => (
         <ProductCardSkeleton key={i} />
       ))}
