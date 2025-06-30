@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation';
 import { ROUTES } from '@/types/constants';
 import RightSvg from '@/assets/icons/chevron-right.svg';
 import ProductRecommendationSkeleton from '@/components/skeleton/ProductRecommendationSkeleton';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation } from 'swiper/modules';
 
 type Props = {
   title: string;
@@ -23,23 +25,30 @@ export default function ProductRecommendation({ title, categorySlug }: Props) {
 
   return (
     <section className="w-full mb-10">
+      {/* 상단 타이틀 */}
       <div className="flex justify-between items-center mb-4 px-2">
-        <h2 className="text-xl font-semibold">{title}</h2>
+        <h2 className="text-hr-h5 font-hr-semi-bold">{title}</h2>
         <div
           onClick={() =>
             router.push(ROUTES.MALL_CATALOG_CATEGORY(categorySlug))
           }
-          className="flex items-center text-sm text-gray-500 hover:underline cursor-pointer"
+          className="flex items-center text-hr-b4 text-hr-gray-50 hover:underline cursor-pointer"
         >
           더보기 <RightSvg width={16} height={16} />
         </div>
       </div>
 
-      <div className="flex gap-4 overflow-x-auto px-2">
+      <Swiper
+        modules={[Navigation]}
+        navigation
+        spaceBetween={16} // 슬라이드 간격
+        slidesPerView={'auto'} // 한 줄에 자동 맞춤
+        className="px-2"
+      >
         {data.map((product) => (
-          <div
+          <SwiperSlide
             key={product.id}
-            className="min-w-[180px] flex-shrink-0 border rounded-md p-2 cursor-pointer hover:shadow-md"
+            className="!w-[180px] flex-shrink-0 border rounded-md p-2 cursor-pointer hover:shadow-md"
             onClick={() => router.push(ROUTES.MALL_CATALOG(product.id))}
           >
             <div className="relative w-full h-44 mb-2">
@@ -50,18 +59,18 @@ export default function ProductRecommendation({ title, categorySlug }: Props) {
                 className="object-cover rounded"
               />
             </div>
-            <div className="text-sm truncate">{product.name}</div>
-            <div className="font-semibold">
+            <div className="text-hr-b4 truncate">{product.name}</div>
+            <div className="font-hr-semi-bold">
               {product.final_price?.toLocaleString()}원
             </div>
             {product.discount_rate && product.discount_rate > 0 && (
-              <div className="text-red-500 text-xs">
+              <div className="text-hr-danger-default text-hr-c1">
                 {product.discount_rate}% 할인
               </div>
             )}
-          </div>
+          </SwiperSlide>
         ))}
-      </div>
+      </Swiper>
     </section>
   );
 }

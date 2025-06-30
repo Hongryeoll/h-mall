@@ -1,6 +1,9 @@
 import type { Metadata } from 'next';
 import { Noto_Sans_KR } from 'next/font/google';
 import localFont from 'next/font/local';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 import './globals.css';
 import { HrHeader } from '@/components/common/HrHeader';
 import HrNav from '@/components/common/HrNav';
