@@ -15,10 +15,10 @@ export default function ProductGrid({ products, onClick }: Props) {
         grid-cols-[repeat(auto-fill,minmax(170px,1fr))]
         gap-4 sm:gap-6 md:gap-8
         px-4 sm:px-6 md:px-8
-        w-full max-w-screen-2xl mx-auto
+        w-full mx-auto
       `}
     >
-      {products.map((product) => {
+      {products.map((product, idx) => {
         const {
           id,
           product_images,
@@ -33,7 +33,7 @@ export default function ProductGrid({ products, onClick }: Props) {
 
         return (
           <div
-            key={id}
+            key={`${id}-${idx}`}
             role="button"
             className={`
               mb-5 pb-3 sm:mb-10
