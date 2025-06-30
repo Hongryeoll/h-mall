@@ -138,7 +138,7 @@ src/
 
 ## 🗺️ H-Mall Database ERD
 
-![Database ERD](/ERD-image.png)
+![Database ERD](./public/ERD-image.png)
 
 ---
 
