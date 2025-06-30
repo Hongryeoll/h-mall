@@ -18,7 +18,7 @@ export default function ProductGrid({ products, onClick }: Props) {
         w-full mx-auto
       `}
     >
-      {products.map((product, idx) => {
+      {products.map((product) => {
         const {
           id,
           product_images,
@@ -33,7 +33,7 @@ export default function ProductGrid({ products, onClick }: Props) {
 
         return (
           <div
-            key={`${id}-${idx}`}
+            key={id}
             role="button"
             className={`
               mb-5 pb-3 sm:mb-10
