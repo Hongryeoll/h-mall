@@ -1,39 +1,39 @@
-import type { NextConfig } from 'next'
-const supabaseHost = process.env.NEXT_PUBLIC_SUPABASE_HOST;
-
+import type { NextConfig } from 'next';
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_HOST ?? '';
+const supabaseHost = supabaseUrl.replace(/^https?:\/\//, '').replace(/\/$/, '');
 
 interface SVGExcludeRule {
-  test?: RegExp
-  exclude?: Array<RegExp | string>
+  test?: RegExp;
+  exclude?: Array<RegExp | string>;
 }
 
 interface SVGRLoader {
-  loader: string
-  options: { icon?: boolean; svgo?: boolean }
+  loader: string;
+  options: { icon?: boolean; svgo?: boolean };
 }
 
 interface SVGRRule {
-  test: RegExp
-  issuer: RegExp
-  use: SVGRLoader[]
+  test: RegExp;
+  issuer: RegExp;
+  use: SVGRLoader[];
 }
 
 const nextConfig: NextConfig & { serverExternalPackages?: string[] } = {
   reactStrictMode: true,
 
   webpack(config) {
-    const rules = config.module?.rules
+    const rules = config.module?.rules;
     if (Array.isArray(rules)) {
       rules.forEach((rule) => {
-        const r = rule as SVGExcludeRule
+        const r = rule as SVGExcludeRule;
         if (
           r.test instanceof RegExp &&
           r.test.toString().includes('svg') &&
           Array.isArray(r.exclude)
         ) {
-          r.exclude.push(/\.svg$/i)
+          r.exclude.push(/\.svg$/i);
         }
-      })
+      });
     }
 
     const svgrRule = {
@@ -45,11 +45,11 @@ const nextConfig: NextConfig & { serverExternalPackages?: string[] } = {
           options: { icon: true, svgo: true },
         },
       ],
-    } as SVGRRule
+    } as SVGRRule;
 
-    config.module?.rules?.push(svgrRule)
+    config.module?.rules?.push(svgrRule);
 
-    return config
+    return config;
   },
 
   images: {
@@ -61,11 +61,11 @@ const nextConfig: NextConfig & { serverExternalPackages?: string[] } = {
       },
       {
         protocol: 'https',
-        hostname: supabaseHost!,
+        hostname: supabaseHost,
         pathname: '/storage/v1/object/public/**',
       },
     ],
   },
-}
+};
 
-export default nextConfig
+export default nextConfig;
