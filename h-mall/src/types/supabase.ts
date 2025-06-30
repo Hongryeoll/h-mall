@@ -792,24 +792,21 @@ export type Database = {
     }
     Functions: {
       search_products: {
-        Args: { keyword: string } | { keyword: string; sort?: string }
+        Args:
+          | { keyword: string }
+          | { keyword: string; sort: string; page: number; page_size: number }
+          | { keyword: string; sort?: string }
         Returns: {
-          avg_rating: number | null
-          brand: string | null
-          category_id: string | null
-          created_date: string | null
-          description: string | null
-          detail_images: string[] | null
-          discount_rate: number | null
-          final_price: number | null
-          id: string | null
-          name: string | null
-          price: number | null
-          product_images: string[] | null
-          review_count: number | null
-          section_id: string | null
-          subsection_id: string | null
-          subtab_id: string | null
+          id: string
+          name: string
+          price: number
+          brand: string
+          discount_rate: number
+          final_price: number
+          product_images: string[]
+          avg_rating: number
+          review_count: number
+          created_date: string
         }[]
       }
     }

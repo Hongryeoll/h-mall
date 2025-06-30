@@ -19,3 +19,16 @@ export interface ProductFormProps {
   avg_rating?: number | null;
   review_count?: number | null;
 }
+
+export interface SearchProduct {
+  id: string;
+  name: string;
+  price: number;
+  brand: string;
+  discount_rate: number | null;
+  final_price: number;
+  product_images: string[];
+  avg_rating: number | null;
+  review_count: number | null;
+  created_date: string;
+};
