@@ -4,11 +4,14 @@ import Link from 'next/link';
 import { useOrderList } from '@/hooks/useOrder';
 import { ROUTES } from '@/types/constants';
 import RightSvg from '@/assets/icons/chevron-right.svg';
+import CurrentOrdersSkeleton from '@/components/skeleton/CurrentOrdersSkeleton';
 
 export default function CurrentOrders() {
   const { data, isLoading } = useOrderList();
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) {
+    return <CurrentOrdersSkeleton />;
+  }
 
   const orders = data?.slice(0, 3) || [];
 

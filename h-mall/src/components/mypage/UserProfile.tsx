@@ -1,12 +1,13 @@
 'use client';
 
 import { useUserContext } from '@/components/provider/UserProvider';
+import UserProfileSkeleton from '@/components/skeleton/UserProfileSkeleton';
 
 export default function UserProfile() {
   const { user, loading } = useUserContext();
 
   if (loading) {
-    return <div>회원 정보를 불러오는 중...</div>;
+    return <UserProfileSkeleton />;
   }
 
   if (!user) {

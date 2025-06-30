@@ -4,7 +4,7 @@ import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
 type Props = {
-  isExpanded?: boolean; // 펼침 상태 여부 (선택)
+  isExpanded?: boolean;
 };
 
 export const QnaSectionItemSkeleton = ({ isExpanded = false }: Props) => {

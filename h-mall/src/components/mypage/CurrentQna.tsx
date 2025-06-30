@@ -4,11 +4,14 @@ import Link from 'next/link';
 import { useMyQna } from '@/hooks/useQna';
 import { ROUTES } from '@/types/constants';
 import RightSvg from '@/assets/icons/chevron-right.svg';
+import CurrentQnaSkeleton from '@/components/skeleton/CurrentQnaSkeleton';
 
 export default function CurrentQna() {
   const { data, isLoading } = useMyQna();
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) {
+    return <CurrentQnaSkeleton />;
+  }
 
   const qnas = data?.slice(0, 3) || [];
 
