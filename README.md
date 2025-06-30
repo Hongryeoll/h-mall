@@ -99,17 +99,18 @@ src/
 ├── library/           # Supabase 클라이언트 및 유틸
 ├── types/             # 전역 타입 정의
 ├── middleware.ts      # 인증 및 권한 미들웨어
+```
 
 ## 🔐 미들웨어 인증 및 권한 처리
 
 ### ✅ 경로 접근 규칙
 
-| 경로                    | 권한                              |
-| ----------------------- | --------------------------------- |
-| `/admin/**`             | **관리자만 접근 가능**            |
-| `/order/**`, `/cart/**` | **로그인한 사용자만 접근 가능**   |
-| `/mypage/**`            | **로그인한 사용자만 접근 가능**   |
-| `/checkout/**`          | **로그인한 사용자만 접근 가능**   |
+| 경로                    | 권한                            |
+| ----------------------- | ------------------------------- |
+| `/admin/**`             | **관리자만 접근 가능**          |
+| `/order/**`, `/cart/**` | **로그인한 사용자만 접근 가능** |
+| `/mypage/**`            | **로그인한 사용자만 접근 가능** |
+| `/checkout/**`          | **로그인한 사용자만 접근 가능** |
 
 ### ✅ 동작 방식
 
@@ -117,25 +118,23 @@ src/
 - 미들웨어에서 로그인 상태 및 관리자 권한 판별
 - 권한 미충족 시 로그인 페이지 또는 메인 페이지로 리디렉트
 
-
 ## 🗄️ 데이터베이스 구조
 
 ### 🔸 주요 테이블
 
-| 테이블명     | 설명                              |
-|--------------|-----------------------------------|
-| `users`      | 사용자 정보 (Supabase Auth 연동) |
-| `products`   | 상품 정보                         |
-| `categories` | 카테고리 정보                     |
-| `sections`   | 중간 카테고리                     |
-| `subsections`| 세부 카테고리                     |
-| `subtabs`    | 세부 탭                           |
-| `cart_items` | 장바구니 아이템                   |
-| `orders`     | 주문 정보                         |
-| `order_items`| 주문 상세                         |
-| `reviews`    | 상품 리뷰                         |
-| `qna`        | 상품 QnA                          |
-
+| 테이블명      | 설명                             |
+| ------------- | -------------------------------- |
+| `users`       | 사용자 정보 (Supabase Auth 연동) |
+| `products`    | 상품 정보                        |
+| `categories`  | 카테고리 정보                    |
+| `sections`    | 중간 카테고리                    |
+| `subsections` | 세부 카테고리                    |
+| `subtabs`     | 세부 탭                          |
+| `cart_items`  | 장바구니 아이템                  |
+| `orders`      | 주문 정보                        |
+| `order_items` | 주문 상세                        |
+| `reviews`     | 상품 리뷰                        |
+| `qna`         | 상품 QnA                         |
 
 ## 🗺️ H-Mall Database ERD
 
@@ -147,119 +146,119 @@ src/
 
 ### 🛍️ `products`
 
-| Column      | Type      | Description                        |
-| ------------ | --------- | ----------------------------------- |
-| id           | uuid      | PK. Product ID                     |
-| name         | text      | Product name                       |
-| description  | text      | Product description                |
-| price        | numeric   | Base price                         |
-| category_id  | uuid      | FK. categories.id                  |
-| section_id   | uuid      | FK. sections.id                    |
-| subtab_id    | uuid      | FK. subtabs.id                     |
-| created_at   | timestamp | Created date                       |
+| Column      | Type      | Description         |
+| ----------- | --------- | ------------------- |
+| id          | uuid      | PK. Product ID      |
+| name        | text      | Product name        |
+| description | text      | Product description |
+| price       | numeric   | Base price          |
+| category_id | uuid      | FK. categories.id   |
+| section_id  | uuid      | FK. sections.id     |
+| subtab_id   | uuid      | FK. subtabs.id      |
+| created_at  | timestamp | Created date        |
 
 ---
 
 ### 🗂️ `categories`
 
-| Column | Type | Description              |
-| ------ | ---- | ------------------------- |
-| id     | uuid | PK. Category ID           |
-| code   | text | Unique category code      |
-| name   | text | Category name             |
+| Column | Type | Description          |
+| ------ | ---- | -------------------- |
+| id     | uuid | PK. Category ID      |
+| code   | text | Unique category code |
+| name   | text | Category name        |
 
 ### 🗂️ `sections`
 
-| Column      | Type | Description            |
-| ------------ | ---- | ----------------------- |
-| id           | uuid | PK. Section ID          |
-| category_id  | uuid | FK. categories.id       |
-| name         | text | Section name            |
+| Column      | Type | Description       |
+| ----------- | ---- | ----------------- |
+| id          | uuid | PK. Section ID    |
+| category_id | uuid | FK. categories.id |
+| name        | text | Section name      |
 
 ### 🗂️ `subtabs`
 
-| Column      | Type | Description            |
-| ------------ | ---- | ----------------------- |
-| id           | uuid | PK. Subtab ID          |
-| section_id   | uuid | FK. sections.id        |
-| name         | text | Subtab name            |
+| Column     | Type | Description     |
+| ---------- | ---- | --------------- |
+| id         | uuid | PK. Subtab ID   |
+| section_id | uuid | FK. sections.id |
+| name       | text | Subtab name     |
 
 ---
 
 ### 🛒 `cart_items`
 
-| Column      | Type      | Description                        |
-| ------------ | --------- | ----------------------------------- |
-| id           | uuid      | PK. Cart item ID                   |
-| user_id      | uuid      | FK. userinfo.id                    |
-| product_id   | uuid      | FK. products.id                    |
-| quantity     | int       | Quantity                           |
-| created_at   | timestamp | Created date                       |
+| Column     | Type      | Description      |
+| ---------- | --------- | ---------------- |
+| id         | uuid      | PK. Cart item ID |
+| user_id    | uuid      | FK. userinfo.id  |
+| product_id | uuid      | FK. products.id  |
+| quantity   | int       | Quantity         |
+| created_at | timestamp | Created date     |
 
 ---
 
 ### 🧾 `orders`
 
-| Column       | Type      | Description                        |
-| ------------- | --------- | ----------------------------------- |
-| id            | uuid      | PK. Order ID                       |
-| user_id       | uuid      | FK. userinfo.id                    |
-| total_amount  | numeric   | Total order amount                 |
-| status        | text      | Order status                       |
-| receiver      | text      | Receiver name                      |
-| phone         | text      | Receiver phone number              |
-| address       | text      | Receiver address                   |
-| created_at    | timestamp | Order date                         |
+| Column       | Type      | Description           |
+| ------------ | --------- | --------------------- |
+| id           | uuid      | PK. Order ID          |
+| user_id      | uuid      | FK. userinfo.id       |
+| total_amount | numeric   | Total order amount    |
+| status       | text      | Order status          |
+| receiver     | text      | Receiver name         |
+| phone        | text      | Receiver phone number |
+| address      | text      | Receiver address      |
+| created_at   | timestamp | Order date            |
 
 ### 📦 `order_items`
 
-| Column      | Type    | Description                          |
-| ------------ | ------- | ------------------------------------- |
-| id           | uuid    | PK. Order item ID                    |
-| order_id     | uuid    | FK. orders.id                        |
-| product_id   | uuid    | FK. products.id                      |
-| quantity     | int     | Quantity                             |
-| unit_price   | numeric | Price per unit at order time         |
+| Column     | Type    | Description                  |
+| ---------- | ------- | ---------------------------- |
+| id         | uuid    | PK. Order item ID            |
+| order_id   | uuid    | FK. orders.id                |
+| product_id | uuid    | FK. products.id              |
+| quantity   | int     | Quantity                     |
+| unit_price | numeric | Price per unit at order time |
 
 ---
 
 ### ⭐ `reviews`
 
-| Column      | Type      | Description                        |
-| ------------ | --------- | ----------------------------------- |
-| id           | uuid      | PK. Review ID                      |
-| user_id      | uuid      | FK. userinfo.id                    |
-| product_id   | uuid      | FK. products.id                    |
-| rating       | int       | Rating (1-5)                       |
-| content      | text      | Review content                     |
-| images       | text[]    | Array of image URLs                |
-| created_at   | timestamp | Created date                       |
+| Column     | Type      | Description         |
+| ---------- | --------- | ------------------- |
+| id         | uuid      | PK. Review ID       |
+| user_id    | uuid      | FK. userinfo.id     |
+| product_id | uuid      | FK. products.id     |
+| rating     | int       | Rating (1-5)        |
+| content    | text      | Review content      |
+| images     | text[]    | Array of image URLs |
+| created_at | timestamp | Created date        |
 
 ---
 
 ### ❓ `qnas`
 
-| Column      | Type      | Description                        |
-| ------------ | --------- | ----------------------------------- |
-| id           | uuid      | PK. QnA ID                         |
-| user_id      | uuid      | FK. userinfo.id                    |
-| product_id   | uuid      | FK. products.id                    |
-| question     | text      | QnA question                       |
-| answer       | text      | QnA answer                         |
-| is_private   | boolean   | Private question toggle            |
-| created_at   | timestamp | Created date                       |
+| Column     | Type      | Description             |
+| ---------- | --------- | ----------------------- |
+| id         | uuid      | PK. QnA ID              |
+| user_id    | uuid      | FK. userinfo.id         |
+| product_id | uuid      | FK. products.id         |
+| question   | text      | QnA question            |
+| answer     | text      | QnA answer              |
+| is_private | boolean   | Private question toggle |
+| created_at | timestamp | Created date            |
 
 ---
 
 ### 👤 `userinfo`
 
-| Column      | Type      | Description                        |
-| ------------ | --------- | ----------------------------------- |
-| id           | uuid      | PK. User ID                        |
-| email        | text      | User email                         |
-| name         | text      | User name                          |
-| phone        | text      | User phone                         |
-| created_at   | timestamp | Created date                       |
+| Column     | Type      | Description  |
+| ---------- | --------- | ------------ |
+| id         | uuid      | PK. User ID  |
+| email      | text      | User email   |
+| name       | text      | User name    |
+| phone      | text      | User phone   |
+| created_at | timestamp | Created date |
 
 ---
 
@@ -278,18 +277,17 @@ src/
 
 ## 🚦 Row Level Security (RLS) Policy
 
-| Table        | Public | Logged-In User        | Admin |
-| ------------- | ------ | --------------------- | ----- |
-| products      | ✅     | ✅                    | ✅    |
-| categories    | ✅     | ✅                    | ✅    |
-| sections      | ✅     | ✅                    | ✅    |
-| subtabs       | ✅     | ✅                    | ✅    |
-| cart_items    | ❌     | ✅ (본인만)           | ✅    |
-| orders        | ❌     | ✅ (본인만)           | ✅    |
-| order_items   | ❌     | ✅ (본인만)           | ✅    |
-| reviews       | ❌     | ✅ (본인만)           | ✅    |
-| qnas          | ❌     | ✅ (본인만)           | ✅    |
-| userinfo      | ❌     | ✅ (본인만)           | ✅    |
+| Table       | Public | Logged-In User | Admin |
+| ----------- | ------ | -------------- | ----- |
+| products    | ✅     | ✅             | ✅    |
+| categories  | ✅     | ✅             | ✅    |
+| sections    | ✅     | ✅             | ✅    |
+| subtabs     | ✅     | ✅             | ✅    |
+| cart_items  | ❌     | ✅ (본인만)    | ✅    |
+| orders      | ❌     | ✅ (본인만)    | ✅    |
+| order_items | ❌     | ✅ (본인만)    | ✅    |
+| reviews     | ❌     | ✅ (본인만)    | ✅    |
+| qnas        | ❌     | ✅ (본인만)    | ✅    |
+| userinfo    | ❌     | ✅ (본인만)    | ✅    |
 
 ---
-```
