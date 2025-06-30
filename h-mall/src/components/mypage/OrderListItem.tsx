@@ -83,6 +83,11 @@ export default function OrderListItem({ order, isCard }: Props) {
               disabled={!isReviewWritable}
               onClick={openReview}
             />
+            {!isReviewWritable && !alreadyReviewed && (
+              <p className="text-hr-c3 text-hr-gray-50 mt-2">
+                주문 후 7일 이내만 리뷰 작성이 가능합니다.
+              </p>
+            )}
           </div>
         </div>
         {first && (
@@ -143,6 +148,11 @@ export default function OrderListItem({ order, isCard }: Props) {
               disabled={!isReviewWritable}
               onClick={openReview}
             />
+            {!isReviewWritable && !alreadyReviewed && (
+              <p className="text-hr-c3 text-hr-gray-50 mt-1">
+                7일 이내만 작성 가능
+              </p>
+            )}
           </div>
         </td>
       </tr>
