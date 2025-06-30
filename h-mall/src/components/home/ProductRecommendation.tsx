@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { ROUTES } from '@/types/constants';
 import RightSvg from '@/assets/icons/chevron-right.svg';
+import ProductRecommendationSkeleton from '@/components/skeleton/ProductRecommendationSkeleton';
 
 type Props = {
   title: string;
@@ -15,7 +16,9 @@ export default function ProductRecommendation({ title, categorySlug }: Props) {
   const { data, isLoading, isError } = useFilteredProducts({ categorySlug });
   const router = useRouter();
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) {
+    return <ProductRecommendationSkeleton title={title} />;
+  }
   if (isError || !data) return <div>데이터를 불러올 수 없습니다.</div>;
 
   return (
