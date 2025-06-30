@@ -2,13 +2,18 @@
 
 import { useOrderList } from '@/hooks/useOrder';
 import OrderListItem from '@/components/mypage/OrderListItem';
+import OrderListSkeleton from '@/components/skeleton/OrderListSkeleton';
 
 export default function OrderList() {
   const { data: orders, isLoading, error } = useOrderList();
 
-  if (isLoading) return <p className="p-8 text-center">로딩 중…</p>;
+  if (isLoading) return <OrderListSkeleton rowCount={4} />;
   if (error)
-    return <p className="p-8 text-center text-red-500">에러가 발생했습니다.</p>;
+    return (
+      <p className="p-8 text-center text-hr-danger-default">
+        에러가 발생했습니다.
+      </p>
+    );
   if (!orders || orders.length === 0)
     return <p className="p-8 text-center">주문 내역이 없습니다.</p>;
 

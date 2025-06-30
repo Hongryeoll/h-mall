@@ -4,14 +4,19 @@ import { useMyQna } from '@/hooks/useQna';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { ROUTES } from '@/types/constants';
+import QnaListSkeleton from '@/components/skeleton/QnaListSkeleton';
 
 export default function QnaList() {
   const { data: qnas, isLoading, error } = useMyQna();
   const router = useRouter();
 
-  if (isLoading) return <p className="p-8 text-center">로딩 중…</p>;
+  if (isLoading) return <QnaListSkeleton rowCount={4} />;
   if (error)
-    return <p className="p-8 text-center text-red-500">에러가 발생했습니다.</p>;
+    return (
+      <p className="p-8 text-center text-hr-danger-default">
+        에러가 발생했습니다.
+      </p>
+    );
   if (!qnas || qnas.length === 0)
     return <p className="p-8 text-center">작성한 QnA가 없습니다.</p>;
 

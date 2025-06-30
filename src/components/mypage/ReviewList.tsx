@@ -2,11 +2,12 @@
 
 import { useMyReviews } from '@/hooks/useReview';
 import ReviewItem from '@/components/mypage/ReviewItem';
+import ReviewListSkeleton from '@/components/skeleton/ReviewListSkeleton';
 
 export default function ReviewList() {
   const { data: reviews, isLoading, error } = useMyReviews();
 
-  if (isLoading) return <p className="p-8 text-center">로딩 중…</p>;
+  if (isLoading) return <ReviewListSkeleton rowCount={4} />;
   if (error)
     return (
       <p className="p-8 text-center text-hr-danger-default">
