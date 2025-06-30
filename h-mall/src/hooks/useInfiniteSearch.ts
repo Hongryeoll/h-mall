@@ -5,7 +5,7 @@ import { createSupabaseBrowserClient } from '@/library/client/supabase';
 import { SearchProduct } from '@/types/products';
 import { useMemo } from 'react';
 
-const PAGE_SIZE = 3;
+const PAGE_SIZE = 1;
 
 export function useInfiniteSearch(keyword: string, sort: string) {
   const supabase = useMemo(() => createSupabaseBrowserClient(), []);

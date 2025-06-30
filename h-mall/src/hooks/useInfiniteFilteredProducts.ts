@@ -4,7 +4,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { createSupabaseBrowserClient } from '@/library/client/supabase';
 import { useMemo } from 'react';
 
-const PAGE_SIZE = 3;
+const PAGE_SIZE = 1;
 
 type Filters = {
   categorySlug?: string;

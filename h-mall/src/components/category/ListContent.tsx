@@ -27,12 +27,6 @@ export default function ListContent() {
 
   const products = data?.pages.flatMap((page) => page.products) ?? [];
 
-  const multiply = 20; // ✅ 데이터를 5배로 늘리기
-
-  const multipliedProducts = Array.from({ length: multiply }).flatMap(
-    () => products
-  );
-
   // 무한스크롤 트리거
   if (inView && hasNextPage) {
     fetchNextPage();
@@ -53,7 +47,7 @@ export default function ListContent() {
   return (
     <div className="max-w-screen-xl mx-auto">
       <ProductGrid
-        products={multipliedProducts}
+        products={products}
         onClick={(p) => {
           router.push(ROUTES.MALL_CATALOG(p.id));
         }}

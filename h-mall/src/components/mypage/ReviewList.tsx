@@ -8,13 +8,17 @@ export default function ReviewList() {
 
   if (isLoading) return <p className="p-8 text-center">로딩 중…</p>;
   if (error)
-    return <p className="p-8 text-center text-red-500">에러가 발생했습니다.</p>;
+    return (
+      <p className="p-8 text-center text-hr-danger-default">
+        에러가 발생했습니다.
+      </p>
+    );
   if (!reviews || reviews.length === 0)
     return <p className="p-8 text-center">작성한 리뷰가 없습니다.</p>;
 
   return (
     <section className="px-4 py-6">
-      <h1 className="text-2xl font-semibold mb-6">내가 작성한 리뷰</h1>
+      <h1 className="text-hr-h4 font-hr-semi-bold mb-6">내가 작성한 리뷰</h1>
 
       {/* 데스크탑 */}
       <div className="hidden sm:block">
