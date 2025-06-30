@@ -2,6 +2,7 @@ import '@/app/globals.css';
 import OverlayLogo from '@/components/loader/OverlayLogo';
 import PromotionBanner from '@/components/home/PromotionBanner';
 import ProductRecommendation from '@/components/home/ProductRecommendation';
+import Footer from '@/components/footer/Footer';
 
 export default async function Home() {
   return (
@@ -25,6 +26,7 @@ export default async function Home() {
             />
           </div>
         </div>
+        <Footer />
       </OverlayLogo>
     </>
   );
