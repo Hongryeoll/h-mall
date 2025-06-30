@@ -47,14 +47,24 @@ export default function SearchList({ keyword }: Props) {
       </div>
 
       {/* 상품 목록 */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 ">
+      <div
+        className={`
+          grid grid-cols-[repeat(auto-fill,minmax(170px,1fr))]
+          gap-3 sm:gap-4
+        `}
+      >
         {products.map((product) => (
           <div
             key={product.id}
-            className="space-y-2 cursor-pointer"
+            className={`
+              border border-hr-gray-20 rounded-md p-2
+              cursor-pointer hover:shadow-md
+              space-y-1
+            `}
             onClick={() => router.push(ROUTES.MALL_CATALOG(product.id))}
           >
-            <div className="relative w-full aspect-[3/4] bg-gray-100 rounded-lg overflow-hidden">
+            {/* 이미지 */}
+            <div className="relative w-full aspect-square bg-gray-100 rounded overflow-hidden">
               {product.product_images?.[0] && (
                 <Image
                   src={product.product_images[0]}
@@ -64,13 +74,19 @@ export default function SearchList({ keyword }: Props) {
                 />
               )}
             </div>
-            <div className="text-hr-b3 text-gray-500 truncate">
+
+            {/* 브랜드 */}
+            <div className="text-hr-c1 text-gray-500 truncate">
               {product.brand}
             </div>
-            <div className="text-hr-b2 font-semibold line-clamp-2">
+
+            {/* 상품명 */}
+            <div className="text-hr-b3 font-semibold line-clamp-2">
               {product.name}
             </div>
-            <div className="text-hr-b2 font-bold">
+
+            {/* 가격 */}
+            <div className="text-hr-b3 font-bold">
               {product.final_price?.toLocaleString()}원
             </div>
           </div>

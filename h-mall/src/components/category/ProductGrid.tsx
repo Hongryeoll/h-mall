@@ -38,9 +38,9 @@ export default function ProductGrid({ products, onClick }: Props) {
             className={`
               mb-5 pb-3 sm:mb-10
               bg-white rounded-lg hover:shadow-lg transition-colors
-              hover:border-hr-purple-default
+              hover:border-hr-purple-default border border-hr-gray-20
               cursor-pointer overflow-hidden
-              space-y-2
+              space-y-2 p-2
             `}
             onClick={() => onClick?.(product)}
           >
