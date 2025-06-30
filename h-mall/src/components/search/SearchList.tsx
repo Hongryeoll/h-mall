@@ -7,7 +7,11 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import HrSelectbox from '@/components/common/HrSelectbox';
 import { ROUTES } from '@/types/constants';
-import { ProductGridSkeleton } from '@/components/skeleton/ProductSkeletonComponents';
+import {
+  ProductGridSkeleton,
+  ProductCardSkeleton,
+} from '@/components/skeleton/ProductSkeletonComponents';
+import { productGridClass } from '@/assets/style/ProductGridStyle';
 
 type Props = {
   keyword: string;
@@ -46,6 +50,7 @@ export default function SearchList({ keyword }: Props) {
     }
   }, [inView, hasNextPage, fetchNextPage]);
 
+  // 초기 로딩 상태
   if (isLoading) {
     return (
       <div className="p-4">
@@ -53,16 +58,17 @@ export default function SearchList({ keyword }: Props) {
           <div className="text-hr-b2 text-hr-gray-50">검색 중...</div>
         </div>
 
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(170px,1fr))] gap-3 sm:gap-4">
-          {Array.from({ length: 8 }).map((_, idx) => (
-            <ProductGridSkeleton key={idx} />
-          ))}
-        </div>
+        <ProductGridSkeleton count={8} />
       </div>
     );
   }
-  if (isError) return <div className="p-4">에러가 발생했습니다.</div>;
-  if (!products.length) return <div className="p-4">검색 결과가 없습니다.</div>;
+
+  if (isError) {
+    return <div className="p-4">에러가 발생했습니다.</div>;
+  }
+  if (!products.length) {
+    return <div className="p-4">검색 결과가 없습니다.</div>;
+  }
 
   return (
     <div className="p-4">
@@ -80,7 +86,7 @@ export default function SearchList({ keyword }: Props) {
       </div>
 
       {/* 상품 목록 */}
-      <div className="grid grid-cols-[repeat(auto-fill,minmax(170px,1fr))] gap-3 sm:gap-4">
+      <div className={productGridClass}>
         {products.map((product) => (
           <div
             key={product.id}
@@ -106,12 +112,20 @@ export default function SearchList({ keyword }: Props) {
             </div>
           </div>
         ))}
+
+        {/* 로딩 스켈레톤 */}
+        {isFetchingNextPage &&
+          Array.from({ length: 8 }).map((_, idx) => (
+            <ProductCardSkeleton key={`skeleton-${idx}`} />
+          ))}
       </div>
 
       {/* 무한스크롤 트리거 */}
       {hasNextPage && (
         <div ref={ref} className="mt-6 text-center">
-          {isFetchingNextPage ? '불러오는 중...' : '스크롤하여 더 보기'}
+          <div className="text-center text-sm text-hr-gray-50">
+            {isFetchingNextPage ? ' ' : '스크롤하여 더 보기'}
+          </div>
         </div>
       )}
     </div>
