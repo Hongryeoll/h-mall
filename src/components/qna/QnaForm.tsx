@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { useUserContext } from '@/components/provider/UserProvider';
+import { useUserStore } from '@/store/user/useUserStore';
 import { HrInput } from '@/components/common/HrInput';
 import { HrTextarea } from '@/components/common/HrTextarea';
 import HrSelectbox from '@/components/common/HrSelectbox';
@@ -29,7 +29,7 @@ export default function QnaForm({
   onSubmit,
   onCancel,
 }: Props) {
-  const { user } = useUserContext();
+  const user = useUserStore((state) => state.user);
 
   const methods = useForm<QnaFormValues>({
     defaultValues: {

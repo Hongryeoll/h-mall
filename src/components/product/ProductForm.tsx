@@ -10,8 +10,9 @@ import BasicForm from '@/components/product/BasicForm';
 import PriceForm from '@/components/product/PriceForm';
 import DetailForm from '@/components/product/DetailForm';
 import CategoryForm from '@/components/product/CategoryForm';
-import { useUserContext } from '@/components/provider/UserProvider';
+
 import { useModal } from '@/components/provider/ModalProvider';
+import { useUserStore } from '@/store/user/useUserStore';
 
 type TabKey = 'category' | 'basic' | 'price' | 'detail' | 'ship';
 
@@ -24,7 +25,7 @@ export default function ProductForm({
 }) {
   const supabase = createSupabaseBrowserClient();
   const queryClient = useQueryClient();
-  const { role } = useUserContext();
+  const role = useUserStore((state) => state.user?.role);
   const methods = useForm<ProductFormProps>();
   const { showModal, closeModal } = useModal();
   const {

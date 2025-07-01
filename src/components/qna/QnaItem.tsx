@@ -7,7 +7,7 @@ import {
   QnaDeleteInput,
   QnaAnswerInput,
 } from '@/types/qna';
-import { UserProfile } from '@/components/provider/UserProvider';
+import { UserProfile } from '@/types/user';
 import { useModal } from '@/components/provider/ModalProvider';
 import LockSVG from '@/assets/icons/lock.svg';
 

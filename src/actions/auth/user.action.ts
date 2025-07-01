@@ -1,4 +1,5 @@
-import { createServerSupabaseClient } from "@/library/supabase";
+import { createServerSupabaseClient } from '@/library/supabase';
+import { UserProfile } from '@/types/user';
 
 export const getUser = async ({ serverComponent = false }) => {
   const supabase = await createServerSupabaseClient(serverComponent);
@@ -8,9 +9,22 @@ export const getUser = async ({ serverComponent = false }) => {
 
 export const getProfileById = async ({
   serverComponent = false,
-  userId = "",
-}) => {
+  userId = '',
+}): Promise<UserProfile | null> => {
   const supabase = await createServerSupabaseClient(serverComponent);
-  const profile = await supabase.from("userinfo").select("*").eq("id", userId);
-  return profile?.data?.[0];
+  const { data, error } = await supabase
+    .from('userinfo')
+    .select('id, email, role, nickname, created_at')
+    .eq('id', userId)
+    .single();
+
+  if (error || !data) {
+    return null;
+  }
+
+  return {
+    id: data.id,
+    email: data.email,
+    role: data.role,
+  };
 };

@@ -2,7 +2,7 @@ import { cookies } from 'next/headers';
 import { createServerClient } from '@supabase/ssr';
 import { NextRequest, NextResponse } from 'next/server';
 import type { Database } from '@/types/supabase';
-import type { CookieSerializeOptions } from 'cookie';
+import type { SerializeOptions as CookieSerializeOptions } from 'cookie';
 
 type UserInfo = {
   id: string;

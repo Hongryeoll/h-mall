@@ -1,17 +1,18 @@
 'use client';
 
 import Image from 'next/image';
-import { useUserContext } from '@/components/provider/UserProvider';
+
 import StartSvg from '@/assets/icons/star.svg';
 import { ReviewItemType } from '@/types/review';
 import { useState } from 'react';
+import { useUserStore } from '@/store/user/useUserStore';
 
 type Props = {
   review: ReviewItemType;
 };
 
 export default function ReviewSectionItem({ review }: Props) {
-  const { user } = useUserContext();
+  const user = useUserStore((state) => state.user);
   const isMyReview = user?.id === review.user_id;
   const [isExpanded, setIsExpanded] = useState(false);
   const hasImages = Array.isArray(review.images) && review.images.length > 0;

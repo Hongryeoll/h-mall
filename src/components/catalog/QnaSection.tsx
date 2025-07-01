@@ -2,12 +2,12 @@
 
 import { useState } from 'react';
 import { useQna } from '@/hooks/useQna';
-import { useUserContext } from '@/components/provider/UserProvider';
 import QnaForm from '@/components/qna/QnaForm';
 import QnaItem from '@/components/qna/QnaItem';
 import { QnaSectionItemSkeleton } from '@/components/skeleton/QnaSectionItemSkeleton';
 import HrPagination from '@/components/common/HrPagination';
 import { ProductFormProps } from '@/types/products';
+import { useUserStore } from '@/store/user/useUserStore';
 
 type Props = {
   id: string;
@@ -15,7 +15,8 @@ type Props = {
 };
 
 export default function QnaSection({ id, product }: Props) {
-  const { user, loading: userLoading } = useUserContext();
+  const user = useUserStore((state) => state.user);
+  const userLoading = useUserStore((state) => state.loading);
   const { qnas, isLoading, addQna, updateQna, deleteQna, answerQna } = useQna(
     product.id
   );

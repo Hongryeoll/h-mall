@@ -10,10 +10,10 @@ import LoginSVG from '@/assets/icons/login.svg';
 import LogoutSVG from '@/assets/icons/logout.svg';
 import CogwheelSVG from '@/assets/icons/cogwhell.svg';
 import { createSupabaseBrowserClient } from '@/library/client/supabase';
-import { useUserContext } from '@/components/provider/UserProvider';
 import { HrHeaderSkeleton } from '@/components/skeleton/HrHeaderSkeleton';
 import SearchModal from '@/components/search/SearchModal';
 import { useState } from 'react';
+import { useUserStore } from '@/store/user/useUserStore';
 
 type Props = {
   className?: string;
@@ -27,7 +27,9 @@ export const HrHeader = ({
   isHiddenLeftIcon = false,
 }: Props) => {
   const router = useRouter();
-  const { user, role, loading } = useUserContext();
+  const user = useUserStore((state) => state.user);
+  const loading = useUserStore((state) => state.loading);
+  const role = useUserStore((state) => state.user?.role);
   const [openSearch, setOpenSearch] = useState(false);
 
   if (loading) {
@@ -122,7 +124,7 @@ export const HrHeader = ({
 
         {(role === 'admin' || role === 'readAdmin') && (
           <span
-            className="inline-flex items-center gap-1 p-2 cursor-pointer text-red-600 font-semibold"
+            className="inline-flex items-center gap-1 p-2 cursor-pointer text-hr-danger-default font-hr-semi-bold"
             onClick={() => router.push('/admin')}
           >
             <CogwheelSVG width={16} height={16} className="text-hr-gray-80" />

@@ -1,10 +1,11 @@
 'use client';
 
-import { useUserContext } from '@/components/provider/UserProvider';
 import UserProfileSkeleton from '@/components/skeleton/UserProfileSkeleton';
+import { useUserStore } from '@/store/user/useUserStore';
 
 export default function UserProfile() {
-  const { user, loading } = useUserContext();
+  const user = useUserStore((state) => state.user);
+  const loading = useUserStore((state) => state.loading);
 
   if (loading) {
     return <UserProfileSkeleton />;
