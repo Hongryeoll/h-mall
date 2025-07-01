@@ -1,7 +1,7 @@
 'use client';
 
 import { useForm } from 'react-hook-form';
-import { useModal } from '@/components/provider/ModalProvider';
+import { useModalStore } from '@/store/modal/useModalStore';
 
 type Props = {
   initialValue?: string;
@@ -17,7 +17,7 @@ export default function AnswerForm({
   const { register, handleSubmit, reset } = useForm({
     defaultValues: { answer: initialValue },
   });
-  const { showModal } = useModal();
+  const showModal = useModalStore((state) => state.showModal);
 
   const handleFormSubmit = (data: { answer: string }) => {
     if (data.answer.trim().length < 5) {

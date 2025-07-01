@@ -8,7 +8,7 @@ import {
   QnaAnswerInput,
 } from '@/types/qna';
 import { UserProfile } from '@/types/user';
-import { useModal } from '@/components/provider/ModalProvider';
+import { useModalStore } from '@/store/modal/useModalStore';
 import LockSVG from '@/assets/icons/lock.svg';
 
 type Props = {
@@ -34,7 +34,7 @@ export default function QnaItem({
 
   const isPrivate = qna.is_private;
   const canView = !isPrivate || isMyQna || isAdmin;
-  const { showModal } = useModal();
+  const showModal = useModalStore((state) => state.showModal);
 
   const previewLength = 30;
   const preview = qna.question.slice(0, previewLength);

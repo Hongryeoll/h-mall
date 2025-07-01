@@ -16,7 +16,7 @@ import { createSupabaseBrowserClient } from '@/library/client/supabase';
 import HrStarRating from '@/components/common/HrStartRating';
 import { HrTextarea } from '@/components/common/HrTextarea';
 import { useForm, FormProvider, useWatch } from 'react-hook-form';
-import { useModal } from '@/components/provider/ModalProvider';
+import { useModalStore } from '@/store/modal/useModalStore';
 import Image from 'next/image';
 
 interface Props {
@@ -49,7 +49,8 @@ export default function ReviewForm({
 }: Props) {
   const router = useRouter();
   const supabase = createSupabaseBrowserClient();
-  const { showModal, closeModal } = useModal();
+  const showModal = useModalStore((state) => state.showModal);
+  const closeModal = useModalStore((state) => state.closeModal);
 
   const { reviews, addReview, updateReview, updateReviewedCol } = useReview(
     product.id

@@ -9,7 +9,7 @@ import Image from 'next/image';
 import { HrButton } from '@/components/common/HrButton';
 import HrSelectbox from '@/components/common/HrSelectbox';
 import { ProductFormProps } from '@/types/products';
-import { useModal } from '@/components/provider/ModalProvider';
+import { useModalStore } from '@/store/modal/useModalStore';
 import { ROUTES } from '@/types/constants';
 
 type Props = {
@@ -36,7 +36,8 @@ export default function InfoSection({
   },
 }: Props) {
   const router = useRouter();
-  const { showModal, closeModal } = useModal();
+  const showModal = useModalStore((state) => state.showModal);
+  const closeModal = useModalStore((state) => state.closeModal);
   const { addItem } = useCart();
   const [sizeValue, setSizeValue] = useState<string | null>(null);
   const [selectedSizes, setSelectedSizes] = useState<SelectedOption[]>([]);

@@ -7,13 +7,13 @@ import CartTable from '@/components/cart/CartTable';
 import ActionButton from '@/components/cart/ActionButton';
 import Summary from '@/components/cart/Summary';
 import { useCart } from '@/hooks/useCart';
-import { useModal } from '@/components/provider/ModalProvider';
+import { useModalStore } from '@/store/modal/useModalStore';
 import { ROUTES } from '@/types/constants';
 import { HrButton } from '../common/HrButton';
 
 export default function CartInfo() {
   const router = useRouter();
-  const { showModal } = useModal();
+  const showModal = useModalStore((state) => state.showModal);
   const { items = [], isLoading, removeItem, updateItem } = useCart();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 

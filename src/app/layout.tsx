@@ -9,7 +9,7 @@ import './globals.css';
 import { HrHeader } from '@/components/common/HrHeader';
 import HrNav from '@/components/common/HrNav';
 import QueryProvider from '@/components/provider/QueryProvider';
-import { ModalProvider } from '@/components/provider/ModalProvider';
+import ModalProvider from '@/components/provider/ModalProvider';
 import UserStoreInitializer from '@/components/provider/UserStoreInitializer';
 
 const notoSansKR = Noto_Sans_KR({

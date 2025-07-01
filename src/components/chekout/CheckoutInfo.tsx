@@ -11,11 +11,11 @@ import OrderSummary from '@/components/chekout/OrderSummary';
 import { useOrder } from '@/hooks/useOrder';
 import { CheckoutFormValues } from '@/types/checkout';
 import { ROUTES } from '@/types/constants';
-import { useModal } from '@/components/provider/ModalProvider';
+import { useModalStore } from '@/store/modal/useModalStore';
 
 export default function CheckoutInfo() {
   const router = useRouter();
-  const { showModal } = useModal();
+  const showModal = useModalStore((state) => state.showModal);
   const { items = [] } = useCart();
   const searchParams = useSearchParams();
   const searchIds = searchParams.get('ids')?.split(',') ?? [];

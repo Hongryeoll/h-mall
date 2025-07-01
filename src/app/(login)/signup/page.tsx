@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { createSupabaseBrowserClient } from '@/library/client/supabase';
 import { useState } from 'react';
-import { useModal } from '@/components/provider/ModalProvider';
+import { useModalStore } from '@/store/modal/useModalStore';
 
 type FormData = {
   email: string;
@@ -16,7 +16,7 @@ export default function SignUpPage() {
   const supabase = createSupabaseBrowserClient();
 
   const [serverError, setServerError] = useState('');
-  const { showModal } = useModal();
+  const showModal = useModalStore((state) => state.showModal);
   const {
     register,
     handleSubmit,

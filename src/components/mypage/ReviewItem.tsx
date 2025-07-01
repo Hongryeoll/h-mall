@@ -7,7 +7,7 @@ import { ReviewItemType } from '@/types/review';
 import HrStarRating from '@/components/common/HrStartRating';
 import ReviewForm from '@/components/mypage/ReviewForm';
 import { useReview } from '@/hooks/useReview';
-import { useModal } from '@/components/provider/ModalProvider';
+import { useModalStore } from '@/store/modal/useModalStore';
 
 type Props = {
   review: ReviewItemType;
@@ -15,7 +15,8 @@ type Props = {
 };
 
 export default function ReviewItem({ review, isCard }: Props) {
-  const { showModal, closeModal } = useModal();
+  const showModal = useModalStore((state) => state.showModal);
+  const closeModal = useModalStore((state) => state.closeModal);
   const [isModalOpen, setModalOpen] = useState(false);
   const { deleteReview } = useReview(review.product_id);
 
