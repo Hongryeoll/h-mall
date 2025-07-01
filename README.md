@@ -12,6 +12,7 @@ Next.js + Supabase 기반의 쇼핑몰 프로젝트입니다.
 - Next.js App Router 기반의 풀스택 쇼핑몰
 - Supabase를 활용한 인증, 데이터베이스, 스토리지, 서버리스 API 처리
 - React Query, React Hook Form 기반의 상태 관리와 폼 처리
+- Zustand 기반 클라이언트 상태 관리 (모달, 유저 상태 등)
 - 일반 사용자와 관리자(Admin) 계정 구분 및 미들웨어 기반 권한 처리
 - Vercel을 통한 프론트 + 백엔드 통합 클라우드 배포
 
@@ -31,6 +32,8 @@ Next.js + Supabase 기반의 쇼핑몰 프로젝트입니다.
   - 서버 상태 및 캐싱
 - **React Hook Form**
   - 폼 상태 및 검증
+- **Zustand**
+  - 클라이언트 상태 관리 (모달 상태, 유저 상태 등)
 
 ---
 
@@ -68,6 +71,7 @@ Next.js + Supabase 기반의 쇼핑몰 프로젝트입니다.
 
 - Supabase 기반 회원가입/로그인/로그아웃
 - 미들웨어를 통한 접근 제어 (관리자/일반 사용자 구분)
+- **Zustand 기반 클라이언트 상태 관리로 유저 정보 전역 상태 처리**
 
 ### 📦 기타
 
@@ -75,6 +79,31 @@ Next.js + Supabase 기반의 쇼핑몰 프로젝트입니다.
 - 이미지 스토리지 연동 (Supabase Storage)
 - 서버 액션(Server Actions) 기반 API 처리
 - React Query 기반 서버 상태 관리 및 캐싱
+- Zustand를 활용한 글로벌 상태 관리
+
+---
+
+## ✅ 상태 관리 전략
+
+- **서버 상태**
+  - React Query
+    - API 데이터와 서버 상태 캐싱 및 동기화
+- **클라이언트 상태**
+  - Zustand
+    - 로그인 유저 상태 관리 (`useUserStore`)
+    - 모달 상태 관리 (`useModalStore`)
+    - UI 인터랙션 및 클라이언트 전용 상태 간소화
+
+---
+
+## 🚀 배포 및 운영
+
+- **Vercel**
+  - 프론트엔드 + 서버리스 API 통합 배포
+- **Supabase**
+  - 데이터베이스, 인증, 스토리지, Edge Functions
+
+---
 
 ## 📂 폴더 구조 (Folder Structure)
 
@@ -94,6 +123,7 @@ src/
 │   └── not-found.tsx  # 404 처리
 ├── assets/            # 아이콘, 폰트, 스타일 등 정적 자산
 ├── components/        # UI 컴포넌트
+├── stores/            # Zustand 상태 관리
 ├── data/              # 키워드 데이터, 메뉴 데이터
 ├── hooks/             # 커스텀 훅 (useCart, useOrder 등)
 ├── library/           # Supabase 클라이언트 및 유틸
