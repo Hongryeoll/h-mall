@@ -795,7 +795,6 @@ export type Database = {
         Args:
           | { keyword: string }
           | { keyword: string; sort: string; page: number; page_size: number }
-          | { keyword: string; sort?: string }
         Returns: {
           id: string
           name: string
