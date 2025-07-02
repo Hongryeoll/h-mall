@@ -79,12 +79,7 @@ export default function ProductInfo() {
     setEditingProductId(null);
   };
 
-  if (isLoading)
-    return (
-      <div>
-        <ProductInfoSkeleton />
-      </div>
-    );
+  if (isLoading) return <ProductInfoSkeleton />;
   if (!products) return <div>데이터가 없습니다</div>;
 
   return (
