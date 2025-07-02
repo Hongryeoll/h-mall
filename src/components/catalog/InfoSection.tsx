@@ -11,6 +11,7 @@ import HrSelectbox from '@/components/common/HrSelectbox';
 import { ProductFormProps } from '@/types/products';
 import { useModalStore } from '@/store/modal/useModalStore';
 import { ROUTES } from '@/types/constants';
+import { useUserStore } from '@/store/user/useUserStore';
 
 type Props = {
   product: ProductFormProps;
@@ -36,6 +37,7 @@ export default function InfoSection({
   },
 }: Props) {
   const router = useRouter();
+  const user = useUserStore((state) => state.user);
   const showModal = useModalStore((state) => state.showModal);
   const closeModal = useModalStore((state) => state.closeModal);
   const { addItem } = useCart();
@@ -47,6 +49,11 @@ export default function InfoSection({
   }));
 
   const handleBuyNow = () => {
+    if (!user) {
+      router.push(ROUTES.LOGIN);
+      return;
+    }
+
     if (selectedSizes.length === 0) {
       showModal({
         title: '옵션을 선택해주세요',
@@ -87,6 +94,11 @@ export default function InfoSection({
   );
 
   const handleAddToCart = () => {
+    if (!user) {
+      router.push(ROUTES.LOGIN);
+      return;
+    }
+
     if (selectedSizes.length === 0) {
       showModal({
         title: '옵션을 선택해주세요',
