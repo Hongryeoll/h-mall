@@ -11,6 +11,7 @@ import { useCategoryCascade } from '@/hooks/useCategoryCascade';
 import HrSelectbox from '@/components/common/HrSelectbox';
 import HrPagination from '@/components/common/HrPagination';
 import { useProducts } from '@/hooks/useProducts';
+import ProductInfoSkeleton from '@/components/skeleton/ProductInfoSkeleton';
 
 export default function ProductInfo() {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -78,7 +79,12 @@ export default function ProductInfo() {
     setEditingProductId(null);
   };
 
-  if (isLoading) return <div>로딩 중...</div>;
+  if (isLoading)
+    return (
+      <div>
+        <ProductInfoSkeleton />
+      </div>
+    );
   if (!products) return <div>데이터가 없습니다</div>;
 
   return (

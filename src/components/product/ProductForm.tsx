@@ -13,7 +13,7 @@ import CategoryForm from '@/components/product/CategoryForm';
 import { useModalStore } from '@/store/modal/useModalStore';
 import { useUserStore } from '@/store/user/useUserStore';
 
-type TabKey = 'category' | 'basic' | 'price' | 'detail' | 'ship';
+type TabKey = 'category' | 'basic' | 'price' | 'detail';
 
 export default function ProductForm({
   productId,
@@ -43,7 +43,7 @@ export default function ProductForm({
   const [activeTab, setActiveTab] = useState<
     'category' | 'basic' | 'price' | 'detail' | 'ship'
   >('category');
-  const tabList: TabKey[] = ['category', 'basic', 'price', 'detail', 'ship'];
+  const tabList: TabKey[] = ['category', 'basic', 'price', 'detail'];
 
   const makePreviews = (files: (File | string)[]): string[] =>
     files.map((f) => (typeof f === 'string' ? f : URL.createObjectURL(f)));
@@ -272,7 +272,7 @@ export default function ProductForm({
                   basic: '기본 정보',
                   price: '가격 정보',
                   detail: '상세 설명',
-                  ship: '배송',
+                  // ship: '배송',
                 }[tab]
               }
             </button>
