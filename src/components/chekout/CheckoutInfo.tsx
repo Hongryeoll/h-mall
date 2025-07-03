@@ -9,17 +9,23 @@ import PaymentMethods from '@/components/chekout/PaymentMethods';
 import ProductInfo from '@/components/chekout/ProductInfo';
 import OrderSummary from '@/components/chekout/OrderSummary';
 import { useOrder } from '@/hooks/useOrder';
-import { CheckoutFormValues } from '@/types/checkout';
+import { CheckoutFormValues, CheckoutItem } from '@/types/checkout';
 import { ROUTES } from '@/types/constants';
 import { useModalStore } from '@/store/modal/useModalStore';
+import { useBuyNowStore } from '@/store/order/useBuyNowStore';
+import {
+  convertCartItemsToCheckoutItems,
+  convertBuyNowItemsToCheckoutItems,
+} from '@/utils/convertToCheckoutItems';
 
 export default function CheckoutInfo() {
   const router = useRouter();
   const showModal = useModalStore((state) => state.showModal);
   const { items = [] } = useCart();
+  const buyNowItems = useBuyNowStore((state) => state.items);
   const searchParams = useSearchParams();
   const searchIds = searchParams.get('ids')?.split(',') ?? [];
-  const selectedItems = items.filter(
+  const cartItems = items.filter(
     (item) => searchIds.includes(item.id) || searchIds.includes(item.product.id)
   );
   const [agreements, setAgreements] = useState({
@@ -27,25 +33,40 @@ export default function CheckoutInfo() {
     agree2: false,
     agree3: false,
   });
+  const isBuyNow = buyNowItems.length > 0;
+  const checkoutItems: CheckoutItem[] = isBuyNow
+    ? convertBuyNowItemsToCheckoutItems(buyNowItems)
+    : convertCartItemsToCheckoutItems(cartItems);
 
-  const itemsInput = selectedItems.map((item) => ({
-    id: item.id,
-    product_id: item.product.id,
-    size: item.size,
-    quantity: item.quantity,
-    price: item.product.final_price,
-    discount_rate: item.product.discount_rate,
-  }));
+  const itemsInput = isBuyNow
+    ? buyNowItems.map((item) => ({
+        id: item.product_id,
+        product_id: item.product_id,
+        size: item.size,
+        quantity: item.quantity,
+        price: item.price,
+        discount_rate: item.discount_rate,
+      }))
+    : cartItems.map((item) => ({
+        id: item.id,
+        product_id: item.product.id,
+        size: item.size,
+        quantity: item.quantity,
+        price: item.product.final_price,
+        discount_rate: item.product.discount_rate,
+      }));
 
   const totalProductPrice = itemsInput.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   );
+
   const adminDiscount = itemsInput.reduce(
     (sum, item) =>
       sum + Math.floor(item.price * (item.discount_rate / 100)) * item.quantity,
     0
   );
+
   const shippingFee = totalProductPrice >= 50000 ? 0 : 3000;
   const totalPayable = totalProductPrice + shippingFee - adminDiscount;
 
@@ -139,9 +160,11 @@ export default function CheckoutInfo() {
       receipt_type: data.receipt_type ?? null,
       receipt_phone: data.receipt_phone ?? null,
     };
-
     createOrder.mutate(payload, {
       onSuccess: (order) => {
+        if (isBuyNow) {
+          useBuyNowStore.getState().clearItems();
+        }
         showModal({
           title: '주문완료',
           description: '주문이 정상적으로 완료되었습니다.',
@@ -175,9 +198,9 @@ export default function CheckoutInfo() {
             <PaymentMethods />
           </div>
           <div className="bg-white p-6 border rounded space-y-6">
-            <ProductInfo items={selectedItems} />
+            <ProductInfo items={checkoutItems} />
             <OrderSummary
-              items={selectedItems}
+              items={checkoutItems}
               totalProductPrice={totalProductPrice}
               adminDiscount={adminDiscount}
               shippingFee={shippingFee}

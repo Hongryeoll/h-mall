@@ -6,6 +6,7 @@ import CheckCircleSVG from '@/assets/icons/check-circle.svg';
 import { HrButton } from '@/components/common/HrButton';
 import { useOrderDetail } from '@/hooks/useOrder';
 import Image from 'next/image';
+import { ROUTES } from '@/types/constants';
 
 export default function Confirmed() {
   const params = useParams();
@@ -240,7 +241,7 @@ export default function Confirmed() {
         <HrButton
           text="주문 내역 보기"
           type="line"
-          onClick={() => router.push('/orders')}
+          onClick={() => router.push(ROUTES.MALL_MYPAGE_ORDERS)}
           className="flex-1"
         />
         <HrButton

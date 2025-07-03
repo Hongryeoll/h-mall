@@ -1,5 +1,3 @@
-import type { CartItemProps } from '@/types/cart';
-
 export interface OrderItemInput {
   id: string;
   product_id: string;
@@ -121,7 +119,7 @@ export interface AgreementState {
 }
 
 export interface CheckoutOrderSummaryProps {
-  items: CartItemProps[];
+  items: CheckoutItem[];
   totalProductPrice: number;
   adminDiscount: number;
   shippingFee: number;
@@ -130,4 +128,16 @@ export interface CheckoutOrderSummaryProps {
   totalPayable: number;
   agreements: AgreementState;
   setAgreements: React.Dispatch<React.SetStateAction<AgreementState>>;
+}
+
+export interface CheckoutItem {
+  id: string;
+  product_id: string;
+  size: string;
+  quantity: number;
+  price: number;
+  discount_rate: number;
+  product_name: string;
+  brand: string;
+  product_images: string[];
 }

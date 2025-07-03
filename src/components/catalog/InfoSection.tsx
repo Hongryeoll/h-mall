@@ -12,6 +12,7 @@ import { ProductFormProps } from '@/types/products';
 import { useModalStore } from '@/store/modal/useModalStore';
 import { ROUTES } from '@/types/constants';
 import { useUserStore } from '@/store/user/useUserStore';
+import { useBuyNowStore } from '@/store/order/useBuyNowStore';
 
 type Props = {
   product: ProductFormProps;
@@ -38,6 +39,7 @@ export default function InfoSection({
 }: Props) {
   const router = useRouter();
   const user = useUserStore((state) => state.user);
+  const { setItems } = useBuyNowStore();
   const showModal = useModalStore((state) => state.showModal);
   const closeModal = useModalStore((state) => state.closeModal);
   const { addItem } = useCart();
@@ -61,7 +63,19 @@ export default function InfoSection({
       });
       return;
     }
-    router.push(`${ROUTES.MALL_CHECKOUT}?ids=${id}`);
+    const buyNowItems = selectedSizes.map((opt) => ({
+      product_id: id,
+      product_name: name,
+      brand: brand ?? '',
+      product_images: product_images ?? [],
+      size: opt.size,
+      quantity: opt.quantity,
+      price: opt.price,
+      discount_rate: discount_rate ?? 0,
+    }));
+
+    setItems(buyNowItems);
+    router.push(ROUTES.MALL_CHECKOUT);
   };
 
   const handleSizeSelect = (selectedSize: string) => {

@@ -107,6 +107,7 @@ export function useOrder() {
         quantity: item.quantity,
         price: item.price,
         size: item.size,
+        user_id: user.id,
       }));
 
       const { error: itemError } = await supabase
