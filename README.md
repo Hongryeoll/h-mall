@@ -19,7 +19,7 @@ Next.js + Supabase 기반의 쇼핑몰 프로젝트입니다.
 - Next.js App Router 기반의 풀스택 쇼핑몰
 - Supabase를 활용한 인증, 데이터베이스, 스토리지, 서버리스 API 처리
 - React Query, React Hook Form 기반의 상태 관리와 폼 처리
-- Zustand 기반 클라이언트 상태 관리 (모달, 유저 상태 등)
+- Zustand 기반 클라이언트 상태 관리 (모달, 유저, 바로구매 상품 상태 등)
 - 일반 사용자와 관리자(Admin) 계정 구분 및 미들웨어 기반 권한 처리
 - Vercel을 통한 프론트 + 백엔드 통합 클라우드 배포
 
