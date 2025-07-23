@@ -2,6 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:active {
+  -webkit-text-fill-color: #9ca3af !important;
+  caret-color: #9ca3af;
+  transition: background-color 9999s ease-out, color 9999s ease-out;
+}
+
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #1f2937 !important;
+  caret-color: #1f2937;
+  transition: background-color 9999s ease-out, color 9999s ease-out;
+}
+
 .swiper-button-prev,
 .swiper-button-next {
   color: #732dce !important;
