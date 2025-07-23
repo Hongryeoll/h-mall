@@ -118,7 +118,7 @@ export default function SignUpPage() {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="bg-hr-gray-50 text-white px-4 py-2 rounded"
+        className="bg-hr-purple-default text-white px-4 py-2 rounded"
       >
         {isSubmitting ? '처리 중...' : '가입하기'}
       </button>
