@@ -246,7 +246,7 @@ export default function InfoSection({
               onChange={handleSizeSelect}
               options={ClothesSizeOptions}
               placeholder="사이즈 선택"
-              className="w-full z-50"
+              className="w-full z-40"
             />
           </div>
 
