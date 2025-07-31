@@ -100,6 +100,7 @@ Next.js + Supabase 기반의 쇼핑몰 프로젝트입니다.
   - Zustand
     - 로그인 유저 상태 관리 (`useUserStore`)
     - 모달 상태 관리 (`useModalStore`)
+    - 바로구매 상품 상태 관리 (`useModalStore`)
     - UI 인터랙션 및 클라이언트 전용 상태 간소화
 
 ---
