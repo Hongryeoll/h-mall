@@ -58,6 +58,10 @@ Next.js + Supabase 기반의 쇼핑몰 프로젝트입니다.
 
 ## ✨ 주요 기능 (Features)
 
+### ## 🔐 RBAC 기반 통합 인증/인가 아키텍처 (Next.js Middleware + Supabase Auth + RLS)
+
+![RBAC architecture](image.png)
+
 ### 🛍️ 사용자 (User)
 
 - 상품 카테고리 및 상세 페이지 탐색
@@ -102,6 +106,41 @@ Next.js + Supabase 기반의 쇼핑몰 프로젝트입니다.
     - 모달 상태 관리 (`useModalStore`)
     - 바로구매 상품 상태 관리 (`useModalStore`)
     - UI 인터랙션 및 클라이언트 전용 상태 간소화
+
+---
+
+## 🧠 렌더링 전략
+
+### **🛒 MALL 섹션**
+
+| **경로**                            | **렌더링 방식**          | **선택 이유 및 설명**                                                        |
+| ----------------------------------- | ------------------------ | ---------------------------------------------------------------------------- |
+| /mall/search                        | **SSR (Dynamic)**        | force-dynamic 설정. 실시간 검색 결과 반영 필수. 정적 캐싱 부적절.            |
+| /mall/order/cart                    | **CSR**                  | 로그인 유저별 장바구니. React Query 혹은 localStorage 기반 상태. SEO 불필요. |
+| /mall/order/checkout                | **SSR (Dynamic)**        | 민감한 결제정보, 사용자 맞춤 배송/포인트 정보 포함. 서버에서 직접 렌더링.    |
+| /mall/order/checkout/confirmed/[id] | **SSR (Dynamic Route)**  | 주문 완료 ID별 데이터 표시. 각 사용자별 결과가 달라 서버 렌더링 필요.        |
+| /mall/catalog/[id]                  | **SSR**                  | 상품 상세 정보 fetch 및 SEO 최적화. 클라 컴포넌트 포함해도 SSR 가능.         |
+| /mall/category                      | **SSG**                  | 정적 페이지로 빌드 가능. SEO에는 긍정적, 실시간 데이터 없음.                 |
+| /mall/category/list                 | **SSG + CSR (Suspense)** | 필터링/탭은 CSR로 처리, 페이지 구조는 SSG. UX + 성능 최적 조합.              |
+| /mall/mypage                        | **SSR**                  | 로그인 사용자 기반 fetch. React Server Component로 SSR 처리.                 |
+| /mall/mypage/orders                 | **CSR**                  | 주문 내역은 로그인 후 사용자만 접근. 내부 상태 및 hook 사용.                 |
+| /mall/mypage/qna                    | **CSR**                  | 개인 Q&A 데이터, CSR로 관리하며 UX 중심 설계.                                |
+| /mall/mypage/reviews                | **CSR**                  | 유저 리뷰 목록. React Query 기반 상태.                                       |
+| /mall/mypage/layout.tsx             | **CSR Layout**           | useSearchParams, 동적 탭 전환 등 UI 조작이 많음. 'use client' 선언.          |
+
+---
+
+### **🔧 ADMIN 섹션**
+
+| **경로**          | **렌더링 방식** | **선택 이유 및 설명**                                                        |
+| ----------------- | --------------- | ---------------------------------------------------------------------------- |
+| /admin/product    | **CSR**         | 관리자 상품 관리 UI는 상호작용/폼 중심. SSR은 불필요하며 상태가 많음.        |
+| /admin            | **SSG**         | 빈 또는 리디렉션 페이지. 서버/클라이언트 상태 요구 없음. 정적 빌드 적합.     |
+| /admin/layout.tsx | **CSR Layout**  | 사이드바 토글, 클라이언트 상태 있음. 모바일 지원도 고려한 CSR 컴포넌트 구성. |
+
+---
+
+### **🔐 LOGIN 섹션**
 
 ---
 
