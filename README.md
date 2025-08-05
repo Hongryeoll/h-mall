@@ -58,7 +58,7 @@ Next.js + Supabase 기반의 쇼핑몰 프로젝트입니다.
 
 ## ✨ 주요 기능 (Features)
 
-### ## 🔐 RBAC 기반 통합 인증/인가 아키텍처 (Next.js Middleware + Supabase Auth + RLS)
+### 🔐 RBAC 기반 통합 인증/인가 아키텍처 (Next.js Middleware + Supabase Auth + RLS)
 
 ![RBAC architecture](image.png)
 
